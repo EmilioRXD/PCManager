@@ -4,3 +4,4 @@ dist/
 *.log
 pgdata/
 *.bak
+docker-compose.override.yml
