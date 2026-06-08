@@ -37,8 +37,20 @@
         <button v-if="images.length > 1" class="viewer-nav viewer-next" @click.stop="nextImage" aria-label="Siguiente">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
-        <div class="viewer-image-wrapper" @mousedown.prevent="onViewerMouseDown">
-          <img :src="currentImage" :alt="alt" class="viewer-image" :style="viewerTransform" draggable="false" />
+        <div class="viewer-image-wrapper" @mousedown.prevent="onViewerMouseDown" @dblclick="zoomToggle" :class="{ grabbing: isDragging }" :style="{ cursor: isDragging ? 'grabbing' : scale > 1 ? 'grab' : '' }">
+          <img :src="currentImage" :alt="alt" class="viewer-image" :class="{ dragging: isDragging }" :style="viewerTransform" draggable="false" />
+        </div>
+        <div class="viewer-controls">
+          <button class="ctrl-btn" @click.stop="zoomOut" aria-label="Alejar" :disabled="scale <= 1">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </button>
+          <span class="zoom-level">{{ Math.round(scale * 100) }}%</span>
+          <button class="ctrl-btn" @click.stop="zoomIn" aria-label="Acercar" :disabled="scale >= 10">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </button>
+          <button class="ctrl-btn ctrl-reset" @click.stop="resetZoom" aria-label="Restaurar" :disabled="scale <= 1 && translateX === 0 && translateY === 0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          </button>
         </div>
         <div v-if="images.length > 1" class="viewer-bottom">
           <div class="viewer-counter">{{ currentIdx + 1 }} / {{ images.length }}</div>
@@ -89,7 +101,7 @@ let lastPinchDist = 0
 let isPinching = false
 
 // Drag state
-let isDragging = false
+const isDragging = ref(false)
 let dragStartX = 0
 let dragStartY = 0
 
@@ -131,6 +143,24 @@ function resetZoom() {
   translateY.value = 0
 }
 
+function zoomIn() {
+  scale.value = Math.min(10, scale.value + 0.5)
+}
+
+function zoomOut() {
+  scale.value = Math.max(1, scale.value - 0.5)
+}
+
+function zoomToggle() {
+  if (scale.value > 1) {
+    resetZoom()
+  } else {
+    scale.value = 2.5
+    translateX.value = 0
+    translateY.value = 0
+  }
+}
+
 const viewerTransform = computed(() => {
   if (scale.value === 1 && translateX.value === 0 && translateY.value === 0) return {}
   return {
@@ -145,18 +175,18 @@ function onWheel(e) {
 
 function onViewerMouseDown(e) {
   if (scale.value <= 1) return
-  isDragging = true
+  isDragging.value = true
   dragStartX = e.clientX - translateX.value
   dragStartY = e.clientY - translateY.value
 
   const onMove = (ev) => {
-    if (!isDragging) return
+    if (!isDragging.value) return
     translateX.value = ev.clientX - dragStartX
     translateY.value = ev.clientY - dragStartY
   }
 
   const onUp = () => {
-    isDragging = false
+    isDragging.value = false
     document.removeEventListener('mousemove', onMove)
     document.removeEventListener('mouseup', onUp)
   }
@@ -311,16 +341,38 @@ function onViewerKeydown(e) {
 .viewer-prev { left: 16px; }
 .viewer-next { right: 16px; }
 
+.viewer-controls {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px); margin-bottom: 4px;
+}
+.ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: none; background: transparent; color: #fff;
+  cursor: pointer; display: grid; place-items: center;
+  transition: background 0.15s; flex-shrink: 0;
+}
+.ctrl-btn:hover:not(:disabled) { background: rgba(255,255,255,0.15); }
+.ctrl-btn:disabled { opacity: 0.3; cursor: default; }
+.ctrl-reset svg { stroke-width: 2.2; }
+.zoom-level {
+  min-width: 44px; text-align: center;
+  font-size: 13px; font-weight: 600; color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
 .viewer-image-wrapper {
   flex: 1; width: 100%; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   padding: 16px;
 }
+.viewer-image-wrapper.grabbing { cursor: grabbing !important; }
 .viewer-image {
   display: block; max-width: 100%; max-height: 100%;
   object-fit: contain; will-change: transform;
-  transition: transform 0.08s linear;
 }
+.viewer-image.dragging { transition: none; }
 
 .viewer-bottom {
   width: 100%; padding: 12px 16px 20px;
@@ -353,5 +405,9 @@ function onViewerKeydown(e) {
   .viewer-next { right: 8px; }
   .viewer-image-wrapper { padding: 8px; }
   .viewer-thumb { width: 44px; height: 44px; }
+  .viewer-controls { padding: 6px 10px; gap: 4px; }
+  .ctrl-btn { width: 32px; height: 32px; }
+  .ctrl-btn svg { width: 18px; height: 18px; }
+  .zoom-level { min-width: 36px; font-size: 12px; }
 }
 </style>
