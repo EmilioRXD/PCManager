@@ -26,11 +26,9 @@
         </div>
         <div class="filter-block">
           <div class="filter-block-title">Condición</div>
-          <label class="filter-option">
-            <input type="checkbox" value="new" checked disabled /> Nuevo
-          </label>
-          <label class="filter-option">
-            <input type="checkbox" value="refurbished" checked disabled /> Usado
+          <label v-for="opt in conditionOptions" :key="opt.value" class="filter-option">
+            <input type="checkbox" :value="opt.value" :checked="activeConditions.includes(opt.value)" @change="toggleCondition(opt.value)" />
+            {{ opt.label }}
           </label>
         </div>
       </div>
@@ -49,16 +47,23 @@ const props = defineProps({
   open: { type: Boolean, default: false },
   brands: { type: Array, default: () => [] },
   activeBrands: { type: Array, default: () => [] },
+  activeConditions: { type: Array, default: () => [] },
   minPrice: { type: [String, Number], default: 0 },
   maxPrice: { type: [String, Number], default: 10000 },
 })
 
-const emit = defineEmits(['close', 'toggleBrand', 'resetAll', 'apply', 'update:minPrice', 'update:maxPrice'])
+const emit = defineEmits(['close', 'toggleBrand', 'toggleCondition', 'resetAll', 'apply', 'update:minPrice', 'update:maxPrice'])
+
+const conditionOptions = [
+  { value: 'nuevo', label: 'Nuevo' },
+  { value: 'refurbished', label: 'Refurbished' },
+]
 
 function close() { emit('close') }
 function apply() { emit('apply'); emit('close') }
 function resetAll() { emit('resetAll'); emit('close') }
 function toggleBrand(brand) { emit('toggleBrand', brand) }
+function toggleCondition(cond) { emit('toggleCondition', cond) }
 </script>
 
 <style scoped>

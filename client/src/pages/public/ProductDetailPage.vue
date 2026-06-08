@@ -29,6 +29,9 @@
         <div class="info-col">
           <div class="status-row">
             <span class="badge">{{ equipo.categoria_nombre }}</span>
+            <span v-if="equipo.condicion" :class="['badge', equipo.condicion === 'refurbished' ? 'badge-warning' : 'badge-success']">
+              {{ equipo.condicion === 'refurbished' ? 'Refurbished' : 'Nuevo' }}
+            </span>
             <span class="badge badge-accent">Garantía incluida</span>
           </div>
 
@@ -140,7 +143,7 @@ const accordionItems = computed(() => {
   if (!equipo.value) return []
   return [
     { title: 'Descripción del producto', content: equipo.value.descripcion || 'Equipo de alto rendimiento con componentes de calidad.' },
-    { title: 'Estado y garantía', content: 'Equipo nuevo o en perfectas condiciones. Incluye garantía técnica por defectos de funcionamiento. No cubre daños físicos, líquidos o mal uso.' },
+    { title: 'Estado y garantía', content: equipo.value?.condicion === 'refurbished' ? 'Equipo refurbished en excelentes condiciones. Inspeccionado, certificado y libre de defectos funcionales. Incluye garantía técnica por defectos de funcionamiento. No cubre daños físicos, líquidos o mal uso.' : 'Equipo nuevo de paquete original. Incluye garantía técnica por defectos de funcionamiento. No cubre daños físicos, líquidos o mal uso.' },
     { title: 'Envío y entrega', content: 'Envío gratis a todo el país. Empaque con espuma anti-impacto. Tiempo de entrega: 2 a 4 días hábiles. Se proporciona número de rastreo.' },
   ]
 })

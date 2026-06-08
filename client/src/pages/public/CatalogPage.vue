@@ -125,10 +125,12 @@
       :open="drawerOpen"
       :brands="uniqueBrands"
       :active-brands="activeBrands"
+      :active-conditions="activeConditions"
       :min-price="minPrice"
       :max-price="maxPrice"
       @close="drawerOpen = false"
       @toggle-brand="toggleBrand"
+      @toggle-condition="toggleCondition"
       @reset-all="resetFilters"
       @apply="applyFilters"
       @update:min-price="(v) => { minPrice = v }"
@@ -159,6 +161,7 @@ const quickViewOpen = ref(false)
 const quickViewEquipo = ref(null)
 const compareList = ref([])
 const activeBrands = ref([])
+const activeConditions = ref([])
 const minPrice = ref(0)
 const maxPrice = ref(10000)
 
@@ -174,6 +177,7 @@ const activeCatName = computed(() => {
 const filterCount = computed(() => {
   let n = 0
   if (activeBrands.value.length < uniqueBrands.value.length && activeBrands.value.length > 0) n++
+  if (activeConditions.value.length > 0 && activeConditions.value.length < 2) n++
   if (minPrice.value > 0 || maxPrice.value < 10000) n++
   if (activeCat.value) n++
   return n
@@ -190,6 +194,9 @@ const filteredEquipos = computed(() => {
   }
   if (activeBrands.value.length > 0) {
     items = items.filter((e) => activeBrands.value.includes(e.marca))
+  }
+  if (activeConditions.value.length > 0) {
+    items = items.filter((e) => activeConditions.value.includes(e.condicion))
   }
   const min = Number(minPrice.value) || 0
   const max = Number(maxPrice.value) || Infinity
@@ -243,6 +250,7 @@ function applyFilters() {
 
 function resetFilters() {
   activeBrands.value = []
+  activeConditions.value = []
   minPrice.value = 0
   maxPrice.value = 10000
 }
@@ -257,6 +265,12 @@ function toggleBrand(brand) {
   const idx = activeBrands.value.indexOf(brand)
   if (idx >= 0) activeBrands.value.splice(idx, 1)
   else activeBrands.value.push(brand)
+}
+
+function toggleCondition(cond) {
+  const idx = activeConditions.value.indexOf(cond)
+  if (idx >= 0) activeConditions.value.splice(idx, 1)
+  else activeConditions.value.push(cond)
 }
 
 onMounted(async () => {

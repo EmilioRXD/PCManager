@@ -12,6 +12,9 @@
       <div class="card-brand">
         <span :class="['brand-dot', brandClass]" />
         {{ equipo.marca }}
+        <span v-if="equipo.condicion" :class="['cond-badge', equipo.condicion === 'refurbished' ? 'cond-refurb' : 'cond-new']">
+          {{ equipo.condicion === 'refurbished' ? 'Refurbished' : 'Nuevo' }}
+        </span>
       </div>
 
       <div class="card-name">{{ equipo.modelo }}</div>
@@ -150,6 +153,14 @@ function toggleCompare() {
 .brand-dot--hp      { background: #0096d6; }
 .brand-dot--msi     { background: #d32f2f; }
 .brand-dot--alien   { background: #37474f; }
+
+.cond-badge {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 99px;
+  margin-left: auto; line-height: 1.2;
+}
+.cond-new { background: rgba(34,197,94,0.12); color: #16a34a; }
+.cond-refurb { background: rgba(245,158,11,0.12); color: #d97706; }
 
 .card-name {
   font-size: 16px; font-weight: 700; letter-spacing: -0.02em;

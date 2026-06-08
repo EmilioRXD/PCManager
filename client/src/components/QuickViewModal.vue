@@ -11,6 +11,9 @@
         <div class="qv-info">
           <div>
             <span class="badge badge-accent">{{ equipo?.categoria_nombre }}</span>
+            <span v-if="equipo?.condicion" :class="['badge', equipo.condicion === 'refurbished' ? 'badge-warning' : 'badge-success']" style="margin-left:6px;">
+              {{ equipo.condicion === 'refurbished' ? 'Refurbished' : 'Nuevo' }}
+            </span>
           </div>
           <div class="card-brand" style="display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);">
             <span :class="['brand-dot', brandClass]" style="width:7px;height:7px;border-radius:50%;flex-shrink:0;" />

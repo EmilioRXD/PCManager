@@ -99,8 +99,8 @@
               </span>
             </td>
             <td>
-              <span :class="['badge', row.stock > 0 ? 'badge-success' : 'badge-danger']">
-                {{ row.stock > 0 ? 'Activo' : 'Sin stock' }}
+              <span :class="['badge', row.condicion === 'refurbished' ? 'badge-warning' : 'badge-success']">
+                {{ row.condicion === 'refurbished' ? 'Refurbished' : 'Nuevo' }}
               </span>
             </td>
             <td>
@@ -192,6 +192,13 @@
                   <input class="input mono" v-model.number="form.stock" type="number" min="0" required />
                 </div>
                 <div style="flex:1 1 calc(33% - 11px);min-width:150px;">
+                  <label class="form-label">Condición *</label>
+                  <select class="input" v-model="form.condicion" required style="cursor:pointer;">
+                    <option value="nuevo">Nuevo</option>
+                    <option value="refurbished">Refurbished</option>
+                  </select>
+                </div>
+                <div style="flex:1 1 calc(33% - 11px);min-width:150px;">
                   <label class="form-label">Categoría *</label>
                   <select class="input" v-model="form.categoria_id" required style="cursor:pointer;">
                     <option v-for="c in categoriaOptions" :key="c.id" :value="c.id">{{ c.nombre }}</option>
@@ -240,7 +247,8 @@ const editingId = ref(null)
 
 const defaultForm = () => ({
   marca: '', modelo: '', procesador: '', ram: '', almacenamiento: '',
-  tarjeta_grafica: '', precio: null, stock: 0, imagen_url: '', descripcion: '', categoria_id: null,
+  tarjeta_grafica: '', precio: null, stock: 0, imagen_url: '', descripcion: '',
+  condicion: 'nuevo', categoria_id: null,
 })
 
 const form = ref(defaultForm())
@@ -298,7 +306,7 @@ function openEditDialog(row) {
     marca: row.marca, modelo: row.modelo, procesador: row.procesador, ram: row.ram,
     almacenamiento: row.almacenamiento, tarjeta_grafica: row.tarjeta_grafica || '',
     precio: Number(row.precio), stock: row.stock, imagen_url: row.imagen_url || '',
-    descripcion: row.descripcion || '', categoria_id: row.categoria_id,
+    descripcion: row.descripcion || '', condicion: row.condicion || 'nuevo', categoria_id: row.categoria_id,
   }
   dialogOpen.value = true
 }

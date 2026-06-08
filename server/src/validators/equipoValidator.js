@@ -36,6 +36,10 @@ const equipoSchema = Joi.object({
     'string.uri': 'La URL de la imagen no es válida',
   }),
   descripcion: Joi.string().allow('', null),
+  condicion: Joi.string().valid('nuevo', 'refurbished').required().messages({
+    'any.required': 'La condición es requerida',
+    'any.only': 'La condición debe ser "nuevo" o "refurbished"',
+  }),
   categoria_id: Joi.number().integer().required().messages({
     'any.required': 'La categoría es requerida',
   }),
