@@ -196,7 +196,7 @@ const filteredEquipos = computed(() => {
     items = items.filter((e) => activeBrands.value.includes(e.marca))
   }
   if (activeConditions.value.length > 0) {
-    items = items.filter((e) => activeConditions.value.includes(e.condicion))
+    items = items.filter((e) => e.condicion && activeConditions.value.includes(e.condicion))
   }
   const min = Number(minPrice.value) || 0
   const max = Number(maxPrice.value) || Infinity

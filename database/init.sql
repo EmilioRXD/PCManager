@@ -69,6 +69,9 @@ INSERT INTO equipos (marca, modelo, procesador, ram, almacenamiento, tarjeta_gra
     ('Lenovo', 'ThinkStation P3 Ultra', 'Intel Xeon W-3400', '128 GB DDR5 ECC', '4 TB SSD NVMe', 'NVIDIA RTX A6000 48 GB', 12999.99, 1, 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=600&h=400&fit=crop', 'Workstation profesional definitiva. Certificada ISV, para renderizado 3D, IA y simulaciones.', 'refurbished', 4),
     ('HP', 'Z8 Fury G5', 'Dual Intel Xeon Gold 6430', '256 GB DDR5 ECC', '8 TB SSD NVMe RAID', 'NVIDIA RTX 6000 Ada 48 GB', 24999.99, 1, 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&h=400&fit=crop', 'La workstation más potente del mercado. Doble procesador, para deep learning y VFX profesionales.', 'nuevo', 4);
 
+-- Para migrar una base de datos existente, ejecutar:
+--   psql -U pcmanager -d pcmanager -f database/migrate.sql
+
 INSERT INTO imagenes (equipo_id, url, orden) VALUES
     (1, 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&h=600&fit=crop', 1),
     (1, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800&h=600&fit=crop', 2),
