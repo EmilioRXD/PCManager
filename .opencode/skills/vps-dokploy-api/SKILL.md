@@ -5,6 +5,7 @@
 |----------|-------|
 | **API Base URL** | `http://154.53.39.143:3000/api` |
 | **API Key** | `kOlEmjkNqrSRIXVYdwOzuWehUGMVlItXJIjNNWbyygwlNUQSmqQRIJsdTWwTotVV` |
+| **Dominio** | `https://mobiltech.scape.nexus` |
 
 ## Conexión
 ```bash
