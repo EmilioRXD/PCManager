@@ -149,6 +149,7 @@ function zoomIn() {
 
 function zoomOut() {
   scale.value = Math.max(1, scale.value - 0.5)
+  if (scale.value <= 1) resetZoom()
 }
 
 function zoomToggle() {
@@ -170,7 +171,9 @@ const viewerTransform = computed(() => {
 
 function onWheel(e) {
   const delta = e.deltaY > 0 ? -0.1 : 0.1
-  scale.value = Math.max(1, Math.min(10, scale.value + delta))
+  const next = Math.max(1, Math.min(10, scale.value + delta))
+  scale.value = next
+  if (next <= 1) resetZoom()
 }
 
 function onViewerMouseDown(e) {
