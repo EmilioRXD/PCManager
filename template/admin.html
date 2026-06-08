@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="es-ES">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Gestión — Mobil Tech</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/system.css">
+  <style>
+    /* ── Admin Layout ── */
+    .admin-layout { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar-admin {
+      width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      position: fixed; inset: 0 auto 0 0; z-index: 50;
+      transition: transform 0.3s cubic-bezier(0.23,1,0.32,1);
+    }
+    .sidebar-admin .sidebar-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .sidebar-admin .brand { font-weight: 700; font-size: 16px; letter-spacing: -0.02em; }
+    .sidebar-admin .sidebar-nav { flex: 1; padding: 16px 12px; }
+    .nav-section { margin-bottom: 8px; }
+    .nav-section-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted-light); padding: 10px 14px 6px; font-weight: 700;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: var(--radius-md);
+      color: var(--muted); font-size: 13.5px; font-weight: 500;
+      text-decoration: none; transition: all 0.15s; position: relative;
+    }
+    .sidebar-link:hover { background: var(--gradient-accent-subtle); color: var(--fg); }
+    .sidebar-link.active {
+      background: var(--accent-glow); color: var(--accent); font-weight: 600;
+    }
+    .sidebar-link.active::before {
+      content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 24px; background: var(--accent); border-radius: 0 3px 3px 0;
+    }
+    .sidebar-link .nav-badge {
+      margin-left: auto;
+      background: var(--accent-glow); color: var(--accent);
+      font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px;
+      font-family: var(--font-mono);
+    }
+    .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
+
+    /* ── Main Admin ── */
+    .main-admin { flex: 1; margin-left: 260px; min-width: 0; background: var(--bg); }
+
+    /* ── Admin Header ── */
+    .header-admin {
+      height: 64px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      position: sticky; top: 0; z-index: 40;
+    }
+    .header-left { display: flex; align-items: center; gap: 18px; }
+    .menu-toggle {
+      display: none; width: 38px; height: 38px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface); color: var(--fg);
+      cursor: pointer; align-items: center; justify-content: center;
+    }
+    .breadcrumb-admin { font-size: 13px; color: var(--muted); }
+    .breadcrumb-admin a { color: var(--muted); text-decoration: none; }
+    .breadcrumb-admin a:hover { color: var(--accent); }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .user-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--gradient-accent-subtle);
+      color: var(--accent); font-weight: 700; font-size: 13px;
+      display: grid; place-items: center; cursor: pointer;
+      border: 2px solid transparent; transition: border-color 0.15s;
+    }
+    .user-avatar:hover { border-color: var(--accent); }
+
+    /* ── Content ── */
+    .content { padding: 32px; max-width: 1400px; }
+
+    /* ── Welcome Banner ── */
+    .welcome-banner {
+      background: var(--gradient-hero);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap;
+    }
+    .welcome-banner h2 { font-size: 22px; font-weight: 700; }
+    .welcome-banner p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+    .welcome-banner .quick-actions { display: flex; gap: 10px; }
+
+    /* ── Stats Grid ── */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 32px; }
+
+    /* ── Section Header ── */
+    .section-header-admin { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+    .section-header-admin h2 { font-size: 20px; font-weight: 700; }
+
+    /* ── Table customizations ── */
+    .table-wrap { margin-bottom: 0; }
+    .table td { vertical-align: middle; }
+    .thumb-table {
+      width: 42px; height: 42px; border-radius: var(--radius-sm);
+      object-fit: cover; border: 1px solid var(--border);
+      background: var(--border-light);
+    }
+    .product-name-cell { font-weight: 600; font-size: 14px; }
+    .product-meta-cell { font-size: 12px; color: var(--muted); }
+    .stock-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: var(--radius-pill);
+      font-size: 12px; font-weight: 600; font-family: var(--font-mono);
+    }
+    .stock-high { background: var(--success-glow); color: var(--success); }
+    .stock-low { background: var(--warning-glow); color: var(--warning); }
+    .stock-out { background: var(--danger-glow); color: var(--danger); }
+    .stock-pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+    .stock-high .dot { background: var(--success); }
+    .stock-low .dot { background: var(--warning); }
+    .stock-out .dot { background: var(--danger); }
+
+    .action-btns { display: flex; gap: 4px; justify-content: flex-end; }
+    .action-btn {
+      width: 34px; height: 34px; border-radius: var(--radius-sm);
+      border: 1px solid transparent; background: transparent;
+      color: var(--muted); cursor: pointer; display: grid; place-items: center;
+      transition: all 0.12s;
+    }
+    .action-btn:hover { background: var(--border-light); color: var(--fg); border-color: var(--border); }
+    .action-btn.delete:hover { background: var(--danger-glow); color: var(--danger); border-color: var(--danger-glow); }
+
+    /* ── FAB ── */
+    .fab {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 54px; height: 54px; border-radius: 16px;
+      background: var(--accent); color: #fff; border: none;
+      box-shadow: 0 8px 24px var(--accent-glow-strong);
+      cursor: pointer; display: grid; place-items: center;
+      transition: all 0.2s cubic-bezier(0.23,1,0.32,1); z-index: 30;
+    }
+    .fab:hover { transform: scale(1.06); box-shadow: 0 12px 32px var(--accent-glow-strong); }
+
+    /* ── Pagination ── */
+    .pagination { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; flex-wrap: wrap; gap: 12px; }
+    .pagination .page-info { font-size: 13px; color: var(--muted); }
+    .pagination .page-btns { display: flex; gap: 4px; }
+    .page-btn {
+      width: 34px; height: 34px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--fg); cursor: pointer; display: grid; place-items: center;
+      font-size: 13px; font-weight: 500; transition: all 0.12s;
+    }
+    .page-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .page-btn:disabled { opacity: 0.35; cursor: default; }
+
+    /* ── Overlay ── */
+    .overlay-admin { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 45; backdrop-filter: blur(2px); }
+    .overlay-admin.active { display: block; }
+
+    @media (max-width: 1024px) {
+      .sidebar-admin { transform: translateX(-100%); }
+      .sidebar-admin.open { transform: translateX(0); }
+      .main-admin { margin-left: 0; }
+      .menu-toggle { display: inline-flex; }
+      .content { padding: 20px; }
+      .header-admin { padding: 0 20px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: 1fr; }
+      .welcome-banner { padding: 20px; }
+      .welcome-banner .quick-actions { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar-admin" id="sidebar">
+      <div class="sidebar-header">
+        <svg width="30" height="30" viewBox="0 0 48 48" fill="none"><path d="M8 36c4-12 8-20 16-24 4 6 8 12 8 20-4 4-8 8-16 8s-12-4-8-4z" fill="var(--accent)" opacity="0.2"/><path d="M12 38c4-8 8-16 16-20 4 4 8 8 8 16-4 4-8 6-14 6s-10-2-10-2z" fill="var(--accent)"/><circle cx="18" cy="16" r="3" fill="var(--accent-2)"/><circle cx="30" cy="20" r="2" fill="var(--accent-2)"/></svg>
+        <span class="brand">Mobil Tech</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Principal</div>
+          <a href="#" class="sidebar-link active">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Catálogo
+          </a>
+          <a href="#" class="sidebar-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Mensajes
+            <span class="nav-badge">3</span>
+          </a>
+          <a href="#" class="sidebar-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Estadísticas
+          </a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Operaciones</div>
+          <a href="#" class="sidebar-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            Clientes
+          </a>
+          <a href="#" class="sidebar-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Garantías
+          </a>
+          <a href="#" class="sidebar-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Envíos
+          </a>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="index.html" class="sidebar-link" style="padding:10px 14px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 11-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+          Ver tienda
+        </a>
+      </div>
+    </aside>
+
+    <div class="overlay-admin" id="overlay" onclick="closeSidebar()"></div>
+
+    <!-- Main -->
+    <div class="main-admin">
+      <header class="header-admin">
+        <div class="header-left">
+          <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menú">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="breadcrumb-admin">
+            <a href="index.html">Tienda</a> / Gestión / <span style="color:var(--fg);font-weight:500;">Catálogo</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="user-avatar" title="Admin">AM</div>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+          <div>
+            <h2>Panel de gestión</h2>
+            <p>Administra tu catálogo de equipos, revisa el stock y responde consultas desde un solo lugar.</p>
+          </div>
+          <div class="quick-actions">
+            <a href="index.html" class="btn btn-secondary" style="gap:6px;font-size:13px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+              Ver tienda
+            </a>
+            <button class="btn btn-primary" style="gap:6px;font-size:13px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Agregar equipo
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-label">Total equipos</div>
+            <div class="stat-value">128</div>
+            <div class="stat-delta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+              +12 este mes
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Stock bajo</div>
+            <div class="stat-value">9</div>
+            <div class="stat-delta down">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              Requiere atención
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Ventas hoy</div>
+            <div class="stat-value">$2.840</div>
+            <div class="stat-delta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+              +8% vs ayer
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Consultas WhatsApp</div>
+            <div class="stat-value">34</div>
+            <div class="stat-delta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+              +5 nuevas hoy
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="section-header-admin">
+          <h2>Inventario de equipos</h2>
+          <div class="flex items-center gap-3">
+            <input class="input" id="tableSearch" placeholder="Buscar equipo…" type="text" style="width:240px;">
+            <button class="btn btn-secondary" style="gap:6px;font-size:13px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Exportar CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table" id="inventoryTable">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th style="text-align:right;">Precio</th>
+                <th>Stock</th>
+                <th>Estado</th>
+                <th style="text-align:right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:14px;">
+                    <img class="thumb-table" src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=100&h=100&fit=crop" alt="" loading="lazy">
+                    <div>
+                      <div class="product-name-cell">ThinkPad T14s Gen 3</div>
+                      <div class="product-meta-cell">Lenovo · i7-1185G7</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge">Laptop</span></td>
+                <td class="mono text-right" style="font-weight:700;font-size:15px;">$330</td>
+                <td><span class="stock-pill stock-high"><span class="dot"></span> 4 uds</span></td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn" aria-label="Editar" title="Editar">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button class="action-btn delete" aria-label="Eliminar" title="Eliminar">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:14px;">
+                    <img class="thumb-table" src="https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=100&h=100&fit=crop" alt="" loading="lazy">
+                    <div>
+                      <div class="product-name-cell">ROG Zephyrus G14</div>
+                      <div class="product-meta-cell">ASUS · Ryzen 9 · RTX 4060</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge">Laptop</span></td>
+                <td class="mono text-right" style="font-weight:700;font-size:15px;">$1.299</td>
+                <td><span class="stock-pill stock-high"><span class="dot"></span> 12 uds</span></td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn" aria-label="Editar" title="Editar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button class="action-btn delete" aria-label="Eliminar" title="Eliminar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:14px;">
+                    <img class="thumb-table" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=100&h=100&fit=crop" alt="" loading="lazy">
+                    <div>
+                      <div class="product-name-cell">MacBook Pro 14" M3 Pro</div>
+                      <div class="product-meta-cell">Apple · M3 Pro · 18GB</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge">Laptop</span></td>
+                <td class="mono text-right" style="font-weight:700;font-size:15px;">$1.899</td>
+                <td><span class="stock-pill stock-low"><span class="dot"></span> 2 uds</span></td>
+                <td><span class="badge badge-warning">Stock bajo</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn" aria-label="Editar" title="Editar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button class="action-btn delete" aria-label="Eliminar" title="Eliminar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:14px;">
+                    <img class="thumb-table" src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=100&h=100&fit=crop" alt="" loading="lazy">
+                    <div>
+                      <div class="product-name-cell">OptiPlex 7090 Tower</div>
+                      <div class="product-meta-cell">Dell · i7-10700 · GTX 1650</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge">Desktop</span></td>
+                <td class="mono text-right" style="font-weight:700;font-size:15px;">$899</td>
+                <td><span class="stock-pill stock-out"><span class="dot"></span> 0 uds</span></td>
+                <td><span class="badge badge-danger">Sin stock</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn" aria-label="Editar" title="Editar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button class="action-btn delete" aria-label="Eliminar" title="Eliminar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:14px;">
+                    <img class="thumb-table" src="https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=100&h=100&fit=crop" alt="" loading="lazy">
+                    <div>
+                      <div class="product-name-cell">Spectre x360 14</div>
+                      <div class="product-meta-cell">HP · i7-1355U · 3K2K</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge">Laptop</span></td>
+                <td class="mono text-right" style="font-weight:700;font-size:15px;">$749</td>
+                <td><span class="stock-pill stock-high"><span class="dot"></span> 7 uds</span></td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn" aria-label="Editar" title="Editar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button class="action-btn delete" aria-label="Eliminar" title="Eliminar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:14px;">
+                    <img class="thumb-table" src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=100&h=100&fit=crop" alt="" loading="lazy">
+                    <div>
+                      <div class="product-name-cell">ThinkStation P3 Ultra</div>
+                      <div class="product-meta-cell">Lenovo · i9-13900 · RTX A4000</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge">Workstation</span></td>
+                <td class="mono text-right" style="font-weight:700;font-size:15px;">$2.499</td>
+                <td><span class="stock-pill stock-high"><span class="dot"></span> 5 uds</span></td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn" aria-label="Editar" title="Editar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button class="action-btn delete" aria-label="Eliminar" title="Eliminar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <span class="page-info">Mostrando 1–6 de 128 equipos</span>
+          <div class="page-btns">
+            <button class="page-btn" disabled aria-label="Anterior">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">22</button>
+            <button class="page-btn" aria-label="Siguiente">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" aria-label="Agregar equipo" title="Agregar equipo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+
+  <script src="js/system.js"></script>
+  <script>
+    (function() {
+      const search = document.getElementById('tableSearch');
+      const rows = document.querySelectorAll('#inventoryTable tbody tr');
+      search.addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        rows.forEach(row => {
+          row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+      });
+    })();
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('active');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('active');
+    }
+  </script>
+</body>
+</html>

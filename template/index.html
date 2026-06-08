@@ -1,0 +1,1075 @@
+<!doctype html>
+<html lang="es-ES">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobil Tech — Catálogo de Equipos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/system.css">
+  <style>
+    /* ── Page layout ── */
+    body { overflow-x: hidden; }
+    .page { position: relative; }
+
+    /* ── Hero ── */
+    .catalog-hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(160deg, #f0f5ff 0%, #e8effe 25%, #fafbfd 55%, #f0f5ff 100%);
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 420px; align-items: center;
+    }
+    .catalog-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 80% 30%, rgba(0,82,255,0.06), transparent),
+        radial-gradient(ellipse 400px 300px at 20% 80%, rgba(0,198,255,0.05), transparent);
+    }
+    .catalog-hero .dots {
+      position: absolute; right: -20px; top: -20px;
+      width: 500px; height: 500px;
+      background-image: radial-gradient(circle, rgba(0,82,255,0.08) 1.8px, transparent 1.8px);
+      background-size: 34px 34px;
+      pointer-events: none;
+    }
+    .hero-content { padding: 64px 28px 64px 32px; position: relative; z-index: 1; }
+    .hero-kicker {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 99px;
+      background: rgba(0,82,255,0.08); color: var(--accent);
+      font-size: 13px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 20px;
+    }
+    .hero-kicker .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: hero-dot-pulse 2s ease-in-out infinite; }
+    @keyframes hero-dot-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero-title { font-size: clamp(34px, 4vw, 52px); font-weight: 900; letter-spacing: -0.04em; line-height: 1.05; }
+    .hero-title em { font-style: normal; background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-desc { font-size: 16px; color: var(--muted); max-width: 440px; margin: 16px 0 24px; line-height: 1.5; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-visual {
+      position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
+      padding: 32px;
+    }
+    .hero-visual .laptop-frame {
+      width: 100%; max-width: 520px;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.10));
+      transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
+    }
+    .hero-visual:hover .laptop-frame { transform: translateY(-6px); }
+    .hero-visual .spec-float {
+      position: absolute; padding: 10px 16px; border-radius: var(--radius-md);
+      background: var(--surface); border: 1px solid var(--border);
+      box-shadow: var(--shadow-md); font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+      animation: float-bob 3s ease-in-out infinite;
+    }
+    .hero-visual .spec-float.f1 { top: 18%; right: 8%; animation-delay: 0s; }
+    .hero-visual .spec-float.f2 { bottom: 28%; left: 4%; animation-delay: 1.2s; }
+    .hero-visual .spec-float .sf-icon {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: var(--accent-glow); color: var(--accent);
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    @keyframes float-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    /* ── Quick nav category pills ── */
+    .cat-strip {
+      display: flex; align-items: center; gap: 10px;
+      padding: 20px 32px; border-bottom: 1px solid var(--border);
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .cat-strip::-webkit-scrollbar { display: none; }
+    .cat-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: 99px;
+      border: 1px solid var(--border); background: var(--surface);
+      font-size: 14px; font-weight: 600; color: var(--fg);
+      cursor: pointer; white-space: nowrap; transition: all 0.18s;
+      flex-shrink: 0;
+    }
+    .cat-pill svg { flex-shrink: 0; color: var(--muted); transition: color 0.18s; }
+    .cat-pill:hover { border-color: var(--accent); color: var(--accent); }
+    .cat-pill:hover svg { color: var(--accent); }
+    .cat-pill.active {
+      background: var(--accent); color: #fff; border-color: var(--accent);
+      box-shadow: 0 4px 16px var(--accent-glow-strong);
+    }
+    .cat-pill.active svg { color: #fff; }
+    .cat-pill .count { font-size: 11px; opacity: 0.7; font-family: var(--font-mono); }
+
+    /* ── Filter bar ── */
+    .filter-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px; gap: 16px; flex-wrap: wrap;
+    }
+    .filter-bar .results-info { font-size: 14px; color: var(--muted); }
+    .filter-bar .results-info strong { color: var(--fg); font-family: var(--font-mono); }
+    .active-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 99px;
+      background: var(--accent-glow); color: var(--accent);
+      font-size: 12.5px; font-weight: 600; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .chip:hover { background: var(--accent-glow-strong); }
+    .chip svg { flex-shrink: 0; }
+    .filter-actions { display: flex; align-items: center; gap: 10px; }
+    .sort-select {
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 9px 14px; font-size: 13px; background: var(--surface);
+      color: var(--fg); cursor: pointer; font-family: var(--font-body);
+    }
+    .sort-select:focus { outline: none; border-color: var(--accent); }
+    .btn-filter-toggle {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 16px; border-radius: var(--radius-md);
+      border: 1px solid var(--border); background: var(--surface);
+      font-size: 13px; font-weight: 600; color: var(--fg); cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-filter-toggle:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-filter-toggle .badge-count {
+      background: var(--accent); color: #fff; font-family: var(--font-mono);
+      font-size: 10px; padding: 2px 7px; border-radius: 99px; font-weight: 700;
+    }
+
+    /* ── Product grid ── */
+    .products-area { padding: 0 32px 40px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .grid.list-view { grid-template-columns: 1fr; }
+    .grid.list-view .product-card { display: grid; grid-template-columns: 300px 1fr; }
+    .grid.list-view .product-card .card-media { aspect-ratio: auto; height: 100%; cursor: pointer; }
+    .grid.list-view .product-card .card-body { display: flex; flex-direction: row; gap: 28px; padding: 18px 20px; align-items: center; }
+    .grid.list-view .product-card .specs { flex-wrap: nowrap; }
+    .grid.list-view .product-card .card-footer { flex-direction: column; align-items: flex-start; gap: 10px; border-top: none; width: auto; }
+    .grid.list-view .product-card .btn-quick { display: none; }
+
+    .empty-state { grid-column: 1/-1; text-align: center; padding: 80px 0; }
+    .empty-state .empty-icon { color: var(--border); margin-bottom: 20px; }
+    .empty-state h3 { font-size: 18px; margin-bottom: 6px; }
+    .empty-state p { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
+
+    /* ── Product Card (v3 — premium clean-tech) ── */
+    .product-card {
+      border: none;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.025);
+      transition: box-shadow 0.3s cubic-bezier(0.23,1,0.32,1),
+                  transform 0.3s cubic-bezier(0.23,1,0.32,1);
+    }
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 0 1px rgba(0,82,255,0.10), 0 16px 48px rgba(0,82,255,0.06);
+    }
+    .product-card .card-media {
+      aspect-ratio: 4/3;
+      background: linear-gradient(180deg, #fefeff 0%, #f5f7fc 100%);
+      position: relative; overflow: hidden;
+      display: grid; place-items: center; cursor: pointer;
+    }
+    .product-card .card-media::after {
+      content: '';
+      position: absolute; bottom: -10%; left: 50%; transform: translateX(-50%);
+      width: 80%; height: 50%;
+      background: radial-gradient(ellipse at center, rgba(0,82,255,0.025), transparent 70%);
+      pointer-events: none;
+    }
+    .product-card .card-media img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
+      position: relative; z-index: 1;
+    }
+    .product-card:hover .card-media img { transform: scale(1.03); }
+
+    .badge-cond {
+      display: inline-block; vertical-align: middle;
+      padding: 2px 8px; border-radius: 99px;
+      font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; line-height: 1.5;
+      margin-left: 4px;
+    }
+    .badge-new {
+      background: rgba(0,82,255,0.1); color: var(--accent);
+    }
+    .badge-refurb {
+      background: #eef2f6; color: var(--muted);
+    }
+
+    .card-media .compare-check {
+      position: absolute; top: 12px; right: 12px; z-index: 2;
+      opacity: 0; transform: scale(0.85);
+      transition: all 0.22s cubic-bezier(0.23,1,0.32,1);
+    }
+    .product-card:hover .compare-check,
+    .compare-check.selected { opacity: 1; transform: scale(1); }
+    .compare-check input[type="checkbox"] { display: none; }
+    .compare-check label {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border);
+      cursor: pointer; transition: all 0.18s;
+      font-size: 0; /* icon-only */
+    }
+    .compare-check label::before {
+      content: '+'; font-size: 18px; font-weight: 400;
+      color: var(--muted-light); line-height: 1;
+    }
+    .compare-check label:hover { border-color: var(--accent); background: rgba(0,82,255,0.04); }
+    .compare-check input:checked + label {
+      background: var(--accent); border-color: var(--accent);
+    }
+    .compare-check input:checked + label::before {
+      content: '✓'; color: #fff; font-size: 14px; font-weight: 700;
+    }
+
+    .product-card .card-body {
+      padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px;
+    }
+
+    .card-brand {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .card-brand .brand-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    }
+    .brand-dot.lenovo  { background: #e60000; }
+    .brand-dot.asus    { background: #00b4d8; }
+    .brand-dot.apple   { background: #555555; }
+    .brand-dot.dell    { background: #007db8; }
+    .brand-dot.hp      { background: #0096d6; }
+
+    .product-card .card-name {
+      font-size: 16px; font-weight: 700; letter-spacing: -0.02em;
+      line-height: 1.25; color: var(--fg);
+    }
+
+    .product-card .card-price {
+      font-family: var(--font-mono); font-size: 22px; font-weight: 700;
+      color: var(--accent); display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px;
+    }
+    .product-card .card-price .old {
+      font-size: 13px; color: var(--muted-light); text-decoration: line-through;
+      font-weight: 500;
+    }
+    .product-card .card-price .save {
+      font-size: 10.5px; font-weight: 700; color: var(--success);
+      background: rgba(34,197,94,0.08); padding: 2px 9px; border-radius: 99px;
+    }
+
+    .product-card .specs { display: flex; flex-wrap: wrap; gap: 5px; }
+    .spec-tag {
+      padding: 4px 9px; border-radius: 5px;
+      border: 1px solid var(--border);
+      background: transparent;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+      color: var(--fg-secondary); letter-spacing: -0.01em;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .product-card:hover .spec-tag {
+      border-color: rgba(0,82,255,0.14);
+      color: var(--accent);
+      background: rgba(0,82,255,0.025);
+    }
+
+    .product-card .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 6px; padding-top: 10px;
+      border-top: 1px solid var(--border-light);
+    }
+    .product-card .card-footer .btn-more {
+      font-size: 13px; font-weight: 600; color: var(--accent);
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 3px;
+      transition: gap 0.2s;
+    }
+    .product-card .card-footer .btn-more:hover { gap: 7px; }
+    .product-card .card-footer .btn-quick {
+      font-size: 12px; font-weight: 500; color: var(--muted);
+      background: none; border: none; cursor: pointer;
+      padding: 4px 8px; border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .product-card .card-footer .btn-quick:hover {
+      color: var(--fg); background: var(--border-light);
+    }
+
+    /* ── Filter drawer ── */
+    .drawer-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 90;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    .filter-drawer {
+      position: fixed; top: 0; right: 0; width: 380px; max-width: 100vw; height: 100vh;
+      background: var(--surface); z-index: 95; overflow-y: auto;
+      transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.23,1,0.32,1);
+      box-shadow: var(--shadow-lg); display: flex; flex-direction: column;
+    }
+    .filter-drawer.open { transform: translateX(0); }
+    .drawer-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: var(--surface); z-index: 2;
+    }
+    .drawer-header h3 { font-size: 18px; font-weight: 700; }
+    .drawer-body { flex: 1; padding: 24px; }
+    .drawer-body .filter-block { margin-bottom: 32px; }
+    .drawer-body .filter-block-title {
+      font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--muted); margin-bottom: 14px; font-weight: 700;
+    }
+    .drawer-body .filter-option {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: var(--radius-sm);
+      font-size: 14px; cursor: pointer; transition: all 0.12s;
+    }
+    .drawer-body .filter-option:hover { background: var(--border-light); }
+    .drawer-body .filter-option input[type="checkbox"] {
+      width: 18px; height: 18px; accent-color: var(--accent); flex-shrink: 0;
+    }
+    .price-range-wrap { display: flex; gap: 12px; align-items: center; }
+    .price-range-wrap input { flex: 1; font-family: var(--font-mono); }
+    .price-range-wrap span { color: var(--muted); font-size: 13px; }
+    .drawer-footer {
+      padding: 20px 24px; border-top: 1px solid var(--border);
+      display: flex; gap: 10px; position: sticky; bottom: 0; background: var(--surface);
+    }
+    .drawer-footer .btn { flex: 1; }
+
+    /* ── Quick view modal ── */
+    .qv-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 80;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .qv-overlay.open { opacity: 1; pointer-events: auto; }
+    .qv-modal {
+      background: var(--surface); border-radius: var(--radius-lg); width: 900px;
+      max-width: 95vw; max-height: 85vh; overflow-y: auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.23,1,0.32,1);
+    }
+    .qv-overlay.open .qv-modal { transform: translateY(0); }
+    .qv-modal .qv-image {
+      display: grid; place-items: center; padding: 40px;
+      background: var(--border-light); position: relative;
+    }
+    .qv-modal .qv-image img { width: 100%; max-height: 380px; object-fit: contain; }
+    .qv-modal .qv-info { padding: 40px 32px; display: flex; flex-direction: column; gap: 16px; }
+    .qv-modal .qv-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--surface);
+      cursor: pointer; display: grid; place-items: center; transition: all 0.15s;
+    }
+    .qv-modal .qv-close:hover { background: var(--border-light); }
+
+    /* ── Compare bar ── */
+    .compare-bar {
+      position: fixed; bottom: -120px; left: 0; right: 0; z-index: 70;
+      background: var(--surface); border-top: 1px solid var(--border);
+      box-shadow: 0 -8px 32px rgba(0,0,0,0.08);
+      padding: 16px 32px; display: flex; align-items: center; gap: 20px;
+      transition: bottom 0.35s cubic-bezier(0.23,1,0.32,1);
+    }
+    .compare-bar.visible { bottom: 0; }
+    .compare-bar .compare-items { display: flex; gap: 16px; flex: 1; overflow-x: auto; }
+    .compare-bar .compare-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 16px 8px 8px; border-radius: var(--radius-md);
+      border: 1px solid var(--border); flex-shrink: 0;
+    }
+    .compare-bar .compare-item img { width: 40px; height: 40px; object-fit: contain; border-radius: 4px; }
+    .compare-bar .compare-item .ci-name { font-size: 13px; font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .compare-bar .compare-item .ci-remove { cursor: pointer; color: var(--muted); flex-shrink: 0; }
+    .compare-bar .compare-item .ci-remove:hover { color: var(--danger); }
+    .compare-bar .compare-actions { display: flex; gap: 10px; flex-shrink: 0; }
+
+    /* ── Trust stripe ── */
+    .trust-stripe {
+      display: flex; align-items: center; justify-content: center; gap: 48px;
+      padding: 32px; border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 13px; color: var(--muted);
+    }
+    .trust-item .trust-icon {
+      width: 40px; height: 40px; border-radius: var(--radius-sm);
+      background: var(--accent-glow); color: var(--accent);
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .trust-item strong { display: block; color: var(--fg); font-size: 14px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .catalog-hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-visual { display: none; }
+      .hero-content { padding: 40px 20px; }
+      .cat-strip { padding: 16px 20px; }
+      .filter-bar { padding: 12px 20px; }
+      .products-area { padding: 0 20px 32px; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+      .qv-modal { grid-template-columns: 1fr; max-height: 90vh; }
+      .qv-modal .qv-image { padding: 24px; }
+      .qv-modal .qv-info { padding: 20px 24px 32px; }
+      .trust-stripe { gap: 24px; }
+    }
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 28px; }
+      .filter-drawer { width: 100%; }
+      .compare-bar { padding: 12px 16px; flex-direction: column; }
+      .compare-bar .compare-actions { width: 100%; }
+      .trust-stripe { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="flex items-center gap-6">
+      <a href="index.html" class="flex items-center gap-2" style="text-decoration:none;color:var(--fg);">
+        <svg width="32" height="32" viewBox="0 0 48 48" fill="none"><path d="M8 36c4-12 8-20 16-24 4 6 8 12 8 20-4 4-8 8-16 8s-12-4-8-4z" fill="var(--accent)" opacity="0.2"/><path d="M12 38c4-8 8-16 16-20 4 4 8 8 8 16-4 4-8 6-14 6s-10-2-10-2z" fill="var(--accent)"/><circle cx="18" cy="16" r="3" fill="var(--accent-2)"/><circle cx="30" cy="20" r="2" fill="var(--accent-2)"/></svg>
+        <span class="font-bold text-lg" style="letter-spacing:-0.02em;">Mobil Tech</span>
+      </a>
+    </div>
+    <div style="flex:1;max-width:420px;margin:0 32px;position:relative;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="input" id="search" placeholder="Buscar equipos..." type="text" autocomplete="off" style="padding-left:42px;">
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="admin.html" class="btn btn-secondary" style="font-size:13px;padding:8px 16px;">Panel Admin</a>
+    </div>
+  </header>
+
+  <div class="page">
+
+    <!-- Hero -->
+    <section class="catalog-hero">
+      <div class="dots"></div>
+      <div class="hero-content">
+        <div class="hero-kicker"><span class="dot"></span> Nuevos ingresos esta semana</div>
+        <h1 class="hero-title">Equipos <em>premium</em> para profesionales</h1>
+        <p class="hero-desc">Laptops, workstations y desktops refurbished y nuevos — inspeccionados, garantizados, y listos para trabajar. Tecnología de alto rendimiento sin pagar de más.</p>
+        <div class="hero-actions">
+          <a href="#products" class="btn btn-primary btn-lg">Ver catálogo</a>
+          <a href="detalle.html?id=1" class="btn btn-secondary btn-lg">Producto destacado</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img class="laptop-frame" src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&h=400&fit=crop" alt="Featured laptop" style="max-width:480px;border-radius:16px;">
+        <div class="spec-float f1">
+          <span class="sf-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/></svg>
+          </span>
+          i7-1185G7
+        </div>
+        <div class="spec-float f2">
+          <span class="sf-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="2" y1="6" x2="22" y2="6"/></svg>
+          </span>
+          32GB RAM
+        </div>
+      </div>
+    </section>
+
+    <!-- Category pills -->
+    <div class="cat-strip" id="catStrip">
+      <button class="cat-pill active" data-cat="all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Todos <span class="count">6</span>
+      </button>
+      <button class="cat-pill" data-cat="laptop">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Laptops <span class="count">4</span>
+      </button>
+      <button class="cat-pill" data-cat="desktop">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="16" rx="2"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+        Desktops <span class="count">1</span>
+      </button>
+      <button class="cat-pill" data-cat="workstation">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Workstations <span class="count">1</span>
+      </button>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar" id="products">
+      <div class="flex items-center gap-3" style="flex-wrap:wrap;">
+        <span class="results-info">Mostrando <strong id="count">6</strong> equipos</span>
+        <div class="active-chips" id="activeChips"></div>
+      </div>
+      <div class="filter-actions">
+        <select class="sort-select" id="sort">
+          <option value="relevance">Relevancia</option>
+          <option value="price-asc">Precio: menor a mayor</option>
+          <option value="price-desc">Precio: mayor a menor</option>
+        </select>
+        <button class="btn-filter-toggle" id="filterToggle" onclick="openDrawer()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          Filtros
+          <span class="badge-count" id="filterCount" style="display:none;">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Product grid -->
+    <div class="products-area">
+      <div class="grid" id="grid">
+
+        <!-- 1. Lenovo ThinkPad -->
+        <article class="product-card" data-cat="laptop" data-brand="Lenovo" data-price="330" data-cond="refurbished" data-id="1">
+          <div class="card-media" onclick="openQuickView('1')">
+            <div class="compare-check" onclick="event.stopPropagation()">
+              <input type="checkbox" id="cmp1" data-name="ThinkPad T14s Gen 3" data-brand="Lenovo" data-img="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=200&h=150&fit=crop" data-price="$330" onchange="toggleCompare(this)">
+              <label for="cmp1" title="Comparar"></label>
+            </div>
+            <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&h=333&fit=crop" alt="Lenovo ThinkPad T14s" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-brand"><span class="brand-dot lenovo"></span> Lenovo <span class="badge-cond badge-refurb">REFURBISHED</span></div>
+            <div class="card-name">ThinkPad T14s Gen 3</div>
+            <div class="card-price">$330 <span class="old">$549</span> <span class="save">−40%</span></div>
+            <div class="specs">
+              <span class="spec-tag">i7-1185G7</span>
+              <span class="spec-tag">32GB RAM</span>
+              <span class="spec-tag">256GB SSD</span>
+              <span class="spec-tag">14" FHD</span>
+            </div>
+            <div class="card-footer">
+              <a href="detalle.html?id=1" class="btn-more">Ver ficha técnica <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <button class="btn-quick" onclick="event.stopPropagation();openQuickView('1')">Vista rápida</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. ASUS ROG -->
+        <article class="product-card" data-cat="laptop" data-brand="ASUS" data-price="1299" data-cond="new" data-id="2">
+          <div class="card-media" onclick="openQuickView('2')">
+            <div class="compare-check" onclick="event.stopPropagation()">
+              <input type="checkbox" id="cmp2" data-name="ROG Zephyrus G14" data-brand="ASUS" data-img="https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=200&h=150&fit=crop" data-price="$1.299" onchange="toggleCompare(this)">
+              <label for="cmp2" title="Comparar"></label>
+            </div>
+            <img src="https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=500&h=333&fit=crop" alt="ASUS ROG Zephyrus" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-brand"><span class="brand-dot asus"></span> ASUS <span class="badge-cond badge-new">NUEVO</span></div>
+            <div class="card-name">ROG Zephyrus G14</div>
+            <div class="card-price">$1.299</div>
+            <div class="specs">
+              <span class="spec-tag">Ryzen 9</span>
+              <span class="spec-tag">RTX 4060</span>
+              <span class="spec-tag">16GB DDR5</span>
+              <span class="spec-tag">1TB NVMe</span>
+            </div>
+            <div class="card-footer">
+              <a href="detalle.html?id=2" class="btn-more">Ver ficha técnica <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <button class="btn-quick" onclick="event.stopPropagation();openQuickView('2')">Vista rápida</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3. MacBook Pro -->
+        <article class="product-card" data-cat="laptop" data-brand="Apple" data-price="1899" data-cond="new" data-id="3">
+          <div class="card-media" onclick="openQuickView('3')">
+            <div class="compare-check" onclick="event.stopPropagation()">
+              <input type="checkbox" id="cmp3" data-name="MacBook Pro 14&#34;" data-brand="Apple" data-img="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=150&fit=crop" data-price="$1.899" onchange="toggleCompare(this)">
+              <label for="cmp3" title="Comparar"></label>
+            </div>
+            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=333&fit=crop" alt="MacBook Pro 14" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-brand"><span class="brand-dot apple"></span> Apple <span class="badge-cond badge-new">NUEVO</span></div>
+            <div class="card-name">MacBook Pro 14" M3 Pro</div>
+            <div class="card-price">$1.899</div>
+            <div class="specs">
+              <span class="spec-tag">M3 Pro</span>
+              <span class="spec-tag">18GB RAM</span>
+              <span class="spec-tag">512GB SSD</span>
+              <span class="spec-tag">Liquid Retina</span>
+            </div>
+            <div class="card-footer">
+              <a href="detalle.html?id=3" class="btn-more">Ver ficha técnica <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <button class="btn-quick" onclick="event.stopPropagation();openQuickView('3')">Vista rápida</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. Dell OptiPlex -->
+        <article class="product-card" data-cat="desktop" data-brand="Dell" data-price="899" data-cond="refurbished" data-id="4">
+          <div class="card-media" onclick="openQuickView('4')">
+            <div class="compare-check" onclick="event.stopPropagation()">
+              <input type="checkbox" id="cmp4" data-name="OptiPlex 7090 Tower" data-brand="Dell" data-img="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=200&h=150&fit=crop" data-price="$899" onchange="toggleCompare(this)">
+              <label for="cmp4" title="Comparar"></label>
+            </div>
+            <img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=500&h=333&fit=crop" alt="Dell OptiPlex" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-brand"><span class="brand-dot dell"></span> Dell <span class="badge-cond badge-refurb">REFURBISHED</span></div>
+            <div class="card-name">OptiPlex 7090 Tower</div>
+            <div class="card-price">$899 <span class="old">$1.149</span> <span class="save">−22%</span></div>
+            <div class="specs">
+              <span class="spec-tag">i7-10700</span>
+              <span class="spec-tag">16GB RAM</span>
+              <span class="spec-tag">GTX 1650</span>
+              <span class="spec-tag">512GB SSD</span>
+            </div>
+            <div class="card-footer">
+              <a href="detalle.html?id=4" class="btn-more">Ver ficha técnica <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <button class="btn-quick" onclick="event.stopPropagation();openQuickView('4')">Vista rápida</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 5. HP Spectre -->
+        <article class="product-card" data-cat="laptop" data-brand="HP" data-price="749" data-cond="new" data-id="5">
+          <div class="card-media" onclick="openQuickView('5')">
+            <div class="compare-check" onclick="event.stopPropagation()">
+              <input type="checkbox" id="cmp5" data-name="Spectre x360 14" data-brand="HP" data-img="https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=200&h=150&fit=crop" data-price="$749" onchange="toggleCompare(this)">
+              <label for="cmp5" title="Comparar"></label>
+            </div>
+            <img src="https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=500&h=333&fit=crop" alt="HP Spectre" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-brand"><span class="brand-dot hp"></span> HP <span class="badge-cond badge-new">NUEVO</span></div>
+            <div class="card-name">Spectre x360 14</div>
+            <div class="card-price">$749</div>
+            <div class="specs">
+              <span class="spec-tag">i7-1355U</span>
+              <span class="spec-tag">16GB LPDDR5</span>
+              <span class="spec-tag">1TB SSD</span>
+              <span class="spec-tag">3K2K OLED</span>
+            </div>
+            <div class="card-footer">
+              <a href="detalle.html?id=5" class="btn-more">Ver ficha técnica <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <button class="btn-quick" onclick="event.stopPropagation();openQuickView('5')">Vista rápida</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 6. ThinkStation -->
+        <article class="product-card" data-cat="workstation" data-brand="Lenovo" data-price="2499" data-cond="new" data-id="6">
+          <div class="card-media" onclick="openQuickView('6')">
+            <div class="compare-check" onclick="event.stopPropagation()">
+              <input type="checkbox" id="cmp6" data-name="ThinkStation P3 Ultra" data-brand="Lenovo" data-img="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=200&h=150&fit=crop" data-price="$2.499" onchange="toggleCompare(this)">
+              <label for="cmp6" title="Comparar"></label>
+            </div>
+            <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=500&h=333&fit=crop" alt="ThinkStation P3" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-brand"><span class="brand-dot lenovo"></span> Lenovo <span class="badge-cond badge-new">NUEVO</span></div>
+            <div class="card-name">ThinkStation P3 Ultra</div>
+            <div class="card-price">$2.499</div>
+            <div class="specs">
+              <span class="spec-tag">i9-13900</span>
+              <span class="spec-tag">RTX A4000</span>
+              <span class="spec-tag">64GB DDR5</span>
+              <span class="spec-tag">1TB NVMe</span>
+            </div>
+            <div class="card-footer">
+              <a href="detalle.html?id=6" class="btn-more">Ver ficha técnica <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+              <button class="btn-quick" onclick="event.stopPropagation();openQuickView('6')">Vista rápida</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="empty-icon">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3>Sin resultados</h3>
+        <p>No encontramos equipos con esos filtros. Probá con otra combinación.</p>
+        <button class="btn btn-secondary" onclick="resetAll()">Limpiar todos los filtros</button>
+      </div>
+    </div>
+
+    <!-- Trust stripe -->
+    <div class="trust-stripe">
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <div><strong>90 días de garantía</strong>Todos los equipos refurbished</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <div><strong>Envío gratis nacional</strong>Empaque anti-impacto</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg>
+        </div>
+        <div><strong>32 puntos de inspección</strong>Pantalla, batería, teclado, puertos</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div><strong>Soporte por WhatsApp</strong>Respuesta en menos de 24h</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Filter drawer -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <aside class="filter-drawer" id="filterDrawer">
+    <div class="drawer-header">
+      <h3>Filtros</h3>
+      <button class="btn-ghost" style="padding:6px;" onclick="closeDrawer()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="filter-block">
+        <div class="filter-block-title">Marca</div>
+        <label class="filter-option"><input type="checkbox" class="filter-brand" value="Lenovo" checked> Lenovo</label>
+        <label class="filter-option"><input type="checkbox" class="filter-brand" value="Dell" checked> Dell</label>
+        <label class="filter-option"><input type="checkbox" class="filter-brand" value="ASUS" checked> ASUS</label>
+        <label class="filter-option"><input type="checkbox" class="filter-brand" value="Apple" checked> Apple</label>
+        <label class="filter-option"><input type="checkbox" class="filter-brand" value="HP" checked> HP</label>
+      </div>
+      <div class="filter-block">
+        <div class="filter-block-title">Rango de precio</div>
+        <div class="price-range-wrap">
+          <input class="input" type="number" id="minPrice" placeholder="0" value="0">
+          <span>—</span>
+          <input class="input" type="number" id="maxPrice" placeholder="3000" value="3000">
+        </div>
+      </div>
+      <div class="filter-block">
+        <div class="filter-block-title">Condición</div>
+        <label class="filter-option"><input type="checkbox" class="filter-cond" value="new" checked> Nuevo</label>
+        <label class="filter-option"><input type="checkbox" class="filter-cond" value="refurbished" checked> Refurbished</label>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="btn btn-secondary" onclick="resetFilters()">Limpiar todo</button>
+      <button class="btn btn-primary" onclick="applyFilters()">Aplicar filtros</button>
+    </div>
+  </aside>
+
+  <!-- Quick view modal -->
+  <div class="qv-overlay" id="qvOverlay" onclick="closeQuickView(event)">
+    <div class="qv-modal" id="qvModal" onclick="event.stopPropagation()">
+      <button class="qv-close" onclick="closeQuickView()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="qv-image">
+        <img id="qvImage" src="" alt="">
+      </div>
+      <div class="qv-info">
+        <div><span class="badge badge-accent" id="qvCond">NUEVO</span></div>
+        <div class="card-brand" id="qvBrand">Lenovo</div>
+        <h2 style="font-size:28px;font-weight:800;letter-spacing:-0.03em;line-height:1.1;" id="qvName">ThinkPad T14s</h2>
+        <div class="card-price" style="font-size:32px;" id="qvPrice">$330</div>
+        <div class="specs" id="qvSpecs"></div>
+        <div style="margin-top:auto;display:flex;gap:10px;">
+          <a id="qvLink" href="#" class="btn btn-primary" style="flex:1;">Ver ficha completa</a>
+          <a href="#" class="btn btn-secondary" style="gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare bar -->
+  <div class="compare-bar" id="compareBar">
+    <div class="compare-items" id="compareItems"></div>
+    <div class="compare-actions">
+      <button class="btn btn-secondary" style="font-size:13px;" onclick="clearCompare()">Limpiar</button>
+      <button class="btn btn-primary" style="font-size:13px;gap:6px;" onclick="doCompare()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Comparar (<span id="compareCount">0</span>)
+      </button>
+    </div>
+  </div>
+
+  <script src="js/system.js"></script>
+  <script>
+    (function() {
+      const grid = document.getElementById('grid');
+      const cards = Array.from(grid.querySelectorAll('.product-card'));
+      const countEl = document.getElementById('count');
+      const search = document.getElementById('search');
+      const minPrice = document.getElementById('minPrice');
+      const maxPrice = document.getElementById('maxPrice');
+      const sort = document.getElementById('sort');
+      const activeChips = document.getElementById('activeChips');
+      const filterCount = document.getElementById('filterCount');
+      const emptyState = document.getElementById('emptyState');
+      let activeCat = 'all';
+      let compareList = [];
+
+      function getData(el) {
+        return {
+          cat: el.dataset.cat,
+          brand: el.dataset.brand,
+          price: parseFloat(el.dataset.price),
+          cond: el.dataset.cond,
+          text: el.textContent.toLowerCase()
+        };
+      }
+
+      function getActiveBrands() {
+        return Array.from(document.querySelectorAll('.filter-brand:checked')).map(e => e.value);
+      }
+      function getActiveConds() {
+        return Array.from(document.querySelectorAll('.filter-cond:checked')).map(e => e.value);
+      }
+
+      function filter() {
+        const q = search.value.toLowerCase();
+        const min = parseFloat(minPrice.value) || 0;
+        const max = parseFloat(maxPrice.value) || Infinity;
+        const brands = getActiveBrands();
+        const conds = getActiveConds();
+
+        let visible = 0;
+        cards.forEach(card => {
+          const d = getData(card);
+          const ok = d.text.includes(q) &&
+            (activeCat === 'all' || d.cat === activeCat) &&
+            brands.includes(d.brand) &&
+            conds.includes(d.cond) &&
+            d.price >= min && d.price <= max;
+          card.style.display = ok ? '' : 'none';
+          if (ok) visible++;
+        });
+
+        countEl.textContent = visible;
+        emptyState.style.display = visible === 0 ? '' : 'none';
+        updateChips(brands, conds, min, max);
+        updateFilterCount(brands, conds, min, max);
+      }
+
+      function updateChips(brands, conds, min, max) {
+        const chips = [];
+        const allBrands = ['Lenovo','Dell','ASUS','Apple','HP'];
+        const allConds = ['new','refurbished'];
+        const condLabels = { new: 'Nuevo', refurbished: 'Refurbished' };
+
+        if (brands.length < allBrands.length) {
+          brands.forEach(b => chips.push({ label: b, clear: () => {
+            document.querySelector(`.filter-brand[value="${b}"]`).checked = false;
+            applyFilters();
+          }}));
+        }
+        if (conds.length < allConds.length) {
+          conds.forEach(c => chips.push({ label: condLabels[c], clear: () => {
+            document.querySelector(`.filter-cond[value="${c}"]`).checked = false;
+            applyFilters();
+          }}));
+        }
+        if (min > 0 || max < 3000) {
+          chips.push({ label: `$${min} – $${max}`, clear: () => {
+            document.getElementById('minPrice').value = 0;
+            document.getElementById('maxPrice').value = 3000;
+            applyFilters();
+          }});
+        }
+        if (activeCat !== 'all') {
+          chips.push({ label: activeCat.charAt(0).toUpperCase() + activeCat.slice(1), clear: () => {
+            setCategory('all');
+          }});
+        }
+
+        activeChips.innerHTML = chips.map(c =>
+          `<span class="chip" onclick="event.stopPropagation();void(0)" data-clear="1">${c.label}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" onclick="event.stopPropagation();this.closest('.chip').__clear()"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </span>`
+        ).join('');
+
+        document.querySelectorAll('.chip[data-clear]').forEach((chip, i) => {
+          chip.__clear = chips[i].clear;
+          chip.addEventListener('click', function(e) {
+            if (e.target === chip) chip.__clear();
+          });
+        });
+      }
+
+      function updateFilterCount(brands, conds, min, max) {
+        const allBrands = ['Lenovo','Dell','ASUS','Apple','HP'];
+        const allConds = ['new','refurbished'];
+        let n = 0;
+        if (brands.length < allBrands.length) n++;
+        if (conds.length < allConds.length) n++;
+        if (min > 0 || max < 3000) n++;
+        if (activeCat !== 'all') n++;
+        const fc = document.getElementById('filterCount');
+        fc.textContent = n;
+        fc.style.display = n > 0 ? '' : 'none';
+      }
+
+      function sortCards() {
+        const mode = sort.value;
+        const visible = cards.filter(c => c.style.display !== 'none');
+        visible.sort((a, b) => {
+          const pa = parseFloat(a.dataset.price);
+          const pb = parseFloat(b.dataset.price);
+          if (mode === 'price-asc') return pa - pb;
+          if (mode === 'price-desc') return pb - pa;
+          return 0;
+        });
+        visible.forEach((c, i) => { c.style.order = i; });
+      }
+
+      function applyFilters() { filter(); sortCards(); }
+
+      function setCategory(cat) {
+        activeCat = cat;
+        document.querySelectorAll('.cat-pill').forEach(p => p.classList.toggle('active', p.dataset.cat === cat));
+        applyFilters();
+      }
+
+      function resetFilters() {
+        document.querySelectorAll('.filter-brand, .filter-cond').forEach(e => e.checked = true);
+        minPrice.value = 0; maxPrice.value = 3000; search.value = '';
+        setCategory('all'); applyFilters(); closeDrawer();
+      }
+
+      function resetAll() { resetFilters(); }
+
+      function openDrawer() { document.getElementById('filterDrawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
+      function closeDrawer() { document.getElementById('filterDrawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
+
+      window.openDrawer = openDrawer;
+      window.closeDrawer = closeDrawer;
+      window.resetFilters = resetFilters;
+      window.resetAll = resetAll;
+      window.applyFilters = applyFilters;
+
+      // Category pills
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.addEventListener('click', () => setCategory(btn.dataset.cat));
+      });
+
+      search.addEventListener('input', applyFilters);
+      minPrice.addEventListener('input', applyFilters);
+      maxPrice.addEventListener('input', applyFilters);
+      sort.addEventListener('change', applyFilters);
+      document.querySelectorAll('.filter-brand, .filter-cond').forEach(el => el.addEventListener('change', applyFilters));
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== search && document.activeElement?.tagName !== 'INPUT') {
+          e.preventDefault(); search.focus();
+        }
+      });
+
+      filter();
+      sortCards();
+    })();
+
+    /* ── Compare ── */
+    let compareList = [];
+    window.toggleCompare = function(cb) {
+      const id = cb.id.replace('cmp', '');
+      const card = document.querySelector(`[data-id="${id}"]`);
+      const wrapper = cb.closest('.compare-check');
+      if (cb.checked) {
+        if (compareList.length >= 3) { cb.checked = false; alert('Máximo 3 equipos para comparar'); return; }
+        compareList.push({
+          id, name: cb.dataset.name, brand: cb.dataset.brand,
+          img: cb.dataset.img, price: cb.dataset.price
+        });
+        if (wrapper) wrapper.classList.add('selected');
+      } else {
+        compareList = compareList.filter(c => c.id !== id);
+        if (wrapper) wrapper.classList.remove('selected');
+      }
+      renderCompareBar();
+    };
+
+    function renderCompareBar() {
+      const bar = document.getElementById('compareBar');
+      const items = document.getElementById('compareItems');
+      const count = document.getElementById('compareCount');
+      count.textContent = compareList.length;
+      items.innerHTML = compareList.map(c =>
+        `<div class="compare-item">
+          <img src="${c.img}" alt="${c.name}">
+          <span class="ci-name">${c.name}</span>
+          <svg class="ci-remove" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" onclick="removeCompare('${c.id}')"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>`
+      ).join('');
+      bar.classList.toggle('visible', compareList.length > 0);
+    }
+
+    window.removeCompare = function(id) {
+      const cb = document.getElementById('cmp' + id);
+      if (cb) { cb.checked = false; cb.closest('.compare-check')?.classList.remove('selected'); }
+      compareList = compareList.filter(c => c.id !== id);
+      renderCompareBar();
+    };
+
+    window.clearCompare = function() {
+      compareList.forEach(c => {
+        const cb = document.getElementById('cmp' + c.id);
+        if (cb) { cb.checked = false; cb.closest('.compare-check')?.classList.remove('selected'); }
+      });
+      compareList = [];
+      renderCompareBar();
+    };
+
+    window.doCompare = function() {
+      if (compareList.length < 2) { alert('Seleccioná al menos 2 equipos para comparar'); return; }
+      // Open compare in new tab — simplified
+      const ids = compareList.map(c => c.id).join(',');
+      window.open(`compare.html?ids=${ids}`, '_blank');
+    };
+
+    /* ── Quick view ── */
+    const productsData = {
+      '1': { name:'ThinkPad T14s Gen 3', brand:'Lenovo', price:'$330', cond:'REFURBISHED', img:'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&h=400&fit=crop', specs:['i7-1185G7','32GB RAM','256GB SSD','14" FHD'], link:'detalle.html?id=1' },
+      '2': { name:'ROG Zephyrus G14', brand:'ASUS', price:'$1.299', cond:'NUEVO', img:'https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=600&h=400&fit=crop', specs:['Ryzen 9','RTX 4060','16GB DDR5','1TB NVMe'], link:'detalle.html?id=2' },
+      '3': { name:'MacBook Pro 14" M3 Pro', brand:'Apple', price:'$1.899', cond:'NUEVO', img:'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop', specs:['M3 Pro','18GB RAM','512GB SSD','Liquid Retina'], link:'detalle.html?id=3' },
+      '4': { name:'OptiPlex 7090 Tower', brand:'Dell', price:'$899', cond:'REFURBISHED', img:'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=600&h=400&fit=crop', specs:['i7-10700','16GB RAM','GTX 1650','512GB SSD'], link:'detalle.html?id=4' },
+      '5': { name:'Spectre x360 14', brand:'HP', price:'$749', cond:'NUEVO', img:'https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=600&h=400&fit=crop', specs:['i7-1355U','16GB LPDDR5','1TB SSD','3K2K OLED'], link:'detalle.html?id=5' },
+      '6': { name:'ThinkStation P3 Ultra', brand:'Lenovo', price:'$2.499', cond:'NUEVO', img:'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=600&h=400&fit=crop', specs:['i9-13900','RTX A4000','64GB DDR5','1TB NVMe'], link:'detalle.html?id=6' }
+    };
+
+    window.openQuickView = function(id) {
+      const d = productsData[id];
+      if (!d) return;
+      document.getElementById('qvImage').src = d.img;
+      document.getElementById('qvBrand').textContent = d.brand;
+      document.getElementById('qvName').textContent = d.name;
+      document.getElementById('qvPrice').textContent = d.price;
+      document.getElementById('qvCond').textContent = d.cond;
+      document.getElementById('qvSpecs').innerHTML = d.specs.map(s => `<span class="spec-tag">${s}</span>`).join('');
+      document.getElementById('qvLink').href = d.link;
+      document.getElementById('qvOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeQuickView = function(e) {
+      if (e && e.target !== document.getElementById('qvOverlay')) return;
+      document.getElementById('qvOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeQuickView();
+        closeDrawer();
+      }
+    });
+  </script>
+</body>
+</html>

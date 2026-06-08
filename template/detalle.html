@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="es-ES">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThinkPad T14s Gen 3 — Ficha Técnica | Mobil Tech</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/system.css">
+  <style>
+    /* ── Breadcrumb ── */
+    .breadcrumb { display: flex; align-items: center; gap: 8px; padding: 16px 24px 0; font-size: 13px; color: var(--muted); }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: var(--fg); font-weight: 500; }
+
+    /* ── Detail Layout ── */
+    .detail-wrapper { max-width: 1280px; margin: 0 auto; padding: 0 24px 64px; }
+    .detail-layout { display: grid; grid-template-columns: 1fr 440px; gap: 56px; margin-top: 24px; align-items: start; }
+
+    /* ── Gallery ── */
+    .gallery { position: sticky; top: 88px; }
+    .main-image {
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--border-light), var(--surface));
+      display: grid; place-items: center;
+      position: relative; overflow: hidden;
+      cursor: zoom-in;
+    }
+    .main-image img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.45s cubic-bezier(0.23,1,0.32,1);
+    }
+    .main-image:hover img { transform: scale(1.06); }
+    .main-image .zoom-hint {
+      position: absolute; bottom: 14px; right: 14px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 5px 10px;
+      font-size: 11px; color: var(--muted); pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .main-image:hover .zoom-hint { opacity: 0; }
+    .thumbs { display: flex; gap: 10px; margin-top: 14px; }
+    .thumb-item {
+      width: 76px; height: 76px; border-radius: var(--radius-md);
+      border: 2px solid var(--border); background: var(--surface);
+      cursor: pointer; display: grid; place-items: center;
+      transition: all 0.18s; position: relative; overflow: hidden;
+    }
+    .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+    .thumb-item.active { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .thumb-item:hover { border-color: var(--accent); }
+    .thumb-item::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--gradient-accent-subtle);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .thumb-item:hover::after { opacity: 1; }
+
+    /* ── Payment cubes ── */
+    .pay-cube { transition: all 0.2s cubic-bezier(0.23,1,0.32,1); cursor: default; }
+    .pay-cube:hover { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); transform: translateY(-2px); }
+
+    /* ── Info Column ── */
+    .info-col { position: sticky; top: 88px; }
+    .status-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    .product-title { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 8px; }
+    .product-subtitle { font-size: 15px; color: var(--muted); margin-bottom: 20px; }
+
+    .price-block {
+      background: var(--gradient-accent-subtle);
+      border: 1px solid var(--accent-glow);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 16px;
+      flex-wrap: wrap;
+    }
+    .price-big { font-family: var(--font-mono); font-size: 38px; font-weight: 700; color: var(--accent); line-height: 1; }
+    .price-info { font-size: 13px; color: var(--muted); }
+    .price-info strong { color: var(--fg); }
+
+    .stock-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--radius-pill); font-size: 13px; font-weight: 600; }
+    .stock-in { background: var(--success-glow); color: var(--success); }
+    .stock-low { background: var(--warning-glow); color: var(--warning); }
+    .stock-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .stock-in .stock-dot { background: var(--success); }
+    .stock-low .stock-dot { background: var(--warning); }
+
+    .actions-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .actions-row .btn { flex: 1; min-width: 180px; padding: 14px 20px; font-size: 15px; border-radius: 12px; }
+    .btn-whatsapp { background: #25d366; color: #fff; border-color: #25d366; }
+    .btn-whatsapp:hover { background: #1ebe57; box-shadow: 0 6px 20px rgba(37,211,102,0.3); }
+
+    /* ── Sections ── */
+    .detail-section { margin-top: 36px; }
+    .detail-section h2 {
+      font-size: 18px; font-weight: 700; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .detail-section h2 .section-icon {
+      width: 34px; height: 34px; border-radius: var(--radius-sm);
+      background: var(--accent-glow); color: var(--accent);
+      display: grid; place-items: center;
+    }
+
+    /* ── Highlights ── */
+    .highlight-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .highlight-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--surface);
+      transition: all 0.15s;
+    }
+    .highlight-card:hover { border-color: var(--accent-glow); background: var(--gradient-accent-subtle); }
+    .highlight-card .hl-icon {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      background: var(--accent-glow); color: var(--accent);
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .highlight-card .hl-text { font-size: 13px; line-height: 1.4; }
+    .highlight-card .hl-text strong { display: block; font-size: 14px; color: var(--fg); margin-bottom: 2px; }
+
+    /* ── Specs Detail Grid ── */
+    .specs-grid-detail {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .spec-item-detail {
+      display: flex; gap: 14px; align-items: center;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      transition: all 0.18s;
+    }
+    .spec-item-detail:hover {
+      border-color: var(--accent-glow);
+      box-shadow: var(--shadow-sm);
+    }
+    .spec-item-detail .spec-icon-box {
+      width: 42px; height: 42px; border-radius: var(--radius-sm);
+      background: var(--accent-glow); color: var(--accent);
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .spec-item-detail .spec-body { display: flex; flex-direction: column; gap: 3px; }
+    .spec-item-detail .spec-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .spec-item-detail .spec-value { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--fg); }
+
+    /* ── Accordion ── */
+    .accordion { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .accordion-item + .accordion-item { border-top: 1px solid var(--border-light); }
+    .accordion-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; cursor: pointer; font-weight: 600; font-size: 14px;
+      background: var(--surface); transition: background 0.12s;
+    }
+    .accordion-header:hover { background: var(--gradient-accent-subtle); }
+    .accordion-body { display: none; padding: 16px 20px; font-size: 14px; color: var(--muted); line-height: 1.65; border-top: 1px solid var(--border-light); }
+    .accordion-item.open .accordion-body { display: block; }
+    .accordion-item.open .chevron { transform: rotate(180deg); }
+    .chevron { transition: transform 0.25s cubic-bezier(0.23,1,0.32,1); flex-shrink: 0; color: var(--muted); }
+
+    /* ── Floating WhatsApp ── */
+    .floating-wa {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: #25d366; color: #fff; border: none;
+      box-shadow: 0 8px 24px rgba(37,211,102,0.35);
+      cursor: pointer; display: grid; place-items: center;
+      transition: transform 0.2s; z-index: 30;
+    }
+    .floating-wa:hover { transform: scale(1.08); }
+    .floating-wa .pulse-ring {
+      position: absolute; inset: -4px;
+      border-radius: 50%;
+      border: 2px solid rgba(37,211,102,0.4);
+      animation: wa-pulse 2s ease-out infinite;
+    }
+    @keyframes wa-pulse {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    @media (max-width: 1024px) {
+      .detail-layout { grid-template-columns: 1fr; gap: 32px; }
+      .gallery { position: static; }
+      .info-col { position: static; }
+      .product-title { font-size: 26px; }
+      .price-big { font-size: 30px; }
+      .highlight-cards { grid-template-columns: 1fr; }
+      .specs-grid-detail { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .specs-grid-detail { grid-template-columns: 1fr; }
+      .actions-row .btn { min-width: 100%; }
+      .detail-wrapper { padding: 0 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="flex items-center gap-6">
+      <a href="index.html" class="flex items-center gap-2" style="text-decoration:none;color:var(--fg);">
+        <svg width="32" height="32" viewBox="0 0 48 48" fill="none"><path d="M8 36c4-12 8-20 16-24 4 6 8 12 8 20-4 4-8 8-16 8s-12-4-8-4z" fill="var(--accent)" opacity="0.2"/><path d="M12 38c4-8 8-16 16-20 4 4 8 8 8 16-4 4-8 6-14 6s-10-2-10-2z" fill="var(--accent)"/><circle cx="18" cy="16" r="3" fill="var(--accent-2)"/><circle cx="30" cy="20" r="2" fill="var(--accent-2)"/></svg>
+        <span class="font-bold text-lg" style="letter-spacing:-0.02em;">Mobil Tech</span>
+      </a>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="admin.html" class="btn btn-secondary" style="font-size:13px;padding:8px 16px;">Panel Admin</a>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Catálogo</a>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    <a href="index.html">Laptops</a>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    <span>ThinkPad T14s Gen 3</span>
+  </div>
+
+  <div class="detail-wrapper">
+    <div class="detail-layout">
+      <!-- Gallery Column -->
+      <div class="gallery">
+        <div class="main-image" id="mainImage">
+          <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&h=600&fit=crop" alt="Lenovo ThinkPad T14s" id="mainImg">
+          <div class="zoom-hint">Pasa el cursor para ampliar</div>
+        </div>
+        <div class="thumbs">
+          <div class="thumb-item active" onclick="setImage(this, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&h=600&fit=crop')">
+            <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=200&h=150&fit=crop" alt="Vista frontal" loading="lazy">
+          </div>
+          <div class="thumb-item" onclick="setImage(this, 'https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=800&h=600&fit=crop')">
+            <img src="https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=200&h=150&fit=crop" alt="Vista lateral" loading="lazy">
+          </div>
+          <div class="thumb-item" onclick="setImage(this, 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800&h=600&fit=crop')">
+            <img src="https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=200&h=150&fit=crop" alt="Teclado" loading="lazy">
+          </div>
+          <div class="thumb-item" onclick="setImage(this, 'https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=800&h=600&fit=crop')">
+            <img src="https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=200&h=150&fit=crop" alt="Puertos" loading="lazy">
+          </div>
+        </div>
+
+        <!-- Highlights below gallery -->
+        <div class="detail-section">
+          <h2>
+            <span class="section-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </span>
+            Garantías y beneficios
+          </h2>
+          <div class="highlight-cards">
+            <div class="highlight-card">
+              <div class="hl-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+              </div>
+              <div class="hl-text">
+                <strong>90 días de garantía</strong>
+                Cobertura técnica por defectos de funcionamiento.
+              </div>
+            </div>
+            <div class="highlight-card">
+              <div class="hl-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+              <div class="hl-text">
+                <strong>Envío gratis nacional</strong>
+                Empaque anti-impacto, 2-4 días hábiles.
+              </div>
+            </div>
+            <div class="highlight-card">
+              <div class="hl-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              </div>
+              <div class="hl-text">
+                <strong>Equipo inspeccionado</strong>
+                Revisión de 32 puntos: pantalla, batería, teclado, puertos.
+              </div>
+            </div>
+            <div class="highlight-card">
+              <div class="hl-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </div>
+              <div class="hl-text">
+                <strong>Soporte por WhatsApp</strong>
+                Respuesta en menos de 24h para cualquier consulta.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Column -->
+      <div class="info-col">
+        <div class="status-row">
+          <span class="badge">REFURBISHED</span>
+          <span class="badge badge-accent">Garantía 90 días</span>
+        </div>
+
+        <h1 class="product-title">ThinkPad T14s Gen 3</h1>
+        <p class="product-subtitle">Lenovo — Laptop empresarial premium con chasis de fibra de carbono y magnesio. Ideal para profesionales que exigen potencia, portabilidad y durabilidad.</p>
+
+        <div class="price-block">
+          <div>
+            <div class="price-big">$330</div>
+            <div class="price-info">Precio válido por tiempo limitado</div>
+          </div>
+          <span class="stock-badge stock-in"><span class="stock-dot"></span> En stock — 4 unidades</span>
+        </div>
+
+        <div class="actions-row">
+          <a href="#" class="btn btn-whatsapp" style="flex:2;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar por WhatsApp
+          </a>
+        </div>
+
+        <!-- Quick Specs Summary -->
+        <div class="detail-section" style="margin-top:32px;">
+          <h2>
+            <span class="section-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/></svg>
+            </span>
+            Especificaciones técnicas
+          </h2>
+          <div class="specs-grid-detail">
+            <div class="spec-item-detail">
+              <div class="spec-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/></svg>
+              </div>
+              <div class="spec-body">
+                <span class="spec-label">Procesador</span>
+                <span class="spec-value">Intel i7-1185G7</span>
+              </div>
+            </div>
+            <div class="spec-item-detail">
+              <div class="spec-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="2" y1="6" x2="22" y2="6"/></svg>
+              </div>
+              <div class="spec-body">
+                <span class="spec-label">Memoria RAM</span>
+                <span class="spec-value">32GB DDR4</span>
+              </div>
+            </div>
+            <div class="spec-item-detail">
+              <div class="spec-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M12 6v12"/></svg>
+              </div>
+              <div class="spec-body">
+                <span class="spec-label">Almacenamiento</span>
+                <span class="spec-value">256GB NVMe SSD</span>
+              </div>
+            </div>
+            <div class="spec-item-detail">
+              <div class="spec-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="spec-body">
+                <span class="spec-label">Pantalla</span>
+                <span class="spec-value">14" FHD Táctil</span>
+              </div>
+            </div>
+            <div class="spec-item-detail">
+              <div class="spec-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="7" y1="12" x2="13" y2="12"/></svg>
+              </div>
+              <div class="spec-body">
+                <span class="spec-label">Batería</span>
+                <span class="spec-value">57Wh (~10h)</span>
+              </div>
+            </div>
+            <div class="spec-item-detail">
+              <div class="spec-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0114.08 0"/><path d="M1.42 9a16 16 0 0121.16 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1"/></svg>
+              </div>
+              <div class="spec-body">
+                <span class="spec-label">Conectividad</span>
+                <span class="spec-value">WiFi 6 / BT 5.1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion -->
+        <div class="detail-section">
+          <h2>
+            <span class="section-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </span>
+            Más información
+          </h2>
+          <div class="accordion">
+            <div class="accordion-item open">
+              <div class="accordion-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>Descripción del producto</span>
+                <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="accordion-body">
+                ThinkPad T14s Gen 3 en excelente estado (Refurbished Grado A). Diseñado para profesionales que necesitan un equipo confiable sin comprometer presupuesto. Chasis ultraligero de fibra de carbono y magnesio (1.21 kg). Procesador Intel Core i7 de 11va generación con vPro, 32GB de RAM soldada para virtualización y multitarea intensiva, y SSD NVMe de alta velocidad. Pantalla IPS Full HD táctil de 14 pulgadas con tratamiento antirreflejo. Ideal para desarrollo de software, análisis de datos, diseño y trabajo remoto.
+              </div>
+            </div>
+            <div class="accordion-item">
+              <div class="accordion-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>Estado y garantía</span>
+                <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="accordion-body">
+                Equipo Refurbished Grado A: carcasa con signos mínimos de uso, pantalla impecable sin píxeles muertos ni manchas, batería con ≥85% de capacidad original, teclado y touchpad 100% funcionales. Incluye 90 días de garantía técnica por defectos. No cubre daños físicos, líquidos o mal uso.
+              </div>
+            </div>
+            <div class="accordion-item">
+              <div class="accordion-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>Envío y entrega</span>
+                <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="accordion-body">
+                Envío gratis a todo el país por paquetería express con seguro incluido. Empaque con espuma anti-impacto de alta densidad. Tiempo de entrega estimado: 2 a 4 días hábiles. Se proporciona número de rastreo al momento del despacho.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating WhatsApp -->
+  <a href="#" class="floating-wa" aria-label="Consultar por WhatsApp" title="Consultar por WhatsApp">
+    <span class="pulse-ring"></span>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script src="js/system.js"></script>
+  <script>
+    function setImage(thumb, src) {
+      document.getElementById('mainImg').src = src;
+      document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    }
+
+    // Keyboard nav for gallery
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' && e.shiftKey) {
+        const thumbs = document.querySelectorAll('.thumb-item');
+        const active = document.querySelector('.thumb-item.active');
+        const idx = Array.from(thumbs).indexOf(active);
+        const next = thumbs[Math.min(idx + 1, thumbs.length - 1)];
+        if (next && next !== active) next.click();
+      } else if (e.key === 'ArrowLeft' && e.shiftKey) {
+        const thumbs = document.querySelectorAll('.thumb-item');
+        const active = document.querySelector('.thumb-item.active');
+        const idx = Array.from(thumbs).indexOf(active);
+        const prev = thumbs[Math.max(idx - 1, 0)];
+        if (prev && prev !== active) prev.click();
+      }
+    });
+  </script>
+</body>
+</html>
