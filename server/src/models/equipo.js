@@ -1,4 +1,5 @@
 import { query } from '../config/db.js'
+import * as imagenModel from './imagen.js'
 
 export async function findAll({ categoria, search, page = 1, limit = 12 } = {}) {
   let sql = `
@@ -50,7 +51,11 @@ export async function findById(id) {
      WHERE e.id = $1`,
     [id]
   )
-  return result.rows[0] || null
+  const equipo = result.rows[0] || null
+  if (equipo) {
+    equipo.imagenes = await imagenModel.findByEquipoId(id)
+  }
+  return equipo
 }
 
 export async function create(data) {

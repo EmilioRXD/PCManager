@@ -34,6 +34,16 @@ CREATE INDEX idx_equipos_categoria_id ON equipos(categoria_id);
 CREATE INDEX idx_equipos_marca ON equipos(marca);
 CREATE INDEX idx_equipos_precio ON equipos(precio);
 
+CREATE TABLE imagenes (
+    id SERIAL PRIMARY KEY,
+    equipo_id INTEGER NOT NULL REFERENCES equipos(id) ON DELETE CASCADE,
+    url TEXT NOT NULL,
+    orden INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX idx_imagenes_equipo_id ON imagenes(equipo_id);
+
 INSERT INTO categorias (nombre, descripcion) VALUES
     ('Laptops', 'Computadoras portátiles para oficina, estudio y hogar'),
     ('Desktops', 'Computadoras de escritorio para oficina y productividad'),
@@ -57,3 +67,41 @@ INSERT INTO equipos (marca, modelo, procesador, ram, almacenamiento, tarjeta_gra
     ('Alienware', 'Aurora R16', 'Intel Core i9-14900KF', '64 GB DDR5', '2 TB SSD + 4 TB HDD', 'NVIDIA RTX 4090 24 GB', 5499.99, 2, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=600&h=400&fit=crop', 'Desktop gaming de élite. Chasis de flujo optimizado, refrigeración líquida AlienFX.', 3),
     ('Lenovo', 'ThinkStation P3 Ultra', 'Intel Xeon W-3400', '128 GB DDR5 ECC', '4 TB SSD NVMe', 'NVIDIA RTX A6000 48 GB', 12999.99, 1, 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=600&h=400&fit=crop', 'Workstation profesional definitiva. Certificada ISV, para renderizado 3D, IA y simulaciones.', 4),
     ('HP', 'Z8 Fury G5', 'Dual Intel Xeon Gold 6430', '256 GB DDR5 ECC', '8 TB SSD NVMe RAID', 'NVIDIA RTX 6000 Ada 48 GB', 24999.99, 1, 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&h=400&fit=crop', 'La workstation más potente del mercado. Doble procesador, para deep learning y VFX profesionales.', 4);
+
+INSERT INTO imagenes (equipo_id, url, orden) VALUES
+    (1, 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&h=600&fit=crop', 1),
+    (1, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800&h=600&fit=crop', 2),
+    (1, 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800&h=600&fit=crop', 3),
+    (2, 'https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=800&h=600&fit=crop', 1),
+    (2, 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&h=600&fit=crop', 2),
+    (2, 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800&h=600&fit=crop', 3),
+    (3, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&h=600&fit=crop', 1),
+    (3, 'https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=800&h=600&fit=crop', 2),
+    (3, 'https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=800&h=600&fit=crop', 3),
+    (4, 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=600&fit=crop', 1),
+    (4, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&h=600&fit=crop', 2),
+    (4, 'https://images.unsplash.com/photo-1544731612-de7f96afe55f?w=800&h=600&fit=crop', 3),
+    (5, 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', 1),
+    (5, 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=600&fit=crop', 2),
+    (5, 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&h=600&fit=crop', 3),
+    (6, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800&h=600&fit=crop', 1),
+    (6, 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', 2),
+    (6, 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&h=600&fit=crop', 3),
+    (7, 'https://images.unsplash.com/photo-1586210579191-33b45e38fa2c?w=800&h=600&fit=crop', 1),
+    (7, 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', 2),
+    (7, 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&h=600&fit=crop', 3),
+    (8, 'https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=800&h=600&fit=crop', 1),
+    (8, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&h=600&fit=crop', 2),
+    (8, 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=600&fit=crop', 3),
+    (9, 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800&h=600&fit=crop', 1),
+    (9, 'https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=800&h=600&fit=crop', 2),
+    (9, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&h=600&fit=crop', 3),
+    (10, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800&h=600&fit=crop', 1),
+    (10, 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=800&h=600&fit=crop', 2),
+    (10, 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&h=600&fit=crop', 3),
+    (11, 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&h=600&fit=crop', 1),
+    (11, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&h=600&fit=crop', 2),
+    (11, 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=600&fit=crop', 3),
+    (12, 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&h=600&fit=crop', 1),
+    (12, 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=600&fit=crop', 2),
+    (12, 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&h=600&fit=crop', 3);

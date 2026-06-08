@@ -1,7 +1,7 @@
 <template>
   <div class="gallery">
     <div class="main-image" @mousemove="onMouseMove" @mouseleave="zoomed = false">
-      <img :src="currentImage" :alt="alt" id="mainImg" :style="imgTransform" />
+      <img :src="currentImage" :alt="alt" :style="imgTransform" />
       <div class="zoom-hint">Pasa el cursor para ampliar</div>
     </div>
     <div v-if="images.length > 1" class="thumbs">
@@ -11,7 +11,7 @@
         :class="['thumb-item', { active: currentIdx === idx }]"
         @click="setImage(idx)"
       >
-        <img :src="img" alt="" loading="lazy" />
+        <img :src="img.url || img" :alt="'Vista ' + (idx + 1)" loading="lazy" />
       </div>
     </div>
   </div>
@@ -30,7 +30,11 @@ const zoomed = ref(false)
 const mouseX = ref(0)
 const mouseY = ref(0)
 
-const currentImage = computed(() => props.images[currentIdx.value] || props.images[0] || 'https://placehold.co/800x600/e8effe/0052ff?text=PCManager')
+const currentImage = computed(() => {
+  const first = props.images[0]
+  if (!first) return 'https://placehold.co/800x600/e8effe/0052ff?text=PCManager'
+  return first.url || first
+})
 
 const imgTransform = computed(() => {
   if (!zoomed.value) return {}

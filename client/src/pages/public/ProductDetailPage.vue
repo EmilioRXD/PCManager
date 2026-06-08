@@ -118,8 +118,9 @@ const openAccordion = ref(0)
 
 const galleryImages = computed(() => {
   if (!equipo.value) return []
-  const img = equipo.value.imagen_url || 'https://placehold.co/800x600/e8effe/0052ff?text=PCManager'
-  return [img]
+  return equipo.value.imagenes?.length
+    ? equipo.value.imagenes
+    : [{ url: equipo.value.imagen_url || 'https://placehold.co/800x600/e8effe/0052ff?text=PCManager' }]
 })
 
 const specsList = computed(() => {
