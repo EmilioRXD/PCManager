@@ -3,35 +3,61 @@
     <div class="drawer-overlay" :class="{ open }" @click="close" />
     <aside class="filter-drawer" :class="{ open }">
       <div class="drawer-header">
-        <h3>Filtros</h3>
-        <button class="btn-ghost" style="padding:6px;" @click="close">
-          <AppIcon name="close" size="20px" />
+        <div class="dh-left">
+          <AppIcon name="filter_list" size="18px" class="dh-icon" />
+          <h3>Filtros</h3>
+        </div>
+        <button class="btn-ghost dh-close" @click="close">
+          <AppIcon name="close" size="18px" />
         </button>
       </div>
+
       <div class="drawer-body">
         <div class="filter-block">
-          <div class="filter-block-title">Marca</div>
-          <label v-for="brand in brands" :key="brand" class="filter-option">
-            <input type="checkbox" :value="brand" :checked="activeBrands.includes(brand)" @change="toggleBrand(brand)" />
-            {{ brand }}
-          </label>
-        </div>
-        <div class="filter-block">
-          <div class="filter-block-title">Rango de precio</div>
-          <div class="price-range-wrap">
-            <input class="input" type="number" :value="minPrice" @input="$emit('update:minPrice', $event.target.value)" placeholder="0" />
-            <span>—</span>
-            <input class="input" type="number" :value="maxPrice" @input="$emit('update:maxPrice', $event.target.value)" placeholder="3000" />
+          <div class="filter-block-title">
+            <AppIcon name="branding_watermark" size="14px" />
+            Marca
+          </div>
+          <div class="brand-options">
+            <label v-for="brand in brands" :key="brand" :class="['brand-chip', { active: activeBrands.includes(brand) }]">
+              <input type="checkbox" :value="brand" :checked="activeBrands.includes(brand)" @change="toggleBrand(brand)" />
+              {{ brand }}
+            </label>
           </div>
         </div>
+
         <div class="filter-block">
-          <div class="filter-block-title">Condición</div>
-          <label v-for="opt in conditionOptions" :key="opt.value" class="filter-option">
-            <input type="checkbox" :value="opt.value" :checked="activeConditions.includes(opt.value)" @change="toggleCondition(opt.value)" />
-            {{ opt.label }}
-          </label>
+          <div class="filter-block-title">
+            <AppIcon name="monetization_on" size="14px" />
+            Rango de precio
+          </div>
+          <div class="price-range-wrap">
+            <div class="price-field">
+              <span class="price-currency">$</span>
+              <input class="input price-input" type="number" :value="minPrice" @input="$emit('update:minPrice', $event.target.value)" placeholder="0" min="0" />
+            </div>
+            <span class="price-sep">—</span>
+            <div class="price-field">
+              <span class="price-currency">$</span>
+              <input class="input price-input" type="number" :value="maxPrice" @input="$emit('update:maxPrice', $event.target.value)" placeholder="3000" min="0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <div class="filter-block-title">
+            <AppIcon name="verified" size="14px" />
+            Condición
+          </div>
+          <div class="brand-options">
+            <label v-for="opt in conditionOptions" :key="opt.value" :class="['brand-chip', { active: activeConditions.includes(opt.value) }]">
+              <input type="checkbox" :value="opt.value" :checked="activeConditions.includes(opt.value)" @change="toggleCondition(opt.value)" />
+              {{ opt.label }}
+            </label>
+          </div>
         </div>
       </div>
+
       <div class="drawer-footer">
         <button class="btn btn-secondary" @click="resetAll">Limpiar todo</button>
         <button class="btn btn-primary" @click="apply">Aplicar filtros</button>
@@ -72,41 +98,80 @@ function toggleCondition(cond) { emit('toggleCondition', cond) }
   opacity: 0; pointer-events: none; transition: opacity 0.3s;
 }
 .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
 .filter-drawer {
-  position: fixed; top: 0; right: 0; width: 380px; max-width: 100vw; height: 100vh;
+  position: fixed; top: 0; right: 0; width: 420px; max-width: 100vw; height: 100vh;
   background: var(--surface); z-index: 95; overflow-y: auto;
   transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.23,1,0.32,1);
-  box-shadow: var(--shadow-lg); display: flex; flex-direction: column;
+  box-shadow: -8px 0 32px rgba(0,0,0,0.08); display: flex; flex-direction: column;
 }
 .filter-drawer.open { transform: translateX(0); }
+
 .drawer-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 24px; border-bottom: 1px solid var(--border);
+  padding: 20px 28px; border-bottom: 1px solid var(--border-light);
   position: sticky; top: 0; background: var(--surface); z-index: 2;
 }
-.drawer-header h3 { font-size: 18px; font-weight: 700; margin: 0; }
-.drawer-body { flex: 1; padding: 24px; }
-.filter-block { margin-bottom: 32px; }
+.dh-left { display: flex; align-items: center; gap: 10px; }
+.dh-icon { color: var(--accent); }
+.drawer-header h3 { font-size: 17px; font-weight: 700; margin: 0; color: var(--fg); }
+.dh-close { padding: 6px; color: var(--muted); }
+
+.drawer-body { flex: 1; padding: 28px; }
+.filter-block { margin-bottom: 36px; }
+.filter-block:last-child { margin-bottom: 0; }
 .filter-block-title {
-  font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.09em;
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em;
   color: var(--muted); margin-bottom: 14px; font-weight: 700;
+  display: flex; align-items: center; gap: 7px;
 }
-.filter-option {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 14px; border-radius: var(--radius-sm);
-  font-size: 14px; cursor: pointer; transition: all 0.12s;
+
+.brand-options {
+  display: flex; flex-wrap: wrap; gap: 8px;
 }
-.filter-option:hover { background: var(--border-light); }
-.filter-option input[type="checkbox"] {
-  width: 18px; height: 18px; accent-color: var(--accent); flex-shrink: 0;
+.brand-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: 13px; font-weight: 600; color: var(--fg); cursor: pointer;
+  transition: all 0.15s; font-family: var(--font-display);
+  user-select: none;
 }
-.price-range-wrap { display: flex; gap: 12px; align-items: center; }
-.price-range-wrap input { flex: 1; font-family: var(--font-mono); }
-.price-range-wrap span { color: var(--muted); font-size: 13px; }
+.brand-chip:hover { border-color: var(--accent); color: var(--accent); }
+.brand-chip.active {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+.brand-chip input { display: none; }
+
+.price-range-wrap {
+  display: flex; gap: 10px; align-items: center;
+}
+.price-field {
+  flex: 1; display: flex; align-items: center;
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.price-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.price-currency {
+  padding: 0 0 0 14px; font-size: 15px; color: var(--muted);
+  font-family: var(--font-mono); font-weight: 500;
+}
+.price-input {
+  flex: 1; border: none; padding: 10px 14px 10px 6px;
+  font-family: var(--font-mono); font-size: 14px; color: var(--fg);
+  background: transparent;
+}
+.price-input:focus { outline: none; box-shadow: none; }
+.price-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.price-input[type=number] { -moz-appearance: textfield; }
+.price-sep { color: var(--muted); font-size: 14px; }
+
 .drawer-footer {
-  padding: 20px 24px; border-top: 1px solid var(--border);
+  padding: 20px 28px; border-top: 1px solid var(--border);
   display: flex; gap: 10px; position: sticky; bottom: 0; background: var(--surface);
 }
 .drawer-footer .btn { flex: 1; }
+
 @media (max-width: 640px) { .filter-drawer { width: 100%; } }
 </style>
