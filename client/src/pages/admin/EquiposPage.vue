@@ -83,7 +83,7 @@
           <tr v-for="row in pagedRows" :key="row.id">
             <td>
               <div class="table-product-cell">
-                <img class="thumb-table" :src="row.imagen_url || 'https://placehold.co/80x80/eceaff/261d90?text=PC'" alt="" loading="lazy" />
+                <img class="thumb-table" :src="row.imagen_url || 'https://placehold.co/80x80/e8effe/0052ff?text=PC'" alt="" loading="lazy" />
                 <div>
                   <div class="product-name-cell">{{ row.modelo }}</div>
                   <div class="product-meta-cell">{{ row.marca }} · {{ row.procesador }}</div>

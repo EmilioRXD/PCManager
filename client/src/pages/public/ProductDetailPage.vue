@@ -123,7 +123,7 @@ const galleryImages = computed(() => {
   if (!equipo.value) return []
   return equipo.value.imagenes?.length
     ? equipo.value.imagenes
-    : [{ url: equipo.value.imagen_url || 'https://placehold.co/800x600/eceaff/261d90?text=PCManager' }]
+    : [{ url: equipo.value.imagen_url || 'https://placehold.co/800x600/e8effe/0052ff?text=PCManager' }]
 })
 
 const specsList = computed(() => {

@@ -83,7 +83,7 @@ const thumbsRef = ref(null)
 
 const currentImage = computed(() => {
   const img = props.images[currentIdx.value]
-  if (!img) return 'https://placehold.co/800x600/eceaff/261d90?text=PCManager'
+  if (!img) return 'https://placehold.co/800x600/e8effe/0052ff?text=PCManager'
   return img.url || img
 })
 

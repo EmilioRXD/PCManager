@@ -55,7 +55,7 @@ const emit = defineEmits(['quickView', 'toggleCompare'])
 const isCompared = computed(() => props.compared)
 
 const imgSrc = computed(() =>
-  props.equipo.imagen_url || 'https://placehold.co/600x400/eceaff/261d90?text=PCManager'
+  props.equipo.imagen_url || 'https://placehold.co/600x400/e8effe/0052ff?text=PCManager'
 )
 
 const brandClass = computed(() => {
@@ -84,7 +84,7 @@ function toggleCompare() {
 }
 .product-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 0 1px rgba(38,29,144,0.10), 0 16px 48px rgba(38,29,144,0.06);
+  box-shadow: 0 0 0 1px rgba(0,82,255,0.10), 0 16px 48px rgba(0,82,255,0.06);
 }
 
 .card-media {
@@ -97,7 +97,7 @@ function toggleCompare() {
   content: '';
   position: absolute; bottom: -10%; left: 50%; transform: translateX(-50%);
   width: 80%; height: 50%;
-  background: radial-gradient(ellipse at center, rgba(38,29,144,0.03), transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(0,82,255,0.025), transparent 70%);
   pointer-events: none;
 }
 .card-media img {
@@ -126,7 +126,7 @@ function toggleCompare() {
   content: '+'; font-size: 18px; font-weight: 400;
   color: var(--muted-light); line-height: 1;
 }
-.compare-check label:hover { border-color: var(--accent); background: rgba(38,29,144,0.06); }
+.compare-check label:hover { border-color: var(--accent); background: rgba(0,82,255,0.04); }
 .compare-check input:checked + label {
   background: var(--accent); border-color: var(--accent);
 }
@@ -185,9 +185,9 @@ function toggleCompare() {
   transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
 .product-card:hover .spec-tag {
-  border-color: rgba(38,29,144,0.14);
+  border-color: rgba(0,82,255,0.14);
   color: var(--accent);
-  background: rgba(38,29,144,0.03);
+  background: rgba(0,82,255,0.025);
 }
 
 .card-footer {

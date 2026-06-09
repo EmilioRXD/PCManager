@@ -53,7 +53,7 @@ const emit = defineEmits(['close'])
 const router = useRouter()
 
 const imgSrc = computed(() =>
-  props.equipo?.imagen_url || 'https://placehold.co/600x400/eceaff/261d90?text=PCManager'
+  props.equipo?.imagen_url || 'https://placehold.co/600x400/e8effe/0052ff?text=PCManager'
 )
 
 const brandClass = computed(() => {

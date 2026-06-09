@@ -91,7 +91,7 @@ async function handleLogin() {
   content: '';
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 600px 400px at 50% 30%, rgba(38,29,144,0.05), transparent),
+    radial-gradient(ellipse 600px 400px at 50% 30%, rgba(0,82,255,0.05), transparent),
     radial-gradient(ellipse 400px 300px at 80% 70%, rgba(0,198,255,0.04), transparent);
 }
 .login-card {
