@@ -67,7 +67,7 @@ const brandClass = computed(() => {
 })
 
 function formatPrice(val) {
-  return Number(val).toLocaleString('es-MX', { minimumFractionDigits: 2 })
+  return Number(val).toLocaleString('en-US', { minimumFractionDigits: 2 })
 }
 
 function toggleCompare() {
@@ -183,9 +183,9 @@ function toggleCompare() {
   font-family: var(--font-mono);
 }
 .price-label {
-  font-size: 10px; font-weight: 700;
+  font-size: 10px; font-weight: 800;
   text-transform: uppercase; letter-spacing: 0.06em;
-  opacity: 0.85; line-height: 1;
+  line-height: 1;
 }
 .price-value {
   font-size: 18px; font-weight: 700; line-height: 1;
