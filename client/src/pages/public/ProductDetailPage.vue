@@ -1,14 +1,5 @@
 <template>
   <div v-if="equipo">
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-      <router-link to="/">Catálogo</router-link>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      <router-link :to="{ name: 'catalog', query: { categoria: equipo.categoria_id } }">{{ equipo.categoria_nombre }}</router-link>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      <span>{{ equipo.modelo }}</span>
-    </div>
-
     <div class="detail-wrapper">
       <div class="detail-layout">
         <!-- Gallery Column -->
@@ -105,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useEquiposStore } from '../../stores/equipos'
 import ImageGallery from '../../components/ImageGallery.vue'
@@ -167,26 +158,24 @@ function formatPrice(val) {
   return Number(val).toLocaleString('es-MX', { minimumFractionDigits: 2 })
 }
 
-onMounted(async () => {
-  try {
-    equipo.value = await store.fetchEquipo(route.params.id)
-  } catch {
+watch(
+  () => route.params.id,
+  async (id) => {
+    loading.value = true
     equipo.value = null
-  } finally {
-    loading.value = false
-  }
-})
+    try {
+      equipo.value = await store.fetchEquipo(id)
+    } catch {
+      equipo.value = null
+    } finally {
+      loading.value = false
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>
-.breadcrumb {
-  display: flex; align-items: center; gap: 8px;
-  padding: 16px 24px 0; font-size: 13px; color: var(--muted);
-}
-.breadcrumb a { color: var(--muted); text-decoration: none; }
-.breadcrumb a:hover { color: var(--accent); }
-.breadcrumb span { color: var(--fg); font-weight: 500; }
-
 .detail-wrapper { max-width: 1280px; margin: 0 auto; padding: 0 24px 64px; }
 .detail-layout { display: grid; grid-template-columns: 1fr 440px; gap: 56px; margin-top: 24px; align-items: start; }
 .gallery-col { position: sticky; top: 88px; }
