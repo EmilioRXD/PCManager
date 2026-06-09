@@ -10,7 +10,7 @@
         </div>
         <div class="qv-info">
           <div>
-            <span class="badge badge-accent">{{ equipo?.categoria_nombre }}</span>
+            <span class="badge badge-cat">{{ equipo?.categoria_nombre }}</span>
             <span v-if="equipo?.condicion" :class="['badge', equipo.condicion === 'refurbished' ? 'badge-warning' : 'badge-success']" style="margin-left:6px;">
               {{ equipo.condicion === 'refurbished' ? 'Refurbished' : 'Nuevo' }}
             </span>
@@ -95,10 +95,9 @@ function goToDetail() {
 }
 .qv-overlay.open .qv-modal { transform: translateY(0); }
 .qv-modal .qv-image {
-  display: grid; place-items: center; padding: 40px;
-  background: var(--border-light); position: relative;
+  position: relative; overflow: hidden;
 }
-.qv-modal .qv-image img { width: 100%; max-height: 380px; object-fit: contain; }
+.qv-modal .qv-image img { width: 100%; height: 100%; object-fit: cover; }
 .qv-modal .qv-info { padding: 40px 32px; display: flex; flex-direction: column; gap: 14px; }
 .qv-modal .qv-close {
   position: absolute; top: 16px; right: 16px;
@@ -117,9 +116,11 @@ function goToDetail() {
   color: var(--fg-secondary); letter-spacing: -0.01em;
 }
 
+.badge-cat { background: var(--accent-dark-glow); color: var(--accent-dark); border-color: var(--accent-dark); }
+
 @media (max-width: 1024px) {
   .qv-modal { grid-template-columns: 1fr; max-height: 90vh; }
-  .qv-modal .qv-image { padding: 24px; }
+  .qv-modal .qv-image { max-height: 300px; }
   .qv-modal .qv-info { padding: 20px 24px 32px; }
 }
 </style>
