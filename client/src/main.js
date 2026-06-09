@@ -16,7 +16,7 @@ app.use(router)
 app.use(Quasar, {
   plugins: { Notify, Dialog, Loading },
   config: {
-    brand: { primary: '#0052ff' },
+    brand: { primary: '#261d90' },
     notify: { position: 'top-right', timeout: 3000 },
   },
 })

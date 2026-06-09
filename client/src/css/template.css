@@ -14,10 +14,10 @@
   --muted-light: #94a3b8;
   --border: #e2e8f0;
   --border-light: #f1f5f9;
-  --accent: #0052ff;
-  --accent-glow: rgba(0, 82, 255, 0.12);
-  --accent-glow-strong: rgba(0, 82, 255, 0.20);
-  --accent-hover: #0043d1;
+  --accent: #261d90;
+  --accent-glow: rgba(38, 29, 144, 0.12);
+  --accent-glow-strong: rgba(38, 29, 144, 0.20);
+  --accent-hover: #1e1773;
   --accent-2: #00c6ff;
   --accent-2-glow: rgba(0, 198, 255, 0.10);
   --success: #22c55e;
@@ -27,8 +27,8 @@
   --danger: #ef4444;
   --danger-glow: rgba(239, 68, 68, 0.10);
   --gradient-hero: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 25%, #f8fafc 50%, #eef2ff 75%, #f0f4ff 100%);
-  --gradient-accent: linear-gradient(135deg, #0052ff, #3b82f6);
-  --gradient-accent-subtle: linear-gradient(135deg, rgba(0,82,255,0.06), rgba(0,198,255,0.04));
+  --gradient-accent: linear-gradient(135deg, #261d90, #4f46e5);
+  --gradient-accent-subtle: linear-gradient(135deg, rgba(38,29,144,0.06), rgba(79,70,229,0.04));
   --font-display: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
   --font-body: 'Inter', 'Roboto', 'SF Pro Text', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
@@ -39,8 +39,8 @@
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
   --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
-  --shadow-glow: 0 8px 32px rgba(0,82,255,0.10);
-  --shadow-glow-lg: 0 16px 48px rgba(0,82,255,0.12);
+  --shadow-glow: 0 8px 32px rgba(38,29,144,0.10);
+  --shadow-glow-lg: 0 16px 48px rgba(38,29,144,0.12);
 }
 
 
@@ -166,7 +166,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   letter-spacing: 0.02em;
   border: 1px solid var(--border);
-  background: rgba(0, 82, 255, 0.05);
+  background: rgba(38, 29, 144, 0.05);
   color: var(--accent);
   transition: all 0.15s;
 }
@@ -331,9 +331,9 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 20% 50%, rgba(0,82,255,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 20% 50%, rgba(38,29,144,0.05) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(0,198,255,0.03) 0%, transparent 40%),
-    radial-gradient(circle at 50% 80%, rgba(0,82,255,0.02) 0%, transparent 30%);
+    radial-gradient(circle at 50% 80%, rgba(38,29,144,0.02) 0%, transparent 30%);
   z-index: -1;
 }
 .hero-title { font-size: 42px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }

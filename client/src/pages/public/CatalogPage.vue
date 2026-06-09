@@ -106,7 +106,7 @@
     <div class="compare-bar" :class="{ visible: compareList.length > 0 }">
       <div class="compare-items">
         <div v-for="item in compareList" :key="item.id" class="compare-item">
-          <img :src="item.imagen_url || 'https://placehold.co/60x60/e8effe/0052ff?text=PC'" alt="" />
+          <img :src="item.imagen_url || 'https://placehold.co/60x60/eceaff/261d90?text=PC'" alt="" />
           <div class="ci-name">{{ item.marca }} {{ item.modelo }}</div>
           <AppIcon name="close" size="14px" class="ci-remove" @click="removeCompare(item)" />
         </div>
@@ -300,13 +300,13 @@ onMounted(async () => {
 .catalog-hero::before {
   content: ''; position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 600px 400px at 80% 30%, rgba(0,82,255,0.06), transparent),
+    radial-gradient(ellipse 600px 400px at 80% 30%, rgba(38,29,144,0.06), transparent),
     radial-gradient(ellipse 400px 300px at 20% 80%, rgba(0,198,255,0.05), transparent);
 }
 .catalog-hero .dots {
   position: absolute; right: -20px; top: -20px;
   width: 500px; height: 500px;
-  background-image: radial-gradient(circle, rgba(0,82,255,0.08) 1.8px, transparent 1.8px);
+  background-image: radial-gradient(circle, rgba(38,29,144,0.08) 1.8px, transparent 1.8px);
   background-size: 34px 34px;
   pointer-events: none;
 }
@@ -314,7 +314,7 @@ onMounted(async () => {
 .hero-kicker {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 16px; border-radius: 99px;
-  background: rgba(0,82,255,0.08); color: var(--accent);
+  background: rgba(38,29,144,0.08); color: var(--accent);
   font-size: 13px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 20px;
 }
 .hero-kicker .dot {
