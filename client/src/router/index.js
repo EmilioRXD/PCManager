@@ -16,6 +16,11 @@ const routes = [
         name: 'product-detail',
         component: () => import('../pages/public/ProductDetailPage.vue'),
       },
+      {
+        path: 'buscar',
+        name: 'search',
+        component: () => import('../pages/public/SearchResultsPage.vue'),
+      },
     ],
   },
   {

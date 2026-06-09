@@ -12,19 +12,11 @@
           <span class="font-bold text-lg brand-name">PCManager</span>
         </router-link>
       </div>
-      <div class="header-search">
-        <div class="search-wrap">
-          <AppIcon name="search" size="18px" class="search-icon" color="grey-6" />
-          <input
-            class="input"
-            v-model="searchQuery"
-            placeholder="Buscar equipos..."
-            type="text"
-            autocomplete="off"
-            @keyup.enter="doSearch"
-            @input="debouncedSearch"
-          />
-        </div>
+      <div class="flex items-center gap-2">
+        <button class="btn-search-icon" @click="searchOpen = true" aria-label="Buscar">
+          <AppIcon name="search" size="20px" />
+        </button>
+        <SearchOverlay :open="searchOpen" @close="searchOpen = false" />
       </div>
     </header>
 
@@ -55,36 +47,22 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import SearchOverlay from '../components/SearchOverlay.vue'
 
-const router = useRouter()
-const searchQuery = ref('')
-let debounceTimer = null
-
-function doSearch() {
-  if (searchQuery.value.trim()) {
-    router.push({ name: 'catalog', query: { search: searchQuery.value } })
-  }
-}
-
-function debouncedSearch() {
-  clearTimeout(debounceTimer)
-  debounceTimer = setTimeout(() => {
-    if (searchQuery.value.trim().length >= 2) {
-      doSearch()
-    }
-  }, 400)
-}
+const searchOpen = ref(false)
 </script>
 
 <style scoped>
 .brand-link { text-decoration: none; color: var(--fg); }
 .brand-name { font-weight: 700; font-size: 16px; letter-spacing: -0.02em; }
-.header-search { flex: 1; max-width: 480px; margin: 0 32px; position: relative; }
-.search-wrap { position: relative; }
-.search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); z-index: 1; }
-.header-search .input { padding-left: 42px; }
-.header-btn { font-size: 13px; padding: 8px 16px; text-decoration: none; color: var(--fg); display: inline-flex; align-items: center; }
+.btn-search-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--muted); cursor: pointer;
+  display: grid; place-items: center;
+  transition: all 0.15s;
+}
+.btn-search-icon:hover { border-color: var(--accent); color: var(--accent); }
 
 .trust-stripe {
   display: flex; align-items: center; justify-content: center; gap: 48px;
@@ -98,10 +76,6 @@ function debouncedSearch() {
 }
 .trust-item strong { display: block; color: var(--fg); font-size: 14px; }
 
-@media (max-width: 1024px) {
-  .header-search { margin: 0 16px; }
-  .trust-stripe { gap: 24px; }
-}
 @media (max-width: 640px) {
   .trust-stripe { flex-direction: column; align-items: flex-start; gap: 16px; }
 }
