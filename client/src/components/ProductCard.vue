@@ -60,7 +60,7 @@
         <span class="spec-tag">{{ equipo.almacenamiento }}</span>
         <span v-if="equipo.pantalla" class="spec-tag">{{ equipo.pantalla }}</span>
         <span v-if="equipo.tactil" class="spec-tag">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px;"><path d="M6 18L9.5 14.5M9.5 14.5L13 18M9.5 14.5V4M9.5 14.5L16.5 11.5M16.5 11.5L20 16M16.5 11.5L9.5 14.5"/></svg>
+          <AppIcon name="touch_app" size="13px" style="margin-right:2px;" />
           Táctil
         </span>
       </div>
