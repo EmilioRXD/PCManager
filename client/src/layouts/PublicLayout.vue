@@ -26,9 +26,6 @@
           />
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <router-link to="/admin/login" class="btn btn-secondary header-btn">Panel Admin</router-link>
-      </div>
     </header>
 
     <q-page-container>
