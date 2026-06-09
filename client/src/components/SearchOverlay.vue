@@ -10,13 +10,13 @@
             v-model="query"
             placeholder="Buscar equipos..."
             autocomplete="off"
-            @input="onInput"
             @keydown.enter="goToSearchPage"
           />
           <button class="search-close" @click="close" aria-label="Cerrar">✕</button>
         </div>
         <div class="search-results" v-if="query.trim().length >= 2">
-          <div v-if="results.length === 0" class="search-empty">
+          <div v-if="searching" class="search-searching">Buscando...</div>
+          <div v-else-if="results.length === 0" class="search-empty">
             <AppIcon name="search_off" size="40px" />
             <p>Sin resultados para "<strong>{{ query }}</strong>"</p>
           </div>
@@ -49,9 +49,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { useEquiposStore } from '../stores/equipos'
+import { getEquipos } from '../api/equipos'
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -60,18 +60,41 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 
 const router = useRouter()
-const store = useEquiposStore()
 const searchInput = ref(null)
 const query = ref('')
-const results = computed(() => {
-  if (query.value.trim().length < 2) return []
-  const q = query.value.toLowerCase()
-  return store.equipos.filter((e) =>
-    `${e.marca} ${e.modelo} ${e.procesador || ''} ${e.descripcion || ''}`.toLowerCase().includes(q)
-  )
-})
+const results = ref([])
+const searching = ref(false)
 
-function onInput() {}
+let debounceTimer = null
+let abortController = null
+
+async function doSearch() {
+  const q = query.value.trim()
+  if (q.length < 2) {
+    results.value = []
+    return
+  }
+
+  if (abortController) abortController.abort()
+  abortController = new AbortController()
+
+  searching.value = true
+  try {
+    const { data } = await getEquipos({ search: q, limit: 8, signal: abortController.signal })
+    results.value = data.data || []
+  } catch (err) {
+    if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+      results.value = []
+    }
+  } finally {
+    searching.value = false
+  }
+}
+
+watch(query, () => {
+  clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(doSearch, 300)
+})
 
 function goToSearchPage() {
   if (query.value.trim()) {
@@ -92,6 +115,7 @@ function close() {
 watch(() => props.open, (val) => {
   if (val) {
     query.value = ''
+    results.value = []
     nextTick(() => searchInput.value?.focus())
     document.body.style.overflow = 'hidden'
   } else {
@@ -166,6 +190,11 @@ watch(() => props.open, (val) => {
   margin-top: 6px; opacity: 0.8;
 }
 .search-result-item:hover .sr-link { opacity: 1; }
+
+.search-searching {
+  text-align: center; padding: 20px;
+  color: var(--muted); font-size: 14px;
+}
 
 .search-empty {
   text-align: center; padding: 40px 20px;

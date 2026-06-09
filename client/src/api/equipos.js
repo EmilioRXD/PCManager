@@ -1,7 +1,8 @@
 import api from './index'
 
 export function getEquipos(params = {}) {
-  return api.get('/equipos', { params })
+  const { signal, ...rest } = params
+  return api.get('/equipos', { params: rest, signal })
 }
 
 export function getEquipo(id) {

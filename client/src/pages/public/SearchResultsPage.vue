@@ -8,67 +8,235 @@
           v-model="query"
           placeholder="Buscar equipos..."
           autocomplete="off"
-          @keydown.enter="doSearch"
+          @keydown.enter="newSearch"
         />
-        <button v-if="query" class="sp-clear" @click="query = ''; doSearch()">✕</button>
+        <button v-if="query" class="sp-clear" @click="query = ''; newSearch()">✕</button>
       </div>
     </div>
 
-    <div class="sp-body" v-if="query">
-      <p class="sp-count">{{ results.length }} resultado{{ results.length !== 1 ? 's' : '' }} para "<strong>{{ query }}</strong>"</p>
+    <div class="sp-body" v-if="query && !initialLoad">
+      <p class="sp-count">{{ searchTotal }} resultado{{ searchTotal !== 1 ? 's' : '' }} para "<strong>{{ query }}</strong>"</p>
 
-      <div v-if="results.length === 0" class="sp-empty-state">
+      <div v-if="searchTotal === 0" class="sp-empty">
         <AppIcon name="search_off" size="56px" />
         <h3>Sin resultados</h3>
-        <p>No encontramos equipos con ese término. Probá con otra búsqueda.</p>
+        <p>No encontramos equipos. Probá con otra búsqueda.</p>
       </div>
 
-      <div v-else class="sp-grid">
-        <ProductCard
-          v-for="equipo in results"
-          :key="equipo.id"
-          :equipo="equipo"
-          :compared="false"
-        />
+      <template v-else>
+        <div class="sp-grid">
+          <ProductCard
+            v-for="equipo in searchResults"
+            :key="'s-' + equipo.id"
+            :equipo="equipo"
+            :compared="false"
+          />
+        </div>
+
+        <div v-if="!searchExhausted" ref="searchSentinel" class="sentinel" />
+
+        <div v-if="searchExhausted" class="sp-divider">
+          <span>No hay más resultados para "{{ query }}"</span>
+        </div>
+
+        <div v-if="searchExhausted" class="sp-grid">
+          <ProductCard
+            v-for="equipo in allResults"
+            :key="'a-' + equipo.id"
+            :equipo="equipo"
+            :compared="false"
+          />
+        </div>
+
+        <div v-if="searchExhausted && !allExhausted" ref="allSentinel" class="sentinel" />
+
+        <div v-if="fetchingMore" class="sp-grid">
+          <div v-for="n in 6" :key="'sk-' + n" class="skeleton-card">
+            <div class="sk-img" />
+            <div class="sk-body">
+              <div class="sk-line sk-short" />
+              <div class="sk-line" />
+              <div class="sk-line sk-long" />
+              <div class="sk-line sk-short" />
+            </div>
+          </div>
+        </div>
+
+        <div v-if="allExhausted" class="sp-divider">
+          <span>Has visto todos los equipos disponibles</span>
+        </div>
+      </template>
+    </div>
+
+    <div v-else-if="initialLoad && query" class="sp-grid">
+      <div v-for="n in 12" :key="'isk-' + n" class="skeleton-card">
+        <div class="sk-img" />
+        <div class="sk-body">
+          <div class="sk-line sk-short" />
+          <div class="sk-line" />
+          <div class="sk-line sk-long" />
+          <div class="sk-line sk-short" />
+        </div>
       </div>
     </div>
 
-    <div class="sp-body sp-empty-state" v-else>
+    <div class="sp-body sp-empty" v-else>
       <AppIcon name="search" size="56px" />
       <h3>Buscá equipos</h3>
-      <p>Escribí en el campo de arriba para encontrar laptops, desktops y workstations.</p>
+      <p>Escribí para encontrar laptops, desktops y workstations.</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useEquiposStore } from '../../stores/equipos'
+import { getEquipos } from '../../api/equipos'
 import ProductCard from '../../components/ProductCard.vue'
 
 const route = useRoute()
 const router = useRouter()
-const store = useEquiposStore()
 
 const query = ref('')
+const searchResults = ref([])
+const allResults = ref([])
+const searchTotal = ref(0)
+const searchPage = ref(1)
+const allPage = ref(0)
+const searching = ref(false)
+const fetchingMore = ref(false)
+const searchExhausted = ref(false)
+const allExhausted = ref(false)
+const initialLoad = ref(false)
+const searchSentinel = ref(null)
+const allSentinel = ref(null)
+let searchObserver = null
+let allObserver = null
+let searchAbort = null
+let allAbort = null
 
-const results = computed(() => {
-  if (!query.value.trim()) return []
-  const q = query.value.toLowerCase()
-  return store.equipos.filter((e) =>
-    `${e.marca} ${e.modelo} ${e.procesador || ''} ${e.descripcion || ''}`.toLowerCase().includes(q)
-  )
-})
+async function newSearch() {
+  const q = query.value.trim()
+  if (!q) return
+  router.replace({ name: 'search', query: { q } })
 
-function doSearch() {
-  router.replace({ name: 'search', query: { q: query.value } })
+  if (searchAbort) searchAbort.abort()
+  searchAbort = new AbortController()
+  if (allAbort) allAbort.abort()
+
+  searching.value = true
+  initialLoad.value = true
+  searchExhausted.value = false
+  allExhausted.value = false
+  allResults.value = []
+  allPage.value = 0
+  searchPage.value = 1
+
+  try {
+    const { data } = await getEquipos({ search: q, limit: 30, page: 1, signal: searchAbort.signal })
+    searchResults.value = data.data || []
+    searchTotal.value = data.total
+    if (data.data.length < 30 || data.total <= 30) {
+      searchExhausted.value = true
+      if (searchResults.value.length > 0) startAllFeed()
+    }
+  } catch (err) {
+    if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+      searchResults.value = []
+      searchTotal.value = 0
+    }
+  } finally {
+    searching.value = false
+    initialLoad.value = false
+  }
 }
+
+async function loadMoreSearch() {
+  if (searching.value || fetchingMore.value || searchExhausted.value) return
+  fetchingMore.value = true
+  searchPage.value++
+  try {
+    const { data } = await getEquipos({ search: query.value, limit: 30, page: searchPage.value, signal: searchAbort.signal })
+    searchResults.value.push(...(data.data || []))
+    if (searchResults.value.length >= searchTotal.value) {
+      searchExhausted.value = true
+      if (searchResults.value.length > 0) startAllFeed()
+    }
+  } catch (err) {
+    if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+      searchExhausted.value = true
+      if (searchResults.value.length > 0) startAllFeed()
+    }
+  } finally {
+    fetchingMore.value = false
+  }
+}
+
+async function startAllFeed() {
+  allAbort = new AbortController()
+  allPage.value = 1
+  fetchingMore.value = true
+  try {
+    const { data } = await getEquipos({ random: true, limit: 30, page: 1, signal: allAbort.signal })
+    allResults.value = data.data || []
+    if (data.total <= 30) allExhausted.value = true
+  } catch {
+    allExhausted.value = true
+  } finally {
+    fetchingMore.value = false
+    nextTick(observeAll)
+  }
+}
+
+async function loadMoreAll() {
+  if (searching.value || fetchingMore.value || allExhausted.value) return
+  fetchingMore.value = true
+  allPage.value++
+  try {
+    const { data } = await getEquipos({ random: true, limit: 30, page: allPage.value, signal: allAbort.signal })
+    allResults.value.push(...(data.data || []))
+    if (allResults.value.length >= data.total) allExhausted.value = true
+  } catch {
+    allExhausted.value = true
+  } finally {
+    fetchingMore.value = false
+  }
+}
+
+function observeSearch() {
+  if (searchObserver) searchObserver.disconnect()
+  if (!searchSentinel.value) return
+  searchObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) loadMoreSearch()
+  }, { rootMargin: '0px 0px 1500px 0px' })
+  searchObserver.observe(searchSentinel.value)
+}
+
+function observeAll() {
+  if (allObserver) allObserver.disconnect()
+  if (!allSentinel.value) return
+  allObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) loadMoreAll()
+  }, { rootMargin: '0px 0px 1500px 0px' })
+  allObserver.observe(allSentinel.value)
+}
+
+watch(searchExhausted, (val) => {
+  if (!val) nextTick(observeSearch)
+})
 
 onMounted(() => {
   if (route.query.q) {
     query.value = route.query.q
+    newSearch()
   }
+})
+
+onUnmounted(() => {
+  if (searchObserver) searchObserver.disconnect()
+  if (allObserver) allObserver.disconnect()
+  if (searchAbort) searchAbort.abort()
+  if (allAbort) allAbort.abort()
 })
 </script>
 
@@ -85,9 +253,7 @@ onMounted(() => {
   transition: border-color 0.15s;
 }
 .sp-search-bar:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-.sp-icon {
-  padding: 0 0 0 16px; color: var(--muted); flex-shrink: 0;
-}
+.sp-icon { padding: 0 0 0 16px; color: var(--muted); flex-shrink: 0; }
 .sp-input {
   flex: 1; border: none; outline: none;
   padding: 14px 12px; font-size: 16px;
@@ -103,9 +269,7 @@ onMounted(() => {
 }
 .sp-clear:hover { color: var(--fg); }
 
-.sp-count {
-  font-size: 14px; color: var(--muted); margin-bottom: 20px;
-}
+.sp-count { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
 
 .sp-grid {
   display: grid;
@@ -113,12 +277,50 @@ onMounted(() => {
   gap: 24px;
 }
 
-.sp-empty-state {
+.sp-divider {
+  text-align: center; padding: 40px 0 32px;
+  color: var(--muted); font-size: 13px;
+}
+.sp-divider span {
+  display: inline-block; padding: 8px 20px;
+  border-radius: 999px; background: var(--border-light);
+  color: var(--muted);
+}
+
+.sentinel { height: 1px; width: 100%; }
+
+.sp-empty {
   text-align: center; padding: 60px 20px;
   color: var(--muted);
 }
-.sp-empty-state h3 { font-size: 18px; color: var(--fg); margin: 12px 0 4px; }
-.sp-empty-state p { font-size: 14px; }
+.sp-empty h3 { font-size: 18px; color: var(--fg); margin: 12px 0 4px; }
+.sp-empty p { font-size: 14px; }
+
+.skeleton-card {
+  border-radius: var(--radius-lg); overflow: hidden;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.025);
+}
+.sk-img {
+  aspect-ratio: 4/3;
+  background: linear-gradient(90deg, var(--border-light) 25%, var(--surface) 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: sk-pulse 1.5s ease-in-out infinite;
+}
+.sk-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+.sk-line {
+  height: 14px; border-radius: 4px; width: 80%;
+  background: linear-gradient(90deg, var(--border-light) 25%, var(--surface) 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: sk-pulse 1.5s ease-in-out infinite;
+}
+.sk-line.sk-short { width: 50%; }
+.sk-line.sk-long { width: 95%; }
+
+@keyframes sk-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
 @media (max-width: 1024px) {
   .search-page { padding: 20px; }

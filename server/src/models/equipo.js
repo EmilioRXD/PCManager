@@ -1,46 +1,66 @@
 import { query } from '../config/db.js'
 import * as imagenModel from './imagen.js'
 
-export async function findAll({ categoria, search, condicion, page = 1, limit = 12 } = {}) {
-  let sql = `
-    SELECT e.*, c.nombre AS categoria_nombre
-    FROM equipos e
-    JOIN categorias c ON e.categoria_id = c.id
-    WHERE 1 = 1
-  `
+export async function findAll({ categoria, search, condicion, random, page = 1, limit = 12 } = {}) {
   const params = []
-  let paramIndex = 1
+  let p = 1
+
+  let selectBase = 'SELECT e.*, c.nombre AS categoria_nombre'
+  let searchRankCol = ''
+  let whereClause = 'WHERE 1 = 1'
+  let orderBy
+
+  if (search) {
+    const textCols = `coalesce(e.marca,'') || ' ' || coalesce(e.modelo,'') || ' ' || coalesce(e.procesador,'') || ' ' || coalesce(e.ram,'') || ' ' || coalesce(e.almacenamiento,'') || ' ' || coalesce(e.descripcion,'') || ' ' || coalesce(e.pantalla,'')`
+
+    whereClause += ` AND (
+      to_tsvector('spanish', ${textCols}) @@ plainto_tsquery('spanish', $${p})
+      OR word_similarity($${p}, e.marca) > 0.2
+      OR word_similarity($${p}, e.modelo) > 0.2
+      OR word_similarity($${p}, e.procesador) > 0.2
+      OR word_similarity($${p}, e.ram) > 0.2
+      OR word_similarity($${p}, e.almacenamiento) > 0.2
+      OR similarity($${p}, e.marca || ' ' || e.modelo) > 0.3
+    )`
+
+    searchRankCol = `, GREATEST(
+      COALESCE(ts_rank(to_tsvector('spanish', ${textCols}), plainto_tsquery('spanish', $${p})), 0),
+      COALESCE(word_similarity($${p}, e.marca), 0) * 3,
+      COALESCE(word_similarity($${p}, e.modelo), 0) * 3,
+      COALESCE(similarity($${p}, e.marca || ' ' || e.modelo), 0) * 2
+    ) AS rank`
+
+    orderBy = 'ORDER BY rank DESC, e.id DESC'
+    params.push(search)
+    p++
+  } else if (random) {
+    orderBy = 'ORDER BY RANDOM()'
+  } else {
+    orderBy = 'ORDER BY e.created_at DESC'
+  }
 
   if (categoria) {
-    sql += ` AND e.categoria_id = $${paramIndex++}`
+    whereClause += ` AND e.categoria_id = $${p++}`
     params.push(parseInt(categoria, 10))
   }
 
-  if (search) {
-    sql += ` AND (e.marca ILIKE $${paramIndex} OR e.modelo ILIKE $${paramIndex} OR e.descripcion ILIKE $${paramIndex})`
-    params.push(`%${search}%`)
-    paramIndex++
-  }
-
   if (condicion) {
-    sql += ` AND e.condicion = $${paramIndex++}`
+    whereClause += ` AND e.condicion = $${p++}`
     params.push(condicion)
   }
 
-  const countResult = await query(
-    sql.replace(/SELECT e\.\*, c\.nombre AS categoria_nombre/, 'SELECT COUNT(*) AS total'),
-    params
-  )
+  const countSql = `SELECT COUNT(*) AS total FROM equipos e JOIN categorias c ON e.categoria_id = c.id ${whereClause}`
+  const countResult = await query(countSql, params)
   const total = parseInt(countResult.rows[0].total, 10)
 
   const offset = (parseInt(page, 10) - 1) * parseInt(limit, 10)
-  sql += ` ORDER BY e.created_at DESC LIMIT $${paramIndex++} OFFSET $${paramIndex++}`
-  params.push(parseInt(limit, 10), offset)
+  const dataSql = `${selectBase}${searchRankCol} FROM equipos e JOIN categorias c ON e.categoria_id = c.id ${whereClause} ${orderBy} LIMIT $${p++} OFFSET $${p++}`
+  const dataParams = [...params, parseInt(limit, 10), offset]
 
-  const result = await query(sql, params)
+  const dataResult = await query(dataSql, dataParams)
 
   return {
-    data: result.rows,
+    data: dataResult.rows,
     total,
     page: parseInt(page, 10),
     limit: parseInt(limit, 10),
