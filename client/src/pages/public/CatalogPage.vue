@@ -141,7 +141,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useEquiposStore } from '../../stores/equipos'
 import { getCategorias } from '../../api/categorias'
 import ProductCard from '../../components/ProductCard.vue'
@@ -149,6 +149,7 @@ import QuickViewModal from '../../components/QuickViewModal.vue'
 import FilterDrawer from '../../components/FilterDrawer.vue'
 
 const route = useRoute()
+const router = useRouter()
 const store = useEquiposStore()
 const productsRef = ref(null)
 
@@ -176,10 +177,10 @@ const activeCatName = computed(() => {
 
 const filterCount = computed(() => {
   let n = 0
-  if (activeBrands.value.length < uniqueBrands.value.length && activeBrands.value.length > 0) n++
-  if (activeConditions.value.length > 0 && activeConditions.value.length < 2) n++
+  if (activeBrands.value.length > 0) n++
+  if (activeConditions.value.length > 0) n++
   if (minPrice.value > 0 || maxPrice.value < 10000) n++
-  if (activeCat.value) n++
+  if (activeCat.value || searchQuery.value) n++
   return n
 })
 
@@ -217,6 +218,7 @@ const featuredId = computed(() => store.equipos[0]?.id || 1)
 
 function setCategory(id) {
   activeCat.value = id
+  applyFilters()
 }
 
 function scrollToProducts() {
@@ -245,7 +247,10 @@ function clearCompare() { compareList.value = [] }
 function sortProducts() { /* computed handles it */ }
 
 function applyFilters() {
-  /* computed handles it */
+  const query = {}
+  if (activeCat.value) query.categoria = activeCat.value
+  if (searchQuery.value) query.search = searchQuery.value
+  router.replace({ query })
 }
 
 function resetFilters() {
