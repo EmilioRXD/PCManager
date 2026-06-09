@@ -88,18 +88,7 @@
 
     <!-- Product grid -->
     <div class="products-area">
-      <div v-if="store.loading" class="flex flex-center q-my-xl" style="grid-column:1/-1;">
-        <q-spinner color="primary" size="4em" />
-      </div>
-
-      <div v-else-if="sortedEquipos.length === 0" class="empty-state">
-        <AppIcon name="search_off" size="56px" color="grey-4" />
-        <h3>Sin resultados</h3>
-        <p>No encontramos equipos con esos filtros. Probá con otra combinación.</p>
-        <button class="btn btn-secondary" @click="resetAll">Limpiar todos los filtros</button>
-      </div>
-
-      <div v-else class="grid">
+      <div class="grid">
         <ProductCard
           v-for="equipo in sortedEquipos"
           :key="equipo.id"
@@ -108,6 +97,46 @@
           @quick-view="openQuickView"
           @toggle-compare="toggleCompare"
         />
+
+        <!-- Skeleton cards while loading first page -->
+        <template v-if="store.loading && store.page === 1">
+          <div v-for="n in 12" :key="'sk-' + n" class="skeleton-card">
+            <div class="sk-img" />
+            <div class="sk-body">
+              <div class="sk-line sk-short" />
+              <div class="sk-line" />
+              <div class="sk-line sk-long" />
+              <div class="sk-line sk-short" />
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div v-if="sortedEquipos.length === 0 && !store.loading" class="empty-state">
+        <AppIcon name="search_off" size="56px" color="grey-4" />
+        <h3>Sin resultados</h3>
+        <p>No encontramos equipos con esos filtros. Probá con otra combinación.</p>
+        <button class="btn btn-secondary" @click="resetAll">Limpiar todos los filtros</button>
+      </div>
+
+      <!-- Sentinel for infinite scroll -->
+      <div v-if="!store.exhausted && sortedEquipos.length > 0" ref="sentinel" class="sentinel" />
+
+      <div v-if="store.exhausted && sortedEquipos.length > 0" class="sp-divider">
+        <span>Has visto todos los equipos disponibles</span>
+      </div>
+
+      <!-- Skeleton while loading more pages -->
+      <div v-if="store.loading && store.page > 1" class="skeleton-grid">
+        <div v-for="n in 6" :key="'lm-sk-' + n" class="skeleton-card">
+          <div class="sk-img" />
+          <div class="sk-body">
+            <div class="sk-line sk-short" />
+            <div class="sk-line" />
+            <div class="sk-line sk-long" />
+            <div class="sk-line sk-short" />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -152,7 +181,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useEquiposStore } from '../../stores/equipos'
 import { getCategorias } from '../../api/categorias'
@@ -163,6 +192,8 @@ import FilterDrawer from '../../components/FilterDrawer.vue'
 const route = useRoute()
 const store = useEquiposStore()
 const productsRef = ref(null)
+const sentinel = ref(null)
+let observer = null
 
 const categorias = ref([])
 const activeCat = ref(null)
@@ -227,8 +258,35 @@ const filteredCount = computed(() => sortedEquipos.value.length)
 
 const featuredId = computed(() => store.equipos[0]?.id || 1)
 
+function getServerParams() {
+  const params = {}
+  if (activeCat.value) params.categoria = activeCat.value
+  return params
+}
+
+async function loadInitial() {
+  store.resetPagination()
+  await store.fetchEquipos(getServerParams())
+  nextTick(observe)
+}
+
+async function loadMore() {
+  await store.loadMore(getServerParams())
+  nextTick(observe)
+}
+
+function observe() {
+  if (observer) observer.disconnect()
+  if (!sentinel.value) return
+  observer = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) loadMore()
+  }, { rootMargin: '0px 0px 1500px 0px' })
+  observer.observe(sentinel.value)
+}
+
 function setCategory(id) {
   activeCat.value = id
+  loadInitial()
 }
 
 function scrollToProducts() {
@@ -257,7 +315,7 @@ function clearCompare() { compareList.value = [] }
 function sortProducts() { /* computed handles it */ }
 
 function applyFilters() {
-  /* filtros aplicados reactivamente por computed */
+  /* filtros reactivos via computed */
 }
 
 function resetFilters() {
@@ -271,6 +329,7 @@ function resetAll() {
   resetFilters()
   activeCat.value = null
   searchQuery.value = ''
+  loadInitial()
 }
 
 function toggleBrand(brand) {
@@ -286,7 +345,6 @@ function toggleCondition(cond) {
 }
 
 onMounted(async () => {
-  store.fetchEquipos({ limit: 100 })
   try {
     const { data } = await getCategorias()
     categorias.value = data
@@ -298,6 +356,13 @@ onMounted(async () => {
   if (route.query.categoria) {
     activeCat.value = parseInt(route.query.categoria, 10)
   }
+
+  loadInitial()
+})
+
+onUnmounted(() => {
+  if (observer) observer.disconnect()
+  if (store.page > 1) store.resetPagination()
 })
 </script>
 
@@ -443,6 +508,49 @@ onMounted(async () => {
 .empty-state h3 { font-size: 18px; margin-bottom: 6px; color: var(--fg); }
 .empty-state p { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
 
+.sentinel { height: 1px; width: 100%; }
+
+.sp-divider {
+  text-align: center; padding: 40px 0 32px;
+  color: var(--muted); font-size: 13px;
+}
+.sp-divider span {
+  display: inline-block; padding: 8px 20px;
+  border-radius: 999px; background: var(--border-light);
+  color: var(--muted);
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px; margin-top: 24px;
+}
+.skeleton-card {
+  border-radius: var(--radius-lg); overflow: hidden;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.025);
+}
+.sk-img {
+  aspect-ratio: 4/3;
+  background: linear-gradient(90deg, var(--border-light) 25%, var(--surface) 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: sk-pulse 1.5s ease-in-out infinite;
+}
+.sk-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+.sk-line {
+  height: 14px; border-radius: 4px; width: 80%;
+  background: linear-gradient(90deg, var(--border-light) 25%, var(--surface) 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: sk-pulse 1.5s ease-in-out infinite;
+}
+.sk-line.sk-short { width: 50%; }
+.sk-line.sk-long { width: 95%; }
+
+@keyframes sk-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* ── Compare bar ── */
 .compare-bar {
   position: fixed; bottom: -120px; left: 0; right: 0; z-index: 70;
@@ -472,9 +580,11 @@ onMounted(async () => {
   .cat-strip, .filter-bar { padding-left: 20px; padding-right: 20px; }
   .products-area { padding: 0 20px 32px; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 }
 @media (max-width: 640px) {
   .grid { grid-template-columns: 1fr; }
+  .skeleton-grid { grid-template-columns: 1fr; }
   .hero-title { font-size: 28px; }
   .compare-bar { padding: 12px 16px; flex-direction: column; }
   .compare-actions { width: 100%; }
