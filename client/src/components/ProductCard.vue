@@ -155,12 +155,12 @@ function toggleCompare() {
 .brand-dot--alien   { background: #37474f; }
 
 .cond-badge {
-  font-size: 9px; font-weight: 800; letter-spacing: 0.06em;
-  text-transform: uppercase; padding: 2px 7px; border-radius: 99px;
-  margin-left: auto; line-height: 1.2;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 99px;
+  margin-left: auto; line-height: 1.3;
 }
-.cond-new { background: rgba(34,197,94,0.12); color: #16a34a; }
-.cond-refurb { background: rgba(245,158,11,0.12); color: #d97706; }
+.cond-new { background: rgba(13,148,136,0.10); color: #0d9488; }
+.cond-refurb { background: rgba(107,114,128,0.10); color: #6b7280; }
 
 .card-name {
   font-size: 16px; font-weight: 700; letter-spacing: -0.02em;

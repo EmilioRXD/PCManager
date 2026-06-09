@@ -4,5 +4,6 @@
 ALTER TABLE equipos ADD COLUMN IF NOT EXISTS condicion VARCHAR(20) NOT NULL DEFAULT 'nuevo' CHECK (condicion IN ('nuevo', 'refurbished'));
 
 -- Asignar estados a productos existentes (~25% refurbished)
-UPDATE equipos SET condicion = 'nuevo' WHERE condicion IS NULL AND id % 4 != 0;
-UPDATE equipos SET condicion = 'refurbished' WHERE condicion IS NULL;
+-- Si la columna se agregó con DEFAULT 'nuevo', todos tienen ese valor.
+-- Se asigna refurbished a IDs específicos para mantener consistencia con init.sql.
+UPDATE equipos SET condicion = 'refurbished' WHERE id IN (3, 5, 11);
