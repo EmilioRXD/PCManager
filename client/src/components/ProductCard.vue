@@ -158,7 +158,7 @@ function toggleCompare() {
   font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
   text-transform: uppercase; padding: 2px 8px; border-radius: 99px;
   margin-left: auto; line-height: 1.3;
-  background: transparent; color: #261d90; border: 2px solid #261d90;
+  background: transparent; color: var(--accent-dark); border: 2px solid var(--accent-dark);
 }
 
 .card-name {
