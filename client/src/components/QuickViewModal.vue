@@ -116,7 +116,7 @@ function goToDetail() {
   color: var(--fg-secondary); letter-spacing: -0.01em;
 }
 
-.badge-cat { background: var(--accent-dark-glow); color: var(--accent-dark); border-color: var(--accent-dark); }
+.badge-cat { background: transparent; color: var(--accent-dark); border: 2px solid var(--accent-dark); }
 
 @media (max-width: 1024px) {
   .qv-modal { grid-template-columns: 1fr; max-height: 90vh; }
