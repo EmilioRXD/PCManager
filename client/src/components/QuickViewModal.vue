@@ -20,8 +20,11 @@
             {{ equipo?.marca }}
           </div>
           <h2 style="font-size:28px;font-weight:800;letter-spacing:-0.03em;line-height:1.1;color:var(--fg);margin:0;">{{ equipo?.modelo }}</h2>
-          <div class="card-price" style="font-size:28px;display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;font-family:var(--font-mono);font-weight:700;color:var(--accent);">
-            ${{ formatPrice(equipo?.precio) }}
+          <div class="card-price">
+            <div class="price-pill">
+              <span class="price-label">REF:</span>
+              <span class="price-value">${{ formatPrice(equipo?.precio) }}</span>
+            </div>
           </div>
           <div class="specs" style="display:flex;flex-wrap:wrap;gap:5px;">
             <span v-if="equipo?.procesador" class="spec-tag">{{ equipo.procesador }}</span>
@@ -117,6 +120,17 @@ function goToDetail() {
 }
 
 .badge-cat { background: transparent; color: var(--accent-dark); border: 2px solid var(--accent-dark); }
+
+.card-price { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+.price-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, var(--accent), #3b82f6);
+  color: #fff; padding: 6px 18px 6px 20px;
+  border-radius: 0 999px 999px 0;
+  font-family: var(--font-display);
+}
+.price-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; }
+.price-value { font-size: 20px; font-weight: 700; line-height: 1; font-family: var(--font-mono); }
 
 @media (max-width: 1024px) {
   .qv-modal { grid-template-columns: 1fr; max-height: 90vh; }
