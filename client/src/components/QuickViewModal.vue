@@ -128,6 +128,7 @@ function goToDetail() {
   background: linear-gradient(135deg, var(--accent), #3b82f6);
   color: #fff; padding: 6px 18px 6px 20px;
   border-radius: 0 999px 999px 0;
+  margin-left: -28px;
   font-family: var(--font-display);
 }
 .price-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; }
