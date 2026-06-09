@@ -158,9 +158,8 @@ function toggleCompare() {
   font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
   text-transform: uppercase; padding: 2px 8px; border-radius: 99px;
   margin-left: auto; line-height: 1.3;
+  background: transparent; color: #261d90; border: 2px solid #261d90;
 }
-.cond-new { background: rgba(13,148,136,0.10); color: #0d9488; }
-.cond-refurb { background: rgba(107,114,128,0.10); color: #6b7280; }
 
 .card-name {
   font-size: 16px; font-weight: 700; letter-spacing: -0.02em;

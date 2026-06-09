@@ -171,9 +171,9 @@ h1, h2, h3, h4, h5, h6 {
   transition: all 0.15s;
 }
 
-.badge-success { background: rgba(13,148,136,0.10); color: #0d9488; border-color: rgba(13,148,136,0.18); }
+.badge-success { background: transparent; color: #261d90; border: 2px solid #261d90; }
 .badge-danger  { background: var(--danger-glow);  color: var(--danger);  border-color: rgba(239,68,68,0.20); }
-.badge-warning { background: rgba(107,114,128,0.10); color: #6b7280; border-color: rgba(107,114,128,0.18); }
+.badge-warning { background: transparent; color: #261d90; border: 2px solid #261d90; }
 .badge-accent { background: rgba(0,198,255,0.08); color: var(--accent-2); border-color: rgba(0,198,255,0.20); }
 
 /* ── Buttons ── */
