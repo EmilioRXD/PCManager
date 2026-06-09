@@ -180,15 +180,16 @@ function toggleCompare() {
   padding: 5px 14px 5px 18px;
   border-radius: 0 999px 999px 0;
   margin-left: -16px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
 }
 .price-label {
-  font-size: 11px; font-weight: 900;
-  text-transform: uppercase; letter-spacing: 0.06em;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
   line-height: 1;
 }
 .price-value {
   font-size: 18px; font-weight: 700; line-height: 1;
+  font-family: var(--font-mono);
 }
 .stock-tag {
   font-size: 10.5px; font-weight: 700; color: var(--success);
