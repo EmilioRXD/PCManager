@@ -40,6 +40,8 @@ const equipoSchema = Joi.object({
     'any.required': 'La condición es requerida',
     'any.only': 'La condición debe ser "nuevo" o "refurbished"',
   }),
+  pantalla: Joi.string().max(100).allow('', null),
+  tactil: Joi.boolean().default(false),
   categoria_id: Joi.number().integer().required().messages({
     'any.required': 'La categoría es requerida',
   }),

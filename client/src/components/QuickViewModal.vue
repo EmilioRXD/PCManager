@@ -28,6 +28,11 @@
             <span v-if="equipo?.ram" class="spec-tag">{{ equipo.ram }}</span>
             <span v-if="equipo?.almacenamiento" class="spec-tag">{{ equipo.almacenamiento }}</span>
             <span v-if="equipo?.tarjeta_grafica" class="spec-tag">{{ equipo.tarjeta_grafica }}</span>
+            <span v-if="equipo?.pantalla" class="spec-tag">{{ equipo.pantalla }}</span>
+            <span v-if="equipo?.tactil" class="spec-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px;"><path d="M6 18L9.5 14.5M9.5 14.5L13 18M9.5 14.5V4M9.5 14.5L16.5 11.5M16.5 11.5L20 16M16.5 11.5L9.5 14.5"/></svg>
+              Táctil
+            </span>
           </div>
           <div style="margin-top:auto;display:flex;gap:10px;">
             <a class="btn btn-primary" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:#fff;" @click.stop="goToDetail">

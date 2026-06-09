@@ -66,7 +66,7 @@ export async function findById(id) {
 export async function create(data) {
   const fields = [
     'marca', 'modelo', 'procesador', 'ram', 'almacenamiento',
-    'tarjeta_grafica', 'precio', 'stock', 'imagen_url', 'descripcion', 'condicion', 'categoria_id',
+    'tarjeta_grafica', 'precio', 'stock', 'imagen_url', 'descripcion', 'condicion', 'pantalla', 'tactil', 'categoria_id',
   ]
   const values = fields.map((f) => data[f])
   const placeholders = values.map((_, i) => `$${i + 1}`).join(', ')
@@ -84,7 +84,7 @@ export async function create(data) {
 export async function update(id, data) {
   const allowedFields = [
     'marca', 'modelo', 'procesador', 'ram', 'almacenamiento',
-    'tarjeta_grafica', 'precio', 'stock', 'imagen_url', 'descripcion', 'condicion', 'categoria_id',
+    'tarjeta_grafica', 'precio', 'stock', 'imagen_url', 'descripcion', 'condicion', 'pantalla', 'tactil', 'categoria_id',
   ]
 
   const sets = []

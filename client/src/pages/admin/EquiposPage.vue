@@ -183,6 +183,16 @@
                   <label class="form-label">Tarjeta Gráfica</label>
                   <input class="input" v-model="form.tarjeta_grafica" />
                 </div>
+                <div style="flex:1 1 calc(50% - 8px);min-width:200px;">
+                  <label class="form-label">Pantalla</label>
+                  <input class="input" v-model="form.pantalla" placeholder="Ej: FHD 15.6&quot;" />
+                </div>
+                <div style="flex:1 1 100%;">
+                  <label class="form-label">
+                    <input type="checkbox" v-model="form.tactil" style="accent-color:var(--accent);margin-right:8px;width:16px;height:16px;" />
+                    Táctil
+                  </label>
+                </div>
                 <div style="flex:1 1 calc(33% - 11px);min-width:150px;">
                   <label class="form-label">Precio *</label>
                   <input class="input mono" v-model.number="form.precio" type="number" step="0.01" min="0" required />
@@ -248,7 +258,7 @@ const editingId = ref(null)
 const defaultForm = () => ({
   marca: '', modelo: '', procesador: '', ram: '', almacenamiento: '',
   tarjeta_grafica: '', precio: null, stock: 0, imagen_url: '', descripcion: '',
-  condicion: 'nuevo', categoria_id: null,
+  condicion: 'nuevo', pantalla: '', tactil: false, categoria_id: null,
 })
 
 const form = ref(defaultForm())
@@ -306,7 +316,8 @@ function openEditDialog(row) {
     marca: row.marca, modelo: row.modelo, procesador: row.procesador, ram: row.ram,
     almacenamiento: row.almacenamiento, tarjeta_grafica: row.tarjeta_grafica || '',
     precio: Number(row.precio), stock: row.stock, imagen_url: row.imagen_url || '',
-    descripcion: row.descripcion || '', condicion: row.condicion || 'nuevo', categoria_id: row.categoria_id,
+    descripcion: row.descripcion || '', condicion: row.condicion || 'nuevo',
+    pantalla: row.pantalla || '', tactil: row.tactil || false, categoria_id: row.categoria_id,
   }
   dialogOpen.value = true
 }

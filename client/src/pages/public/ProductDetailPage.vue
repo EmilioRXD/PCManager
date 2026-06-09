@@ -133,6 +133,8 @@ const specsList = computed(() => {
     { label: 'Procesador', value: e.procesador, icon: 'memory' },
     { label: 'Memoria RAM', value: e.ram, icon: 'sd_card' },
     { label: 'Almacenamiento', value: e.almacenamiento, icon: 'storage' },
+    ...(e.pantalla ? [{ label: 'Pantalla', value: e.pantalla, icon: 'display_settings' }] : []),
+    ...(e.tactil ? [{ label: 'Táctil', value: 'Sí', icon: 'pan_tool' }] : []),
     { label: 'Marca', value: e.marca, icon: 'branding_watermark' },
     ...(e.tarjeta_grafica ? [{ label: 'Tarjeta Gráfica', value: e.tarjeta_grafica, icon: 'videocam' }] : []),
     { label: 'Categoría', value: e.categoria_nombre, icon: 'category' },
