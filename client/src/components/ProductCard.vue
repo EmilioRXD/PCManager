@@ -183,7 +183,7 @@ function toggleCompare() {
   font-family: var(--font-mono);
 }
 .price-label {
-  font-size: 10px; font-weight: 800;
+  font-size: 11px; font-weight: 900;
   text-transform: uppercase; letter-spacing: 0.06em;
   line-height: 1;
 }
