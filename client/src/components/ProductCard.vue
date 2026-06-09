@@ -176,7 +176,10 @@ function toggleCompare() {
 .price-pill {
   display: inline-flex; align-items: center; gap: 6px;
   background: linear-gradient(135deg, var(--accent), #3b82f6);
-  color: #fff; padding: 5px 14px; border-radius: 999px;
+  color: #fff;
+  padding: 5px 14px 5px 18px;
+  border-radius: 0 999px 999px 0;
+  margin-left: -16px;
   font-family: var(--font-mono);
 }
 .price-label {
