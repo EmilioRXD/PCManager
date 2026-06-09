@@ -20,9 +20,12 @@
       <div class="card-name">{{ equipo.modelo }}</div>
 
       <div class="card-price">
-        ${{ formatPrice(equipo.precio) }}
-        <span v-if="equipo.stock > 0" class="save">En stock</span>
-        <span v-else class="save" style="color:var(--danger);background:rgba(239,68,68,0.08)">Agotado</span>
+        <div class="price-pill">
+          <span class="price-label">REF:</span>
+          <span class="price-value">${{ formatPrice(equipo.precio) }}</span>
+        </div>
+        <span v-if="equipo.stock > 0" class="stock-tag">En stock</span>
+        <span v-else class="stock-tag out">Agotado</span>
       </div>
 
       <div class="specs">
@@ -167,12 +170,29 @@ function toggleCompare() {
 }
 
 .card-price {
-  font-family: var(--font-mono); font-size: 22px; font-weight: 700;
-  color: var(--accent); display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px;
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin-top: 2px;
 }
-.card-price .save {
+.price-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, var(--accent), #3b82f6);
+  color: #fff; padding: 5px 14px; border-radius: 999px;
+  font-family: var(--font-mono);
+}
+.price-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  opacity: 0.85; line-height: 1;
+}
+.price-value {
+  font-size: 18px; font-weight: 700; line-height: 1;
+}
+.stock-tag {
   font-size: 10.5px; font-weight: 700; color: var(--success);
-  background: rgba(34,197,94,0.08); padding: 2px 9px; border-radius: 99px;
+  background: rgba(34,197,94,0.08); padding: 3px 10px; border-radius: 99px;
+}
+.stock-tag.out {
+  color: var(--danger); background: rgba(239,68,68,0.08);
 }
 
 .specs { display: flex; flex-wrap: wrap; gap: 5px; }
