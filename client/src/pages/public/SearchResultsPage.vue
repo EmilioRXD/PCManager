@@ -17,32 +17,23 @@
     <div class="sp-body" v-if="query">
       <p class="sp-count">{{ results.length }} resultado{{ results.length !== 1 ? 's' : '' }} para "<strong>{{ query }}</strong>"</p>
 
-      <div v-if="results.length === 0" class="sp-empty">
+      <div v-if="results.length === 0" class="sp-empty-state">
         <AppIcon name="search_off" size="56px" />
         <h3>Sin resultados</h3>
         <p>No encontramos equipos con ese término. Probá con otra búsqueda.</p>
       </div>
 
-      <div v-else class="sp-results">
-        <div
+      <div v-else class="sp-grid">
+        <ProductCard
           v-for="equipo in results"
           :key="equipo.id"
-          class="sp-item"
-          @click="$router.push({ name: 'product-detail', params: { id: equipo.id } })"
-        >
-          <div class="sp-title">{{ equipo.marca }} {{ equipo.modelo }}</div>
-          <div class="sp-specs">
-            {{ equipo.procesador }} · {{ equipo.ram }} · {{ equipo.almacenamiento }}
-            <template v-if="equipo.pantalla"> · {{ equipo.pantalla }}</template>
-            <template v-if="equipo.condicion"> · {{ equipo.condicion === 'refurbished' ? 'Refurbished' : 'Nuevo' }}</template>
-          </div>
-          <div class="sp-price">${{ formatPrice(equipo.precio) }}</div>
-          <div class="sp-link">Ver ficha técnica →</div>
-        </div>
+          :equipo="equipo"
+          :compared="false"
+        />
       </div>
     </div>
 
-    <div class="sp-body sp-empty" v-else>
+    <div class="sp-body sp-empty-state" v-else>
       <AppIcon name="search" size="56px" />
       <h3>Buscá equipos</h3>
       <p>Escribí en el campo de arriba para encontrar laptops, desktops y workstations.</p>
@@ -54,6 +45,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEquiposStore } from '../../stores/equipos'
+import ProductCard from '../../components/ProductCard.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -73,10 +65,6 @@ function doSearch() {
   router.replace({ name: 'search', query: { q: query.value } })
 }
 
-function formatPrice(val) {
-  return Number(val).toLocaleString('es-ES', { minimumFractionDigits: 2 })
-}
-
 onMounted(() => {
   if (route.query.q) {
     query.value = route.query.q
@@ -86,7 +74,7 @@ onMounted(() => {
 
 <style scoped>
 .search-page {
-  max-width: 720px; margin: 0 auto; padding: 24px 20px 64px;
+  max-width: 1280px; margin: 0 auto; padding: 24px 24px 64px;
 }
 
 .sp-header { margin-bottom: 24px; }
@@ -119,37 +107,25 @@ onMounted(() => {
   font-size: 14px; color: var(--muted); margin-bottom: 20px;
 }
 
-.sp-results { display: flex; flex-direction: column; gap: 0; }
-.sp-item {
-  padding: 18px 20px; cursor: pointer; border-radius: var(--radius-md);
-  transition: background 0.12s;
-}
-.sp-item:hover { background: var(--accent-glow); }
-.sp-title {
-  font-size: 17px; font-weight: 700; color: var(--accent);
-  margin-bottom: 4px;
-}
-.sp-specs {
-  font-size: 14px; color: var(--muted); line-height: 1.5;
-}
-.sp-price {
-  font-family: var(--font-mono); font-size: 15px; font-weight: 700;
-  color: var(--fg); margin-top: 4px;
-}
-.sp-link {
-  font-size: 13px; font-weight: 600; color: var(--accent);
-  margin-top: 6px;
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
 }
 
-.sp-empty {
+.sp-empty-state {
   text-align: center; padding: 60px 20px;
   color: var(--muted);
 }
-.sp-empty h3 { font-size: 18px; color: var(--fg); margin: 12px 0 4px; }
-.sp-empty p { font-size: 14px; }
+.sp-empty-state h3 { font-size: 18px; color: var(--fg); margin: 12px 0 4px; }
+.sp-empty-state p { font-size: 14px; }
 
+@media (max-width: 1024px) {
+  .search-page { padding: 20px; }
+  .sp-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+}
 @media (max-width: 640px) {
   .search-page { padding: 16px 12px 48px; }
-  .sp-item { padding: 14px 12px; }
+  .sp-grid { grid-template-columns: 1fr; }
 }
 </style>
