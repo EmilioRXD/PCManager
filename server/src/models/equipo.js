@@ -15,12 +15,10 @@ export async function findAll({ categoria, search, condicion, random, page = 1, 
 
     whereClause += ` AND (
       to_tsvector('spanish', ${textCols}) @@ plainto_tsquery('spanish', $${p})
-      OR word_similarity($${p}, e.marca) > 0.2
-      OR word_similarity($${p}, e.modelo) > 0.2
-      OR word_similarity($${p}, e.procesador) > 0.2
-      OR word_similarity($${p}, e.ram) > 0.2
-      OR word_similarity($${p}, e.almacenamiento) > 0.2
-      OR similarity($${p}, e.marca || ' ' || e.modelo) > 0.3
+      OR word_similarity($${p}, e.marca) > 0.3
+      OR word_similarity($${p}, e.modelo) > 0.3
+      OR word_similarity($${p}, e.procesador) > 0.3
+      OR similarity($${p}, e.marca || ' ' || e.modelo) > 0.5
     )`
 
     searchRankCol = `, GREATEST(
