@@ -92,16 +92,17 @@ function goToDetail() {
 .qv-overlay.open { opacity: 1; pointer-events: auto; }
 .qv-modal {
   background: var(--surface); border-radius: var(--radius-lg); width: 900px;
-  max-width: 95vw; max-height: 85vh; overflow-y: auto;
+  max-width: 95vw; max-height: 85vh; overflow: hidden;
   display: grid; grid-template-columns: 1fr 1fr;
   transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.23,1,0.32,1);
 }
 .qv-overlay.open .qv-modal { transform: translateY(0); }
 .qv-modal .qv-image {
   position: relative; overflow: hidden;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
 }
 .qv-modal .qv-image img { width: 100%; height: 100%; object-fit: cover; }
-.qv-modal .qv-info { padding: 40px 32px; display: flex; flex-direction: column; gap: 14px; }
+.qv-modal .qv-info { padding: 28px 28px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
 .qv-modal .qv-close {
   position: absolute; top: 16px; right: 16px;
   width: 36px; height: 36px; border-radius: 50%;
@@ -134,7 +135,7 @@ function goToDetail() {
 
 @media (max-width: 1024px) {
   .qv-modal { grid-template-columns: 1fr; max-height: 90vh; }
-  .qv-modal .qv-image { max-height: 300px; }
-  .qv-modal .qv-info { padding: 20px 24px 32px; }
+  .qv-modal .qv-image { max-height: 300px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .qv-modal .qv-info { padding: 20px 24px 28px; }
 }
 </style>
