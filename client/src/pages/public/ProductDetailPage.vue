@@ -4,17 +4,17 @@
       <div class="detail-layout">
         <!-- Gallery Column -->
         <div class="gallery-col">
-          <ImageGallery :images="galleryImages" :alt="equipo.modelo" />
+          <div class="image-col"><ImageGallery :images="galleryImages" :alt="equipo.modelo" /></div>
 
-          <!-- Warranty section below gallery -->
+          <!-- Specs below gallery -->
           <div class="detail-section">
             <h2 class="section-title">
               <span class="section-icon"
-                ><AppIcon name="verified_user" size="1.25rem"
+                ><AppIcon name="memory" size="1.25rem"
               /></span>
-              Garantías y beneficios
+              Especificaciones técnicas
             </h2>
-            <WarrantyCards :items="warrantyItems" />
+            <SpecsGrid :specs="specsList" />
           </div>
         </div>
 
@@ -109,19 +109,19 @@
             </a>
           </div>
 
-          <!-- Specs -->
-          <div class="detail-section" style="margin-top: 2rem">
+          <!-- Warranty -->
+          <div class="detail-section section--warranty">
             <h2 class="section-title">
               <span class="section-icon"
-                ><AppIcon name="memory" size="1.25rem"
+                ><AppIcon name="verified_user" size="1.25rem"
               /></span>
-              Especificaciones técnicas
+              Garantías y beneficios
             </h2>
-            <SpecsGrid :specs="specsList" />
+            <WarrantyCards :items="warrantyItems" />
           </div>
 
           <!-- Accordion -->
-          <div class="detail-section">
+          <div class="detail-section section--accordion">
             <h2 class="section-title">
               <span class="section-icon"
                 ><AppIcon name="info" size="1.25rem"
@@ -451,23 +451,19 @@ watch(
 }
 
 @media (max-width: 64rem) {
-  .detail-layout {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  .gallery-col,
-  .info-col {
-    position: static;
-  }
-  .product-title {
-    font-size: 1.75rem;
-  }
-  .price-right-only .price-value {
-    font-size: 1.75rem;
-  }
-  .price-right-only .price-label {
-    font-size: 1.25rem;
-  }
+  .detail-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .gallery-col { position: static; display: contents; }
+  .gallery-col > .detail-section { order: 5; }
+  .gallery-col > .image-col { order: 1; }
+  .info-col { position: static; display: contents; }
+  .info-col > .price-block { order: 2; }
+  .info-col > .stock-row { order: 3; }
+  .info-col > .actions-row { order: 4; }
+  .info-col > .section--warranty { order: 6; }
+  .info-col > .section--accordion { order: 7; }
+  .product-title { font-size: 1.75rem; }
+  .price-right-only .price-value { font-size: 1.5rem; }
+  .price-right-only .price-label { font-size: 0.75rem; }
 }
 @media (max-width: 40rem) {
   .actions-row .btn-whatsapp {
