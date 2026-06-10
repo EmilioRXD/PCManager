@@ -60,7 +60,7 @@
         <span class="spec-tag">{{ equipo.almacenamiento }}</span>
         <span v-if="equipo.pantalla" class="spec-tag">{{ equipo.pantalla }}</span>
         <span v-if="equipo.tactil" class="spec-tag">
-          <AppIcon name="touch_app" size="13px" style="margin-right:2px;" />
+          <AppIcon name="touch_app" size="0.75rem" style="margin-right:0.125rem;" />
           Táctil
         </span>
       </div>
@@ -73,7 +73,7 @@
           "
         >
           Ver ficha técnica
-          <AppIcon name="arrow_forward" size="11px" />
+          <AppIcon name="arrow_forward" size="0.75rem" />
         </a>
         <button class="btn-quick" @click.stop="$emit('quickView', equipo)">
           Vista rápida
@@ -127,7 +127,7 @@ function toggleCompare() {
 <style scoped>
 .compare-check {
   position: absolute;
-  top: 12px; right: 12px; z-index: 2;
+  top: 0.75rem; right: 0.75rem; z-index: 2;
   opacity: 0; transform: scale(0.85);
   transition: all 0.22s cubic-bezier(0.23,1,0.32,1);
 }
@@ -138,12 +138,12 @@ function toggleCompare() {
 .compare-check input[type="checkbox"] { display: none; }
 .compare-check label {
   display: flex; align-items: center; justify-content: center;
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--surface); border: 1px solid var(--border);
+  width: 2rem; height: 2rem; border-radius: 50%;
+  background: var(--surface); border: 0.0625rem solid var(--border);
   cursor: pointer; transition: all 0.18s; font-size: 0;
 }
 .compare-check label::before {
-  content: "+"; font-size: 18px; font-weight: 400;
+  content: "+"; font-size: 1.25rem; font-weight: 400;
   color: var(--muted-light); line-height: 1;
 }
 .compare-check label:hover {
@@ -153,7 +153,7 @@ function toggleCompare() {
   background: var(--accent); border-color: var(--accent);
 }
 .compare-check input:checked + label::before {
-  content: "✓"; color: #fff; font-size: 14px; font-weight: 700;
+  content: "✓"; color: #fff; font-size: 1rem; font-weight: 700;
 }
 
 .card-media::after {

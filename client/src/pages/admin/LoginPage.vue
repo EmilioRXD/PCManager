@@ -85,11 +85,11 @@ async function handleLogin() {
 .login-wrapper::before {
   content: ''; position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 600px 400px at 50% 30%, rgba(0,82,255,0.05), transparent),
-    radial-gradient(ellipse 400px 300px at 80% 70%, rgba(0,198,255,0.04), transparent);
+    radial-gradient(ellipse 37.5rem 25rem at 50% 30%, rgba(0,82,255,0.05), transparent),
+    radial-gradient(ellipse 25rem 18.75rem at 80% 70%, rgba(0,198,255,0.04), transparent);
 }
 .login-card {
-  width: 100%; max-width: 400px; padding: 40px 32px;
+  width: 100%; max-width: 25rem; padding: 2.5rem 2rem;
   position: relative; z-index: 1;
 }
 .text-negative { color: var(--danger); }

@@ -10,7 +10,7 @@
           <div class="detail-section">
             <h2 class="section-title">
               <span class="section-icon"
-                ><AppIcon name="verified_user" size="18px"
+                ><AppIcon name="verified_user" size="1.25rem"
               /></span>
               Garantías y beneficios
             </h2>
@@ -110,10 +110,10 @@
           </div>
 
           <!-- Specs -->
-          <div class="detail-section" style="margin-top: 32px">
+          <div class="detail-section" style="margin-top: 2rem">
             <h2 class="section-title">
               <span class="section-icon"
-                ><AppIcon name="memory" size="18px"
+                ><AppIcon name="memory" size="1.25rem"
               /></span>
               Especificaciones técnicas
             </h2>
@@ -124,7 +124,7 @@
           <div class="detail-section">
             <h2 class="section-title">
               <span class="section-icon"
-                ><AppIcon name="info" size="18px"
+                ><AppIcon name="info" size="1.25rem"
               /></span>
               Más información
             </h2>
@@ -145,7 +145,7 @@
                       'accordion-chevron',
                       { rotated: openAccordion === idx },
                     ]"
-                    size="16px"
+                    size="1rem"
                   />
                 </div>
                 <div class="accordion-body" v-show="openAccordion === idx">
@@ -319,42 +319,42 @@ watch(
 
 <style scoped>
 .detail-wrapper {
-  max-width: 1280px;
+  max-width: 80rem;
   margin: 0 auto;
-  padding: 0 24px 64px;
+  padding: 0 1.5rem 4rem;
 }
 .detail-layout {
   display: grid;
-  grid-template-columns: 1fr 440px;
-  gap: 56px;
-  margin-top: 24px;
+  grid-template-columns: 1fr 27.5rem;
+  gap: 3.5rem;
+  margin-top: 1.5rem;
   align-items: start;
 }
 .gallery-col {
   position: sticky;
-  top: 88px;
+  top: 5.5rem;
 }
 .info-col {
   position: sticky;
-  top: 88px;
+  top: 5.5rem;
 }
 .status-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
   flex-wrap: wrap;
 }
 .product-title {
-  font-size: 34px;
+  font-size: 2.25rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  margin: 0 0 8px;
+  margin: 0 0 0.5rem;
   color: var(--fg);
 }
 .product-subtitle {
-  font-size: 15px;
+  font-size: 1rem;
   color: var(--muted);
   margin: 0;
 }
@@ -363,51 +363,51 @@ watch(
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 24px 24px 0 24px;
-  margin-bottom: 16px;
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  margin-bottom: 1rem;
   overflow: hidden;
 }
 .price-row-wrap {
   display: flex;
   justify-content: flex-start;
-  margin-top: 18px;
+  margin-top: 1.25rem;
 }
 .price-right-only {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.5rem;
   background: linear-gradient(135deg, var(--accent), #3b82f6);
-  border-radius: 0 999px 999px 0;
+  border-radius: 0 62.5rem 62.5rem 0;
   padding: 1rem 1rem 1rem 2.5rem;
-  margin-left: -24px;
+  margin-left: -1.5rem;
   font-family: var(--font-display);
   color: #fff;
 }
 .price-right-only .price-label {
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   line-height: 1;
 }
 .price-right-only .price-value {
-  font-size: 22px;
+  font-size: 1.5rem;
   font-weight: 700;
   line-height: 1;
   font-family: var(--font-mono);
 }
 .price-info {
-  font-size: 13px;
+  font-size: 0.75rem;
   color: var(--muted);
-  padding: 10px 0;
+  padding: 0.75rem 0;
 }
 
 .detail-actions-grid {
   display: grid;
-  grid-template-columns: repeat(4, 70px);
-  justify-content: center;
-  gap: 12px;
-  padding: 12px 0;
+  grid-template-columns: repeat(4, 4.5rem);
+  justify-content: start;
+  gap: 1rem;
+  padding: 1rem 0;
 }
 .detail-action-box {
   aspect-ratio: 1;
@@ -435,48 +435,48 @@ watch(
 }
 
 .stock-row {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
 
 .actions-row {
   display: flex;
-  gap: 10px;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
 .detail-section {
-  margin-top: 36px;
+  margin-top: 2.25rem;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 64rem) {
   .detail-layout {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 2rem;
   }
   .gallery-col,
   .info-col {
     position: static;
   }
   .product-title {
-    font-size: 26px;
+    font-size: 1.75rem;
   }
   .price-right-only .price-value {
-    font-size: 28px;
+    font-size: 1.75rem;
   }
   .price-right-only .price-label {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 }
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
   .actions-row .btn-whatsapp {
     min-width: 100%;
   }
   .detail-wrapper {
-    padding: 0 16px 48px;
+    padding: 0 1rem 3rem;
   }
   .detail-actions-grid {
-    grid-template-columns: repeat(2, 60px);
-    gap: 10px;
+    grid-template-columns: repeat(2, 3.75rem);
+    gap: 0.75rem;
   }
 }
 </style>

@@ -71,7 +71,39 @@ Solo se permiten estos breakpoints. No inventes otros:
 @media (max-width: 640px) { ... }
 ```
 
-## Regla #6 — Scoped es solo para layout local
+## Regla #6 — Unidades relativas, no px
+
+**PROHIBIDO** usar `px` para `font-size`, `padding`, `margin`, `gap`, `width`, `max-width` y `border-radius`. Usa unidades relativas:
+
+| Propiedad | Unidad | Ejemplo |
+|-----------|--------|---------|
+| `font-size` | `rem` | `font-size: 0.875rem` |
+| `padding` / `margin` / `gap` | `rem` | `padding: 1rem; gap: 0.75rem` |
+| `width` / `max-width` | `rem` o `%` | `max-width: 80rem; width: 100%` |
+| `border-radius` | `rem` | `border-radius: 0.5rem` |
+
+Excepciones permitidas (solo `px`):
+- `border-width` (ej: `border: 1px solid ...`)
+- `box-shadow` / `outline` / `inset`
+- `letter-spacing` (ej: `letter-spacing: -0.02em`)
+- Valores que necesitan precision absoluta, justificado con comentario
+
+```css
+/* CORRECTO */
+font-size: 0.875rem;
+padding: 1rem 1.5rem;
+gap: 0.75rem;
+border-radius: 0.5rem;
+max-width: 80rem;
+
+/* INCORRECTO - PROHIBIDO */
+font-size: 14px;
+padding: 16px 24px;
+gap: 12px;
+border-radius: 8px;
+```
+
+## Regla #7 — Scoped es solo para layout local
 
 Los `<style scoped>` solo deben contener reglas **especificas del layout**
 de ese componente. Ejemplos validos de scoped styles:
@@ -91,7 +123,7 @@ Ejemplos de lo que **NO** va en scoped:
   template.css)
 - Espaciados simples (padding, margin, gap — usa clases utilitarias)
 
-## Regla #7 — Clases utilitarias para espaciado y layout
+## Regla #8 — Clases utilitarias para espaciado y layout
 
 template.css define estas clases de layout. Usalas en templates en vez
 de scoped styles:
@@ -103,7 +135,7 @@ de scoped styles:
 </div>
 ```
 
-## Regla #8 — Catalogo de componentes globales
+## Regla #9 — Catalogo de componentes globales
 
 Estos patrones ya existen en template.css. Usalos directamente:
 
@@ -278,8 +310,10 @@ Antes de commitear, verifica:
 2. No hay clases duplicadas entre componentes (si 2+ comparten una clase,
    va a template.css)
 3. Los colores usan `var(--*)` (excepto brand dots)
-4. Los breakpoints son solo 1024px y 640px
-5. Las clases usan kebab-case y siguen BEM simplificado
-6. Scoped styles solo contienen layout local del componente
-7. No se definieron animaciones `@keyframes` duplicadas
-8. El build de Vite compila sin errores: `npm run build` en client/
+4. No hay `px` en `font-size`, `padding`, `margin`, `gap`, `border-radius`
+   (usa `rem`)
+5. Los breakpoints son solo 1024px y 640px
+6. Las clases usan kebab-case y siguen BEM simplificado
+7. Scoped styles solo contienen layout local del componente
+8. No se definieron animaciones `@keyframes` duplicadas
+9. El build de Vite compila sin errores: `npm run build` en client/

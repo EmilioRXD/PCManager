@@ -8,11 +8,11 @@
       </div>
       <div class="quick-actions">
         <router-link to="/" class="btn btn-secondary banner-btn">
-          <AppIcon name="language" size="16px" />
+          <AppIcon name="language" size="1rem" />
           Ver tienda
         </router-link>
         <button class="btn btn-primary banner-btn" @click="openCreateDialog">
-          <AppIcon name="add" size="16px" />
+          <AppIcon name="add" size="1rem" />
           Agregar equipo
         </button>
       </div>
@@ -24,7 +24,7 @@
         <div class="stat-label">Total equipos</div>
         <div class="stat-value">{{ allRows.length }}</div>
         <div class="stat-delta">
-          <AppIcon name="arrow_upward" size="14px" />
+          <AppIcon name="arrow_upward" size="1rem" />
           Actualizado
         </div>
       </div>
@@ -32,7 +32,7 @@
         <div class="stat-label">Stock bajo</div>
         <div class="stat-value">{{ lowStockCount }}</div>
         <div class="stat-delta down">
-          <AppIcon name="arrow_downward" size="14px" />
+          <AppIcon name="arrow_downward" size="1rem" />
           Requiere atención
         </div>
       </div>
@@ -40,7 +40,7 @@
         <div class="stat-label">Valor inventario</div>
         <div class="stat-value mono">${{ totalValue.toLocaleString() }}</div>
         <div class="stat-delta">
-          <AppIcon name="arrow_upward" size="14px" />
+          <AppIcon name="arrow_upward" size="1rem" />
           En catálogo
         </div>
       </div>
@@ -48,7 +48,7 @@
         <div class="stat-label">Categorías</div>
         <div class="stat-value">{{ categoriesCount }}</div>
         <div class="stat-delta">
-          <AppIcon name="category" size="14px" />
+          <AppIcon name="category" size="1rem" />
           Activas
         </div>
       </div>
@@ -58,7 +58,7 @@
     <div class="section-header-admin">
       <h2>Inventario de equipos</h2>
       <div class="flex items-center gap-3">
-        <input class="input" v-model="tableSearch" placeholder="Buscar equipo…" type="text" style="width:240px;">
+        <input class="input" v-model="tableSearch" placeholder="Buscar equipo…" type="text" style="width:15rem;">
       </div>
     </div>
 
@@ -76,7 +76,7 @@
         </thead>
         <tbody>
           <tr v-if="filteredRows.length === 0 && !loading">
-            <td colspan="6" class="text-center" style="padding:40px;color:var(--muted);">
+            <td colspan="6" class="text-center" style="padding:2.5rem;color:var(--muted);">
               No se encontraron equipos
             </td>
           </tr>
@@ -91,7 +91,7 @@
               </div>
             </td>
             <td><span class="badge">{{ row.categoria_nombre }}</span></td>
-            <td class="mono text-right" style="font-weight:700;font-size:15px;">${{ Number(row.precio).toLocaleString() }}</td>
+            <td class="mono text-right" style="font-weight:700;font-size:1rem;">${{ Number(row.precio).toLocaleString() }}</td>
             <td>
               <span :class="['stock-pill', row.stock > 5 ? 'stock-pill-high' : row.stock > 0 ? 'stock-pill-low' : 'stock-pill-out']">
                 <span class="dot" />
@@ -106,10 +106,10 @@
             <td>
               <div class="action-btns">
                 <button class="action-btn" aria-label="Editar" title="Editar" @click="openEditDialog(row)">
-                  <AppIcon name="edit" size="16px" />
+                  <AppIcon name="edit" size="1rem" />
                 </button>
                 <button class="action-btn delete" aria-label="Eliminar" title="Eliminar" @click="confirmDelete(row)">
-                  <AppIcon name="delete" size="16px" />
+                  <AppIcon name="delete" size="1rem" />
                 </button>
               </div>
             </td>
@@ -123,7 +123,7 @@
       <span class="page-info">Mostrando {{ startRow }}–{{ endRow }} de {{ filteredRows.length }} equipos</span>
       <div class="page-btns">
         <button class="page-btn" :disabled="currentPage <= 1" @click="currentPage--">
-          <AppIcon name="chevron_left" size="14px" />
+          <AppIcon name="chevron_left" size="1rem" />
         </button>
         <button
           v-for="p in displayPages"
@@ -134,14 +134,14 @@
           {{ p }}
         </button>
         <button class="page-btn" :disabled="currentPage >= totalPages" @click="currentPage++">
-          <AppIcon name="chevron_right" size="14px" />
+          <AppIcon name="chevron_right" size="1rem" />
         </button>
       </div>
     </div>
 
     <!-- FAB -->
     <button class="fab" aria-label="Agregar equipo" title="Agregar equipo" @click="openCreateDialog">
-      <AppIcon name="add" size="22px" />
+      <AppIcon name="add" size="1.5rem" />
     </button>
 
     <!-- Dialog -->
@@ -149,66 +149,66 @@
       <div class="dialog-overlay" v-if="dialogOpen" @click.self="dialogOpen = false">
         <div class="dialog-modal">
           <div class="dialog-bar">
-            <AppIcon name="computer" size="20px" />
+            <AppIcon name="computer" size="1.25rem" />
             <span>{{ isEditing ? 'Editar Equipo' : 'Nuevo Equipo' }}</span>
             <div style="flex:1;" />
             <button class="action-btn" style="color:#fff;border-color:rgba(255,255,255,0.3);" @click="dialogOpen = false">
-              <AppIcon name="close" size="18px" />
+              <AppIcon name="close" size="1.25rem" />
             </button>
           </div>
           <div class="dialog-body">
             <form ref="formRef" @submit.prevent="handleSubmit">
-              <div class="row q-col-gutter-md" style="display:flex;flex-wrap:wrap;gap:16px;">
-                <div style="flex:1 1 calc(50% - 8px);min-width:200px;">
+              <div class="row q-col-gutter-md" style="display:flex;flex-wrap:wrap;gap:1rem;">
+                <div style="flex:1 1 calc(50% - 0.5rem);min-width:12.5rem;">
                   <label class="form-label form-label-sm">Marca *</label>
                   <input class="input" v-model="form.marca" required />
                 </div>
-                <div style="flex:1 1 calc(50% - 8px);min-width:200px;">
+                <div style="flex:1 1 calc(50% - 0.5rem);min-width:12.5rem;">
                   <label class="form-label form-label-sm">Modelo *</label>
                   <input class="input" v-model="form.modelo" required />
                 </div>
-                <div style="flex:1 1 calc(50% - 8px);min-width:200px;">
+                <div style="flex:1 1 calc(50% - 0.5rem);min-width:12.5rem;">
                   <label class="form-label form-label-sm">Procesador *</label>
                   <input class="input" v-model="form.procesador" required />
                 </div>
-                <div style="flex:1 1 calc(50% - 8px);min-width:200px;">
+                <div style="flex:1 1 calc(50% - 0.5rem);min-width:12.5rem;">
                   <label class="form-label form-label-sm">RAM *</label>
                   <input class="input" v-model="form.ram" required />
                 </div>
-                <div style="flex:1 1 calc(50% - 8px);min-width:200px;">
+                <div style="flex:1 1 calc(50% - 0.5rem);min-width:12.5rem;">
                   <label class="form-label form-label-sm">Almacenamiento *</label>
                   <input class="input" v-model="form.almacenamiento" required />
                 </div>
-                <div style="flex:1 1 calc(50% - 8px);min-width:200px;">
+                <div style="flex:1 1 calc(50% - 0.5rem);min-width:12.5rem;">
                   <label class="form-label form-label-sm">Tarjeta Gráfica</label>
                   <input class="input" v-model="form.tarjeta_grafica" />
                 </div>
-                <div style="flex:1 1 calc(50% - 8px);min-width:200px;">
+                <div style="flex:1 1 calc(50% - 0.5rem);min-width:12.5rem;">
                   <label class="form-label form-label-sm">Pantalla</label>
                   <input class="input" v-model="form.pantalla" placeholder="Ej: FHD 15.6&quot;" />
                 </div>
                 <div style="flex:1 1 100%;">
                   <label class="form-label form-label-sm">
-                    <input type="checkbox" v-model="form.tactil" style="accent-color:var(--accent);margin-right:8px;width:16px;height:16px;" />
+                    <input type="checkbox" v-model="form.tactil" style="accent-color:var(--accent);margin-right:0.5rem;width:1rem;height:1rem;" />
                     Táctil
                   </label>
                 </div>
-                <div style="flex:1 1 calc(33% - 11px);min-width:150px;">
+                <div style="flex:1 1 calc(33% - 0.75rem);min-width:9.5rem;">
                   <label class="form-label form-label-sm">Precio *</label>
                   <input class="input mono" v-model.number="form.precio" type="number" step="0.01" min="0" required />
                 </div>
-                <div style="flex:1 1 calc(33% - 11px);min-width:150px;">
+                <div style="flex:1 1 calc(33% - 0.75rem);min-width:9.5rem;">
                   <label class="form-label form-label-sm">Stock *</label>
                   <input class="input mono" v-model.number="form.stock" type="number" min="0" required />
                 </div>
-                <div style="flex:1 1 calc(33% - 11px);min-width:150px;">
+                <div style="flex:1 1 calc(33% - 0.75rem);min-width:9.5rem;">
                   <label class="form-label form-label-sm">Condición *</label>
                   <select class="input" v-model="form.condicion" required style="cursor:pointer;">
                     <option value="nuevo">Nuevo</option>
                     <option value="refurbished">Refurbished</option>
                   </select>
                 </div>
-                <div style="flex:1 1 calc(33% - 11px);min-width:150px;">
+                <div style="flex:1 1 calc(33% - 0.75rem);min-width:9.5rem;">
                   <label class="form-label form-label-sm">Categoría *</label>
                   <select class="input" v-model="form.categoria_id" required style="cursor:pointer;">
                     <option v-for="c in categoriaOptions" :key="c.id" :value="c.id">{{ c.nombre }}</option>
@@ -223,7 +223,7 @@
                   <textarea class="input" v-model="form.descripcion" rows="4" style="resize:vertical;"></textarea>
                 </div>
               </div>
-              <div class="flex justify-end q-mt-lg" style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end;">
+              <div class="flex justify-end q-mt-lg" style="display:flex;gap:0.75rem;margin-top:1.5rem;justify-content:flex-end;">
                 <button type="button" class="btn btn-secondary" @click="dialogOpen = false">Cancelar</button>
                 <button type="submit" class="btn btn-primary" :disabled="submitting">{{ isEditing ? 'Guardar Cambios' : 'Crear Equipo' }}</button>
               </div>
@@ -369,31 +369,31 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.content { padding: 28px 32px; max-width: 1400px; }
+.content { padding: 1.75rem 2rem; max-width: 87.5rem; }
 
-.quick-actions { display: flex; gap: 10px; }
-.banner-btn { font-size: 13px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+.quick-actions { display: flex; gap: 0.75rem; }
+.banner-btn { font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
 
 .section-header-admin {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 18px; flex-wrap: wrap; gap: 12px;
+  margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;
 }
-.section-header-admin h2 { font-size: 20px; font-weight: 700; margin: 0; color: var(--fg); }
+.section-header-admin h2 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--fg); }
 
 .pagination {
   display: flex; align-items: center; justify-content: space-between;
-  margin-top: 18px; flex-wrap: wrap; gap: 12px;
+  margin-top: 1.25rem; flex-wrap: wrap; gap: 0.75rem;
 }
-.page-info { font-size: 13px; color: var(--muted); }
-.page-btns { display: flex; gap: 4px; }
+.page-info { font-size: 0.75rem; color: var(--muted); }
+.page-btns { display: flex; gap: 0.25rem; }
 
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
-@media (max-width: 1024px) {
-  .content { padding: 20px; }
+@media (max-width: 64rem) {
+  .content { padding: 1.25rem; }
   .stats-row { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
   .stats-row { grid-template-columns: 1fr; }
 }
 </style>

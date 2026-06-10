@@ -4,18 +4,18 @@
     <aside class="filter-drawer" :class="{ open }">
       <div class="drawer-header">
         <div class="dh-left">
-          <AppIcon name="filter_list" size="18px" class="dh-icon" />
+          <AppIcon name="filter_list" size="1.25rem" class="dh-icon" />
           <h3>Filtros</h3>
         </div>
         <button class="btn-ghost dh-close" @click="close">
-          <AppIcon name="close" size="18px" />
+          <AppIcon name="close" size="1.25rem" />
         </button>
       </div>
 
       <div class="drawer-body">
         <div class="filter-block">
           <div class="filter-block-title">
-            <AppIcon name="branding_watermark" size="14px" />
+            <AppIcon name="branding_watermark" size="1rem" />
             Marca
           </div>
           <div class="brand-options">
@@ -28,7 +28,7 @@
 
         <div class="filter-block">
           <div class="filter-block-title">
-            <AppIcon name="monetization_on" size="14px" />
+            <AppIcon name="monetization_on" size="1rem" />
             Rango de precio
           </div>
           <div class="price-range-wrap">
@@ -46,7 +46,7 @@
 
         <div class="filter-block">
           <div class="filter-block-title">
-            <AppIcon name="verified" size="14px" />
+            <AppIcon name="verified" size="1rem" />
             Condición
           </div>
           <div class="brand-options">
@@ -100,30 +100,30 @@ function toggleCondition(cond) { emit('toggleCondition', cond) }
 .drawer-overlay.open { opacity: 1; pointer-events: auto; }
 
 .filter-drawer {
-  position: fixed; top: 0; right: 0; width: 420px; max-width: 100vw; height: 100vh;
+  position: fixed; top: 0; right: 0; width: 26.25rem; max-width: 100vw; height: 100vh;
   background: var(--surface); z-index: 95; overflow-y: auto;
   transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.23,1,0.32,1);
-  box-shadow: -8px 0 32px rgba(0,0,0,0.08); display: flex; flex-direction: column;
+  box-shadow: -0.5rem 0 32px rgba(0,0,0,0.08); display: flex; flex-direction: column;
 }
 .filter-drawer.open { transform: translateX(0); }
 
 .drawer-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 28px; border-bottom: 1px solid var(--border-light);
+  padding: 1.25rem 1.75rem; border-bottom: 0.0625rem solid var(--border-light);
   position: sticky; top: 0; background: var(--surface); z-index: 2;
 }
-.dh-left { display: flex; align-items: center; gap: 10px; }
+.dh-left { display: flex; align-items: center; gap: 0.75rem; }
 .dh-icon { color: var(--accent); }
-.drawer-header h3 { font-size: 17px; font-weight: 700; margin: 0; color: var(--fg); }
-.dh-close { padding: 6px; color: var(--muted); }
+.drawer-header h3 { font-size: 1rem; font-weight: 700; margin: 0; color: var(--fg); }
+.dh-close { padding: 0.5rem; color: var(--muted); }
 
-.drawer-body { flex: 1; padding: 28px; }
+.drawer-body { flex: 1; padding: 1.75rem; }
 
 .drawer-footer {
-  padding: 20px 28px; border-top: 1px solid var(--border);
-  display: flex; gap: 10px; position: sticky; bottom: 0; background: var(--surface);
+  padding: 1.25rem 1.75rem; border-top: 0.0625rem solid var(--border);
+  display: flex; gap: 0.75rem; position: sticky; bottom: 0; background: var(--surface);
 }
 .drawer-footer .btn { flex: 1; }
 
-@media (max-width: 640px) { .filter-drawer { width: 100%; } }
+@media (max-width: 40rem) { .filter-drawer { width: 100%; } }
 </style>

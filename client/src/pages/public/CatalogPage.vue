@@ -15,11 +15,11 @@
       <div class="hero-visual">
         <img class="laptop-frame" src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&h=400&fit=crop" alt="Featured laptop" />
         <div class="spec-float f1">
-          <span class="sf-icon"><AppIcon name="memory" size="14px" /></span>
+          <span class="sf-icon"><AppIcon name="memory" size="1rem" /></span>
           Hasta i9
         </div>
         <div class="spec-float f2">
-          <span class="sf-icon"><AppIcon name="sd_card" size="14px" /></span>
+          <span class="sf-icon"><AppIcon name="sd_card" size="1rem" /></span>
           Hasta 64GB RAM
         </div>
       </div>
@@ -31,7 +31,7 @@
         :class="['cat-pill', { active: activeCat === null }]"
         @click="setCategory(null)"
       >
-        <AppIcon name="grid_view" size="16px" />
+        <AppIcon name="grid_view" size="1rem" />
         Todos
       </button>
       <button
@@ -40,7 +40,7 @@
         :class="['cat-pill', { active: activeCat === cat.id }]"
         @click="setCategory(cat.id)"
       >
-        <AppIcon :name="catIcons[cat.nombre] || 'computer'" size="16px" />
+        <AppIcon :name="catIcons[cat.nombre] || 'computer'" size="1rem" />
         {{ cat.nombre }}
       </button>
     </div>
@@ -52,23 +52,23 @@
         <div class="active-chips">
           <span v-if="activeCat" class="chip-tag" @click="setCategory(null)">
             {{ activeCatName }}
-            <AppIcon name="close" size="12px" />
+            <AppIcon name="close" size="0.75rem" />
           </span>
           <span v-if="searchQuery" class="chip-tag" @click="searchQuery = ''">
             "{{ searchQuery }}"
-            <AppIcon name="close" size="12px" />
+            <AppIcon name="close" size="0.75rem" />
           </span>
           <span v-for="b in activeBrands" :key="b" class="chip-tag" @click="removeBrand(b)">
             {{ b }}
-            <AppIcon name="close" size="12px" />
+            <AppIcon name="close" size="0.75rem" />
           </span>
           <span v-for="c in activeConditions" :key="c" class="chip-tag" @click="removeCondition(c)">
             {{ c === 'nuevo' ? 'Nuevo' : 'Refurbished' }}
-            <AppIcon name="close" size="12px" />
+            <AppIcon name="close" size="0.75rem" />
           </span>
           <span v-if="minPrice > 0 || maxPrice < 10000" class="chip-tag" @click="resetPriceRange">
             ${{ minPrice }} — ${{ maxPrice }}
-            <AppIcon name="close" size="12px" />
+            <AppIcon name="close" size="0.75rem" />
           </span>
         </div>
       </div>
@@ -79,7 +79,7 @@
           <option value="price-desc">Precio: mayor a menor</option>
         </select>
         <button class="btn-filter-toggle" @click="openDrawer">
-          <AppIcon name="filter_list" size="16px" />
+          <AppIcon name="filter_list" size="1rem" />
           Filtros
           <span v-if="filterCount" class="badge-count">{{ filterCount }}</span>
         </button>
@@ -113,7 +113,7 @@
       </div>
 
       <div v-if="sortedEquipos.length === 0 && !store.loading" class="empty-state">
-        <AppIcon name="search_off" size="56px" color="grey-4" />
+        <AppIcon name="search_off" size="3.5rem" color="grey-4" />
         <h3>Sin resultados</h3>
         <p>No encontramos equipos con esos filtros. Probá con otra combinación.</p>
         <button class="btn btn-secondary" @click="resetAll">Limpiar todos los filtros</button>
@@ -161,13 +161,13 @@
         <div v-for="item in compareList" :key="item.id" class="compare-item">
           <img :src="item.imagen_url || 'https://placehold.co/60x60/e8effe/0052ff?text=PC'" alt="" />
           <div class="ci-name">{{ item.marca }} {{ item.modelo }}</div>
-          <AppIcon name="close" size="14px" class="ci-remove" @click="removeCompare(item)" />
+          <AppIcon name="close" size="1rem" class="ci-remove" @click="removeCompare(item)" />
         </div>
       </div>
       <div class="compare-actions">
         <button class="btn btn-secondary compare-btn" @click="clearCompare">Limpiar</button>
         <button class="btn btn-primary compare-btn" disabled>
-          <AppIcon name="bar_chart" size="16px" />
+          <AppIcon name="bar_chart" size="1rem" />
           Comparar ({{ compareList.length }})
         </button>
       </div>
@@ -293,7 +293,7 @@ function observe() {
   if (!sentinel.value) return
   observer = new IntersectionObserver(([entry]) => {
     if (entry.isIntersecting) loadMore()
-  }, { rootMargin: '0px 0px 1500px 0px' })
+  }, { rootMargin: '0rem 0rem 93.75rem 0rem' })
   observer.observe(sentinel.value)
 }
 
@@ -429,36 +429,36 @@ onUnmounted(() => {
   position: relative; overflow: hidden;
   background: linear-gradient(160deg, #f0f5ff 0%, #e8effe 25%, #fafbfd 55%, #f0f5ff 100%);
   display: grid; grid-template-columns: 1fr 1fr;
-  min-height: 420px; align-items: center;
+  min-height: 26.25rem; align-items: center;
 }
 .catalog-hero::before {
   content: ''; position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 600px 400px at 80% 30%, rgba(0,82,255,0.06), transparent),
-    radial-gradient(ellipse 400px 300px at 20% 80%, rgba(0,198,255,0.05), transparent);
+    radial-gradient(ellipse 37.5rem 25rem at 80% 30%, rgba(0,82,255,0.06), transparent),
+    radial-gradient(ellipse 25rem 18.75rem at 20% 80%, rgba(0,198,255,0.05), transparent);
 }
 .catalog-hero .dots {
-  position: absolute; right: -20px; top: -20px;
-  width: 500px; height: 500px;
-  background-image: radial-gradient(circle, rgba(0,82,255,0.08) 1.8px, transparent 1.8px);
+  position: absolute; right: -1.25rem; top: -1.25rem;
+  width: 31.25rem; height: 31.25rem;
+  background-image: radial-gradient(circle, rgba(0,82,255,0.08) 0.1125rem, transparent 0.1125rem);
   background-size: 34px 34px;
   pointer-events: none;
 }
-.hero-content { padding: 64px 28px 64px 32px; position: relative; z-index: 1; }
+.hero-content { padding: 4rem 1.75rem 4rem 2rem; position: relative; z-index: 1; }
 .hero-kicker {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 16px; border-radius: 99px;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1rem; border-radius: 6.25rem;
   background: rgba(0,82,255,0.08); color: var(--accent);
-  font-size: 13px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 20px;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 1.25rem;
 }
 .hero-kicker .dot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+  width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--accent);
 }
 .pulse-dot { animation: hero-dot-pulse 2s ease-in-out infinite; }
 @keyframes hero-dot-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 .hero-title {
-  font-size: clamp(34px, 4vw, 52px); font-weight: 900;
-  letter-spacing: -0.04em; line-height: 1.05; color: var(--fg); margin: 0 0 16px;
+  font-size: clamp(34px, 4vw, 3.25rem); font-weight: 900;
+  letter-spacing: -0.04em; line-height: 1.05; color: var(--fg); margin: 0 0 1rem;
 }
 .hero-title em {
   font-style: normal;
@@ -466,72 +466,72 @@ onUnmounted(() => {
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.hero-desc { font-size: 16px; color: var(--muted); max-width: 440px; margin: 16px 0 24px; line-height: 1.5; }
-.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-desc { font-size: 1rem; color: var(--muted); max-width: 27.5rem; margin: 1rem 0 1.5rem; line-height: 1.5; }
+.hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 .hero-visual {
   position: relative; z-index: 1; display: flex;
-  align-items: center; justify-content: center; padding: 32px;
+  align-items: center; justify-content: center; padding: 2rem;
 }
 .laptop-frame {
-  width: 100%; max-width: 520px;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.10));
+  width: 100%; max-width: 32.5rem;
+  filter: drop-shadow(0 1.25rem 2.5rem rgba(0,0,0,0.10));
   transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
-  border-radius: 16px;
+  border-radius: 1rem;
 }
-.hero-visual:hover .laptop-frame { transform: translateY(-6px); }
+.hero-visual:hover .laptop-frame { transform: translateY(-0.5rem); }
 .spec-float {
-  position: absolute; padding: 10px 16px; border-radius: var(--radius-md);
+  position: absolute; padding: 0.75rem 1rem; border-radius: var(--radius-md);
   background: var(--surface); border: 1px solid var(--border);
-  box-shadow: var(--shadow-md); font-size: 13px; font-weight: 600;
-  display: flex; align-items: center; gap: 8px;
+  box-shadow: var(--shadow-md); font-size: 0.75rem; font-weight: 600;
+  display: flex; align-items: center; gap: 0.5rem;
   animation: float-bob 3s ease-in-out infinite; color: var(--fg);
 }
 .spec-float.f1 { top: 18%; right: 8%; animation-delay: 0s; }
 .spec-float.f2 { bottom: 28%; left: 4%; animation-delay: 1.2s; }
 .sf-icon {
-  width: 28px; height: 28px; border-radius: 6px;
+  width: 1.75rem; height: 1.75rem; border-radius: 0.5rem;
   background: var(--accent-glow); color: var(--accent);
   display: grid; place-items: center; flex-shrink: 0;
 }
-@keyframes float-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes float-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-0.5rem)} }
 
-.products-area { padding: 0 32px 40px; }
+.products-area { padding: 0 2rem 2.5rem; }
 
 .compare-bar {
-  position: fixed; bottom: -120px; left: 0; right: 0; z-index: 70;
+  position: fixed; bottom: -7.5rem; left: 0; right: 0; z-index: 70;
   background: var(--surface); border-top: 1px solid var(--border);
-  box-shadow: 0 -8px 32px rgba(0,0,0,0.08);
-  padding: 16px 32px; display: flex; align-items: center; gap: 20px;
+  box-shadow: 0 -0.5rem 2rem rgba(0,0,0,0.08);
+  padding: 1rem 2rem; display: flex; align-items: center; gap: 1.25rem;
   transition: bottom 0.35s cubic-bezier(0.23,1,0.32,1);
 }
 .compare-bar.visible { bottom: 0; }
-.compare-items { display: flex; gap: 16px; flex: 1; overflow-x: auto; }
+.compare-items { display: flex; gap: 1rem; flex: 1; overflow-x: auto; }
 .compare-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 16px 8px 8px; border-radius: var(--radius-md);
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.5rem 1rem 0.5rem 0.5rem; border-radius: var(--radius-md);
   border: 1px solid var(--border); flex-shrink: 0;
 }
-.compare-item img { width: 40px; height: 40px; object-fit: contain; border-radius: 4px; }
-.compare-item .ci-name { font-size: 13px; font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.compare-item img { width: 2.5rem; height: 2.5rem; object-fit: contain; border-radius: 0.25rem; }
+.compare-item .ci-name { font-size: 0.75rem; font-weight: 600; max-width: 8.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .compare-item .ci-remove { cursor: pointer; color: var(--muted); flex-shrink: 0; }
 .compare-item .ci-remove:hover { color: var(--danger); }
-.compare-actions { display: flex; gap: 10px; flex-shrink: 0; }
-.compare-btn { font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.compare-actions { display: flex; gap: 0.75rem; flex-shrink: 0; }
+.compare-btn { font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.5rem; }
 
 .filter-left { flex-wrap: wrap; }
-.active-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.results-info { font-size: 14px; color: var(--muted); }
+.active-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.results-info { font-size: 1rem; color: var(--muted); }
 .results-info strong { color: var(--fg); font-family: var(--font-mono); }
 
-@media (max-width: 1024px) {
+@media (max-width: 64rem) {
   .catalog-hero { grid-template-columns: 1fr; min-height: auto; }
   .hero-visual { display: none; }
-  .hero-content { padding: 40px 20px; }
-  .products-area { padding: 0 20px 32px; }
+  .hero-content { padding: 2.5rem 1.25rem; }
+  .products-area { padding: 0 1.25rem 2rem; }
 }
-@media (max-width: 640px) {
-  .hero-title { font-size: 28px; }
-  .compare-bar { padding: 12px 16px; flex-direction: column; }
+@media (max-width: 40rem) {
+  .hero-title { font-size: 1.75rem; }
+  .compare-bar { padding: 0.75rem 1rem; flex-direction: column; }
   .compare-actions { width: 100%; }
 }
 </style>
