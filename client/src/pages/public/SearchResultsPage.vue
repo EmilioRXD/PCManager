@@ -2,7 +2,7 @@
   <div class="search-page">
     <div class="sp-header">
       <div class="sp-search-bar">
-        <AppIcon name="search" size="18px" class="sp-icon" />
+        <AppIcon name="search" size="1.25rem" class="sp-icon" />
         <input
           class="sp-input"
           v-model="query"
@@ -18,7 +18,7 @@
       <p class="sp-count">{{ searchTotal }} resultado{{ searchTotal !== 1 ? 's' : '' }} para "<strong>{{ query }}</strong>"</p>
 
       <div v-if="searchTotal === 0" class="empty-state">
-        <AppIcon name="search_off" size="56px" />
+        <AppIcon name="search_off" size="3.5rem" />
         <h3>Sin resultados</h3>
         <p>No encontramos equipos. Probá con otra búsqueda.</p>
       </div>
@@ -81,7 +81,7 @@
     </div>
 
     <div class="sp-body empty-state" v-else>
-      <AppIcon name="search" size="56px" />
+      <AppIcon name="search" size="3.5rem" />
       <h3>Buscá equipos</h3>
       <p>Escribí para encontrar laptops, desktops y workstations.</p>
     </div>
@@ -208,7 +208,7 @@ function observeSearch() {
   if (!searchSentinel.value) return
   searchObserver = new IntersectionObserver(([entry]) => {
     if (entry.isIntersecting) loadMoreSearch()
-  }, { rootMargin: '0px 0px 1500px 0px' })
+  }, { rootMargin: '0rem 0rem 93.75rem 0rem' })
   searchObserver.observe(searchSentinel.value)
 }
 
@@ -217,7 +217,7 @@ function observeAll() {
   if (!allSentinel.value) return
   allObserver = new IntersectionObserver(([entry]) => {
     if (entry.isIntersecting) loadMoreAll()
-  }, { rootMargin: '0px 0px 1500px 0px' })
+  }, { rootMargin: '0rem 0rem 93.75rem 0rem' })
   allObserver.observe(allSentinel.value)
 }
 
@@ -242,10 +242,10 @@ onUnmounted(() => {
 
 <style scoped>
 .search-page {
-  max-width: 1280px; margin: 0 auto; padding: 24px 24px 64px;
+  max-width: 80rem; margin: 0 auto; padding: 1.5rem 1.5rem 4rem;
 }
 
-.sp-header { margin-bottom: 24px; }
+.sp-header { margin-bottom: 1.5rem; }
 .sp-search-bar {
   display: flex; align-items: center; gap: 0;
   border: 1px solid var(--border); border-radius: var(--radius-lg);
@@ -253,28 +253,28 @@ onUnmounted(() => {
   transition: border-color 0.15s;
 }
 .sp-search-bar:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-.sp-icon { padding: 0 0 0 16px; color: var(--muted); flex-shrink: 0; }
+.sp-icon { padding: 0 0 0 1rem; color: var(--muted); flex-shrink: 0; }
 .sp-input {
   flex: 1; border: none; outline: none;
-  padding: 14px 12px; font-size: 16px;
+  padding: 1rem 0.75rem; font-size: 1rem;
   font-family: var(--font-body); color: var(--fg); background: transparent;
 }
 .sp-input::placeholder { color: var(--muted-light); }
 .sp-clear {
-  width: 40px; height: 40px; border: none;
+  width: 2.5rem; height: 2.5rem; border: none;
   background: transparent; color: var(--muted);
-  cursor: pointer; font-size: 16px;
+  cursor: pointer; font-size: 1rem;
   display: grid; place-items: center; flex-shrink: 0;
 }
 .sp-clear:hover { color: var(--fg); }
 
 .sp-body { padding: 0; }
-.sp-count { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+.sp-count { font-size: 1rem; color: var(--muted); margin-bottom: 1.25rem; }
 
-@media (max-width: 1024px) {
-  .search-page { padding: 20px; }
+@media (max-width: 64rem) {
+  .search-page { padding: 1.25rem; }
 }
-@media (max-width: 640px) {
-  .search-page { padding: 16px 12px 48px; }
+@media (max-width: 40rem) {
+  .search-page { padding: 1rem 0.75rem 3rem; }
 }
 </style>

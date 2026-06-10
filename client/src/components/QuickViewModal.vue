@@ -3,7 +3,7 @@
     <div class="qv-overlay" :class="{ open }" @click.self="close">
       <div class="qv-modal">
         <button class="qv-close" @click="close">
-          <AppIcon name="close" size="18px" />
+          <AppIcon name="close" size="1.25rem" />
         </button>
         <div class="qv-image">
           <img :src="imgSrc" :alt="equipo?.modelo" />
@@ -19,7 +19,7 @@
                   ? 'badge-warning'
                   : 'badge-success',
               ]"
-              style="margin-left: 6px"
+              style="margin-left: 0.5rem"
             >
               {{ equipo.condicion === "refurbished" ? "Refurbished" : "Nuevo" }}
             </span>
@@ -42,7 +42,7 @@
             <span v-if="equipo?.tarjeta_grafica" class="spec-tag">{{ equipo.tarjeta_grafica }}</span>
             <span v-if="equipo?.pantalla" class="spec-tag">{{ equipo.pantalla }}</span>
             <span v-if="equipo?.tactil" class="spec-tag">
-              <AppIcon name="touch_app" size="13px" style="margin-right: 2px" />
+              <AppIcon name="touch_app" size="0.75rem" style="margin-right: 0.125rem" />
               Táctil
             </span>
           </div>
@@ -116,9 +116,9 @@ function goToDetail() {
 
 .qv-modal {
   background: var(--surface); border-radius: var(--radius-lg);
-  width: 900px; max-width: 95vw; max-height: 85vh; overflow: hidden;
+  width: 56.25rem; max-width: 95vw; max-height: 85vh; overflow: hidden;
   display: grid; grid-template-columns: 1fr 1fr;
-  transform: translateY(20px);
+  transform: translateY(1.25rem);
   transition: transform 0.3s cubic-bezier(0.23,1,0.32,1);
 }
 .qv-overlay.open .qv-modal { transform: translateY(0); }
@@ -131,12 +131,12 @@ function goToDetail() {
   width: 100%; height: 100%; object-fit: cover;
 }
 .qv-modal .qv-info {
-  padding: 28px; display: flex; flex-direction: column;
-  gap: 12px; overflow-y: auto;
+  padding: 1.75rem; display: flex; flex-direction: column;
+  gap: 0.75rem; overflow-y: auto;
 }
 .qv-modal .qv-close {
-  position: absolute; top: 16px; right: 16px;
-  width: 36px; height: 36px; border-radius: 50%;
+  position: absolute; top: 1rem; right: 1rem;
+  width: 2.25rem; height: 2.25rem; border-radius: 50%;
   border: 1px solid var(--border); background: var(--surface);
   cursor: pointer; display: grid; place-items: center;
   transition: all 0.15s; z-index: 2;
@@ -144,30 +144,30 @@ function goToDetail() {
 .qv-modal .qv-close:hover { background: var(--border-light); }
 
 .qv-title {
-  font-size: 28px; font-weight: 800; letter-spacing: -0.03em;
+  font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em;
   line-height: 1.1; color: var(--fg); margin: 0;
 }
 .qv-actions {
   margin-top: auto; padding-top: 1.5rem;
-  display: flex; gap: 10px;
+  display: flex; gap: 0.75rem;
 }
 .qv-go-btn {
   flex: 1; display: flex; align-items: center;
-  justify-content: center; gap: 8px;
+  justify-content: center; gap: 0.5rem;
   text-decoration: none; color: #fff !important;
 }
 
 .badge-cat {
   background: transparent; color: var(--accent-dark);
-  border: 2px solid var(--accent-dark);
+  border: 0.125rem solid var(--accent-dark);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 64rem) {
   .qv-modal { grid-template-columns: 1fr; max-height: 90vh; }
   .qv-modal .qv-image {
-    max-height: 300px;
+    max-height: 18.75rem;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
-  .qv-modal .qv-info { padding: 20px 24px 28px; }
+  .qv-modal .qv-info { padding: 1.25rem 1.5rem 1.75rem; }
 }
 </style>

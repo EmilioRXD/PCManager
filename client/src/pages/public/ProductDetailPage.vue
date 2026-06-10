@@ -4,17 +4,19 @@
       <div class="detail-layout">
         <!-- Gallery Column -->
         <div class="gallery-col">
-          <ImageGallery :images="galleryImages" :alt="equipo.modelo" />
+          <div class="image-col">
+            <ImageGallery :images="galleryImages" :alt="equipo.modelo" />
+          </div>
 
-          <!-- Warranty section below gallery -->
+          <!-- Specs below gallery -->
           <div class="detail-section">
             <h2 class="section-title">
               <span class="section-icon"
-                ><AppIcon name="verified_user" size="18px"
+                ><AppIcon name="memory" size="1.25rem"
               /></span>
-              Garantías y beneficios
+              Especificaciones técnicas
             </h2>
-            <WarrantyCards :items="warrantyItems" />
+            <SpecsGrid :specs="specsList" />
           </div>
         </div>
 
@@ -22,21 +24,15 @@
         <div class="info-col">
           <div class="price-block">
             <div class="status-row">
-              <span class="badge">{{ equipo.categoria_nombre }}</span>
-              <span
-                v-if="equipo.condicion"
-                :class="[
-                  'badge',
-                  equipo.condicion === 'refurbished'
-                    ? 'badge-warning'
-                    : 'badge-success',
-                ]"
-              >
+              <span class="badge badge-success">{{
+                equipo.categoria_nombre
+              }}</span>
+              <span v-if="equipo.condicion" class="badge badge-success">
                 {{
                   equipo.condicion === "refurbished" ? "Refurbished" : "Nuevo"
                 }}
               </span>
-              <span class="badge badge-accent">Garantía incluida</span>
+              <span class="badge badge-success">Garantía incluida</span>
             </div>
 
             <h1 class="product-title">{{ equipo.modelo }}</h1>
@@ -48,34 +44,50 @@
               }}
             </p>
 
-            <div class="price-row">
-              <div class="price-left">
-                <span
-                  :class="[
-                    'stock-badge',
-                    equipo.stock > 5
-                      ? 'stock-in'
-                      : equipo.stock > 0
-                        ? 'stock-low'
-                        : 'stock-out',
-                  ]"
-                >
-                  <span v-if="equipo.stock > 0" class="stock-dot" />
-                  {{
-                    equipo.stock > 0
-                      ? `En stock — ${equipo.stock} unidades`
-                      : "Agotado"
-                  }}
-                </span>
-              </div>
-              <div class="price-right">
+            <div class="price-row-wrap">
+              <div class="price-right-only">
                 <span class="price-label">REF:</span>
                 <span class="price-value"
                   >${{ formatPrice(equipo.precio) }}</span
                 >
               </div>
             </div>
-            <div class="price-info">Precio válido por tiempo limitado</div>
+            <div class="price-info">Válido al cancelar</div>
+
+            <div class="detail-actions-grid">
+              <div class="detail-action-box">
+                <img src="/images/payments/zelle.webp" alt="Zelle" />
+              </div>
+              <div class="detail-action-box">
+                <img src="/images/payments/binance.webp" alt="Binance" />
+              </div>
+              <div class="detail-action-box detail-action-box--cash">
+                <span class="cash-symbol">$</span>
+              </div>
+              <div class="detail-action-box">
+                <img src="/images/payments/banesco.webp" alt="Banesco" />
+              </div>
+            </div>
+          </div>
+
+          <div class="stock-row">
+            <span
+              :class="[
+                'stock-badge',
+                equipo.stock > 5
+                  ? 'stock-in'
+                  : equipo.stock > 0
+                    ? 'stock-low'
+                    : 'stock-out',
+              ]"
+            >
+              <span v-if="equipo.stock > 0" class="stock-dot" />
+              {{
+                equipo.stock > 0
+                  ? `En stock — ${equipo.stock} unidades`
+                  : "Agotado"
+              }}
+            </span>
           </div>
 
           <div class="actions-row">
@@ -99,22 +111,22 @@
             </a>
           </div>
 
-          <!-- Specs -->
-          <div class="detail-section" style="margin-top: 32px">
+          <!-- Warranty -->
+          <div class="detail-section section--warranty">
             <h2 class="section-title">
               <span class="section-icon"
-                ><AppIcon name="memory" size="18px"
+                ><AppIcon name="verified_user" size="1.25rem"
               /></span>
-              Especificaciones técnicas
+              Garantías y beneficios
             </h2>
-            <SpecsGrid :specs="specsList" />
+            <WarrantyCards :items="warrantyItems" />
           </div>
 
           <!-- Accordion -->
-          <div class="detail-section">
+          <div class="detail-section section--accordion">
             <h2 class="section-title">
               <span class="section-icon"
-                ><AppIcon name="info" size="18px"
+                ><AppIcon name="info" size="1.25rem"
               /></span>
               Más información
             </h2>
@@ -131,8 +143,11 @@
                   <span>{{ acc.title }}</span>
                   <AppIcon
                     name="expand_more"
-                    :class="['accordion-chevron', { rotated: openAccordion === idx }]"
-                    size="16px"
+                    :class="[
+                      'accordion-chevron',
+                      { rotated: openAccordion === idx },
+                    ]"
+                    size="1rem"
                   />
                 </div>
                 <div class="accordion-body" v-show="openAccordion === idx">
@@ -306,83 +321,187 @@ watch(
 
 <style scoped>
 .detail-wrapper {
-  max-width: 1280px;
+  max-width: 80rem;
   margin: 0 auto;
-  padding: 0 24px 64px;
+  padding: 0 1.5rem 4rem;
 }
 .detail-layout {
   display: grid;
-  grid-template-columns: 1fr 440px;
-  gap: 56px;
-  margin-top: 24px;
+  grid-template-columns: 1fr 27.5rem;
+  gap: 3.5rem;
+  margin-top: 1.5rem;
   align-items: start;
 }
 .gallery-col {
   position: sticky;
-  top: 88px;
+  top: 5.5rem;
 }
 .info-col {
   position: sticky;
-  top: 88px;
+  top: 5.5rem;
 }
 .status-row {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 14px; flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 .product-title {
-  font-size: 34px; font-weight: 800; letter-spacing: -0.03em;
-  line-height: 1.1; margin: 0 0 8px; color: var(--fg);
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 0.5rem;
+  color: var(--fg);
 }
 .product-subtitle {
-  font-size: 15px; color: var(--muted); margin: 0;
+  font-size: 1rem;
+  color: var(--muted);
+  margin: 0;
 }
 
 .price-block {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 24px 24px 0 24px;
-  margin-bottom: 20px; overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
 }
-.price-row {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; margin: 18px -24px 0 0;
-  padding: 0 24px 0 0;
+.price-row-wrap {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1.25rem;
 }
-.price-left {
-  display: flex; flex-direction: column; gap: 10px;
-}
-.price-right {
-  display: inline-flex; align-items: center; gap: 6px;
+.price-right-only {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   background: linear-gradient(135deg, var(--accent), #3b82f6);
-  border-radius: 999px 0 0 999px;
-  padding: 14px 28px; font-family: var(--font-display); color: #fff;
+  border-radius: 0 62.5rem 62.5rem 0;
+  padding: 1rem 1.5rem;
+  margin-left: -1.5rem;
+  font-family: var(--font-display);
+  color: #fff;
 }
-.price-right .price-label {
-  font-size: 14px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.05em; line-height: 1;
+.price-right-only .price-label {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
 }
-.price-right .price-value {
-  font-size: 22px; font-weight: 700; line-height: 1;
+.price-right-only .price-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
   font-family: var(--font-mono);
 }
 .price-info {
-  font-size: 13px; color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-dark);
+  padding: 1.25rem 0 0.25rem;
+}
+.detail-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 3rem);
+  justify-content: start;
+  gap: 0.5rem;
+  padding: 0.5rem 0 1rem;
+}
+.detail-action-box {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.detail-action-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.detail-action-box--cash {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+.cash-symbol {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.stock-row {
+  margin-bottom: 1rem;
 }
 
 .actions-row {
-  display: flex; gap: 10px; flex-wrap: wrap;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
-.detail-section { margin-top: 36px; }
-
-@media (max-width: 1024px) {
-  .detail-layout { grid-template-columns: 1fr; gap: 32px; }
-  .gallery-col, .info-col { position: static; }
-  .product-title { font-size: 26px; }
-  .price-right .price-value { font-size: 28px; }
-  .price-right .price-label { font-size: 12px; }
+.detail-section {
+  margin-top: 2.25rem;
 }
-@media (max-width: 640px) {
-  .actions-row .btn-whatsapp { min-width: 100%; }
-  .detail-wrapper { padding: 0 16px 48px; }
+
+@media (max-width: 64rem) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .gallery-col {
+    position: static;
+    display: contents;
+  }
+  .gallery-col > .detail-section {
+    order: 5;
+  }
+  .gallery-col > .image-col {
+    order: 1;
+  }
+  .info-col {
+    position: static;
+    display: contents;
+  }
+  .info-col > .price-block {
+    order: 2;
+  }
+  .info-col > .stock-row {
+    order: 3;
+  }
+  .info-col > .actions-row {
+    order: 4;
+  }
+  .info-col > .section--warranty {
+    order: 6;
+  }
+  .info-col > .section--accordion {
+    order: 7;
+  }
+  .product-title {
+    font-size: 1.75rem;
+  }
+  .price-right-only .price-value {
+    font-size: 1.5rem;
+  }
+  .price-right-only .price-label {
+    font-size: 0.75rem;
+  }
+}
+@media (max-width: 40rem) {
+  .actions-row .btn-whatsapp {
+    min-width: 100%;
+  }
+  .detail-wrapper {
+    padding: 0 1rem 3rem;
+  }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="highlight-cards">
     <div v-for="item in items" :key="item.label" class="highlight-item">
-      <div class="hl-icon"><AppIcon :name="item.icon" size="18px" /></div>
+      <div class="hl-icon"><AppIcon :name="item.icon" size="1.25rem" /></div>
       <div class="hl-text">
         <strong>{{ item.label }}</strong>
         {{ item.desc }}

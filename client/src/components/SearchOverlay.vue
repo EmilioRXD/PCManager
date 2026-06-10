@@ -3,7 +3,7 @@
     <div class="search-overlay" :class="{ open }" @click.self="close">
       <div class="search-panel">
         <div class="search-bar">
-          <AppIcon name="search" size="20px" class="search-bar-icon" />
+          <AppIcon name="search" size="1.25rem" class="search-bar-icon" />
           <input
             ref="searchInput"
             class="search-input"
@@ -17,7 +17,7 @@
         <div class="search-results" v-if="query.trim().length >= 2">
           <div v-if="searching" class="search-searching">Buscando...</div>
           <div v-else-if="results.length === 0" class="search-empty">
-            <AppIcon name="search_off" size="40px" />
+            <AppIcon name="search_off" size="2.5rem" />
             <p>Sin resultados para "<strong>{{ query }}</strong>"</p>
           </div>
           <div
@@ -36,11 +36,11 @@
           </div>
         </div>
         <div class="search-hint" v-else-if="query.trim().length === 0">
-          <AppIcon name="search" size="48px" />
+          <AppIcon name="search" size="3rem" />
           <p>Escribe para buscar equipos</p>
         </div>
         <div class="search-hint" v-else>
-          <AppIcon name="search" size="48px" />
+          <AppIcon name="search" size="3rem" />
           <p>Escribe al menos 2 caracteres</p>
         </div>
       </div>
@@ -136,83 +136,83 @@ watch(() => props.open, (val) => {
 .search-overlay.open { opacity: 1; pointer-events: auto; }
 
 .search-panel {
-  width: 100%; max-width: 680px;
-  margin-top: 12vh; padding: 0 20px;
+  width: 100%; max-width: 42.5rem;
+  margin-top: 12vh; padding: 0 1.25rem;
 }
 
 .search-bar {
   display: flex; align-items: center; gap: 0;
   background: var(--surface);
   border-radius: var(--radius-lg);
-  overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+  overflow: hidden; box-shadow: 0 0.5rem 2.5rem rgba(0,0,0,0.2);
 }
 .search-bar-icon {
-  padding: 0 0 0 18px; color: var(--muted); flex-shrink: 0;
+  padding: 0 0 0 1.25rem; color: var(--muted); flex-shrink: 0;
 }
 .search-input {
   flex: 1; border: none; outline: none;
-  padding: 16px 12px; font-size: 17px;
+  padding: 1rem 0.75rem; font-size: 1rem;
   font-family: var(--font-body); color: var(--fg);
   background: transparent;
 }
 .search-input::placeholder { color: var(--muted-light); }
 .search-close {
-  width: 44px; height: 44px; border: none;
+  width: 2.75rem; height: 2.75rem; border: none;
   background: transparent; color: var(--muted);
-  cursor: pointer; font-size: 20px;
+  cursor: pointer; font-size: 1.25rem;
   display: grid; place-items: center; flex-shrink: 0;
 }
 .search-close:hover { color: var(--fg); }
 
 .search-results {
-  margin-top: 12px;
+  margin-top: 0.75rem;
   background: var(--surface);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 0.5rem 2.5rem rgba(0,0,0,0.15);
   max-height: 60vh; overflow-y: auto;
 }
 .search-result-item {
-  padding: 16px 20px; cursor: pointer;
-  transition: background 0.12s; border-bottom: 1px solid var(--border-light);
+  padding: 1rem 1.25rem; cursor: pointer;
+  transition: background 0.12s; border-bottom: 0.0625rem solid var(--border-light);
 }
 .search-result-item:last-child { border-bottom: none; }
 .search-result-item:hover { background: var(--accent-glow); }
 .sr-title {
-  font-size: 16px; font-weight: 700; color: var(--accent);
+  font-size: 1rem; font-weight: 700; color: var(--accent);
   margin-bottom: 4px;
 }
 .sr-specs {
-  font-size: 13px; color: var(--muted); line-height: 1.5;
+  font-size: 0.75rem; color: var(--muted); line-height: 1.5;
 }
 .sr-link {
-  font-size: 13px; font-weight: 600; color: var(--accent);
-  margin-top: 6px; opacity: 0.8;
+  font-size: 0.75rem; font-weight: 600; color: var(--accent);
+  margin-top: 0.5rem; opacity: 0.8;
 }
 .search-result-item:hover .sr-link { opacity: 1; }
 
 .search-searching {
-  text-align: center; padding: 20px;
-  color: var(--muted); font-size: 14px;
+  text-align: center; padding: 1.25rem;
+  color: var(--muted); font-size: 1rem;
 }
 
 .search-empty {
-  text-align: center; padding: 40px 20px;
-  color: var(--muted); font-size: 15px;
+  text-align: center; padding: 2.5rem 1.25rem;
+  color: var(--muted); font-size: 1rem;
 }
-.search-empty p { margin-top: 8px; }
+.search-empty p { margin-top: 0.5rem; }
 
 .search-hint {
-  text-align: center; padding: 40px 20px;
-  color: rgba(255,255,255,0.4); font-size: 15px;
-  margin-top: 12px;
+  text-align: center; padding: 2.5rem 1.25rem;
+  color: rgba(255,255,255,0.4); font-size: 1rem;
+  margin-top: 0.75rem;
 }
-.search-hint p { margin-top: 12px; }
+.search-hint p { margin-top: 0.75rem; }
 
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
   .search-panel { margin-top: 0; padding: 0; }
   .search-overlay { align-items: stretch; }
   .search-bar { border-radius: 0; }
-  .search-results { border-radius: 0; max-height: calc(100vh - 60px); }
+  .search-results { border-radius: 0; max-height: calc(100vh - 3.75rem); }
 }
 </style>
