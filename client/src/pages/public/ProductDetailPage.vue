@@ -50,7 +50,7 @@
                 >
               </div>
             </div>
-            <div class="price-info">Precio válido por tiempo limitado</div>
+            <div class="price-info">Válido al cancelar</div>
 
             <div class="detail-actions-grid">
               <div class="detail-action-box">
@@ -398,15 +398,15 @@ watch(
 }
 .price-info {
   font-size: 0.75rem;
-  color: var(--muted);
-  padding: 0.75rem 0;
+  font-weight: 700;
+  color: var(--accent-dark);
+  padding: 0.25rem 0 0.75rem;
 }
-
 .detail-actions-grid {
   display: grid;
-  grid-template-columns: repeat(4, 4.5rem);
+  grid-template-columns: repeat(4, 3rem);
   justify-content: start;
-  gap: 1rem;
+  gap: 0.5rem;
   padding: 1rem 0;
 }
 .detail-action-box {
@@ -428,7 +428,7 @@ watch(
 }
 .cash-symbol {
   font-family: var(--font-display);
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: 800;
   color: #fff;
   line-height: 1;
