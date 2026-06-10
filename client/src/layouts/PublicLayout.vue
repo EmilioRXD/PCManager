@@ -3,8 +3,7 @@
     <header class="header">
       <div class="flex items-center gap-6">
         <router-link to="/" class="flex items-center gap-2 brand-link">
-          <img src="/images/logo/Logo.webp" alt="PCManager" class="logo-img" />
-          <span class="font-bold text-lg brand-name">PCManager</span>
+          <img src="/images/logo/logo.webp" alt="PCManager" class="logo-img" />
         </router-link>
       </div>
       <div class="flex items-center gap-2">
@@ -49,8 +48,7 @@ const searchOpen = ref(false)
 
 <style scoped>
 .brand-link { text-decoration: none; color: var(--fg); }
-.brand-name { font-weight: 700; font-size: 1rem; letter-spacing: -0.02em; }
-.logo-img { width: 2rem; height: 2rem; }
+.logo-img { height: 2rem; width: auto; }
 .btn-search-icon {
   width: 2.5rem; height: 2.5rem; border-radius: 50%;
   border: 1px solid var(--border); background: var(--surface);

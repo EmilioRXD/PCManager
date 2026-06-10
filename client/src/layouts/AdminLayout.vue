@@ -3,8 +3,7 @@
     <!-- Sidebar -->
     <aside class="sidebar-admin" :class="{ open: sidebarOpen }">
       <div class="sidebar-header">
-        <img src="/images/logo/Logo.webp" alt="PCManager" class="logo-img-admin" />
-        <span class="brand">PCManager</span>
+        <img src="/images/logo/logo.webp" alt="PCManager" class="logo-img-admin" />
       </div>
       <nav class="sidebar-nav">
         <div class="nav-section">
@@ -84,8 +83,7 @@ function handleLogout() {
   transition: transform 0.3s cubic-bezier(0.23,1,0.32,1);
 }
 .sidebar-header { padding: 1.25rem 1.5rem; border-bottom: 0.0625rem solid var(--border); display: flex; align-items: center; gap: 0.75rem; }
-.brand { font-weight: 700; font-size: 1rem; letter-spacing: -0.02em; }
-.logo-img-admin { width: 1.875rem; height: 1.875rem; }
+.logo-img-admin { height: 1.875rem; width: auto; }
 .sidebar-nav { flex: 1; padding: 1rem 0.75rem; overflow-y: auto; }
 .nav-section-title {
   font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;

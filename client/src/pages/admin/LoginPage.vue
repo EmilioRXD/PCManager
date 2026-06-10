@@ -2,7 +2,7 @@
   <div class="login-wrapper">
     <div class="login-card card">
       <div class="text-center q-mb-lg">
-        <img src="/images/logo/Logo.webp" alt="PCManager" class="logo-img-login" />
+        <img src="/images/logo/logo.webp" alt="PCManager" class="logo-img-login" />
         <div class="text-h5 text-weight-bold" style="letter-spacing:-0.02em;">Panel de Administración</div>
         <div class="text-body2 text-grey">PCManager</div>
       </div>
@@ -88,7 +88,7 @@ async function handleLogin() {
   position: relative; z-index: 1;
 }
 .logo-img-login {
-  width: 3rem; height: 3rem; margin-bottom: 0.5rem;
+  height: 3rem; width: auto; margin-bottom: 0.5rem;
 }
 .text-negative { color: var(--danger); }
 </style>
