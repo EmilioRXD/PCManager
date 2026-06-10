@@ -22,21 +22,14 @@
         <div class="info-col">
           <div class="price-block">
             <div class="status-row">
-              <span class="badge">{{ equipo.categoria_nombre }}</span>
+              <span class="badge badge-success">{{ equipo.categoria_nombre }}</span>
               <span
                 v-if="equipo.condicion"
-                :class="[
-                  'badge',
-                  equipo.condicion === 'refurbished'
-                    ? 'badge-warning'
-                    : 'badge-success',
-                ]"
+                class="badge badge-success"
               >
-                {{
-                  equipo.condicion === "refurbished" ? "Refurbished" : "Nuevo"
-                }}
+                {{ equipo.condicion === "refurbished" ? "Refurbished" : "Nuevo" }}
               </span>
-              <span class="badge badge-accent">Garantía incluida</span>
+              <span class="badge badge-success">Garantía incluida</span>
             </div>
 
             <h1 class="product-title">{{ equipo.modelo }}</h1>
@@ -48,34 +41,38 @@
               }}
             </p>
 
-            <div class="price-row">
-              <div class="price-left">
-                <span
-                  :class="[
-                    'stock-badge',
-                    equipo.stock > 5
-                      ? 'stock-in'
-                      : equipo.stock > 0
-                        ? 'stock-low'
-                        : 'stock-out',
-                  ]"
-                >
-                  <span v-if="equipo.stock > 0" class="stock-dot" />
-                  {{
-                    equipo.stock > 0
-                      ? `En stock — ${equipo.stock} unidades`
-                      : "Agotado"
-                  }}
-                </span>
-              </div>
-              <div class="price-right">
-                <span class="price-label">REF:</span>
-                <span class="price-value"
-                  >${{ formatPrice(equipo.precio) }}</span
-                >
-              </div>
+            <div class="price-right-only">
+              <span class="price-label">REF:</span>
+              <span class="price-value">${{ formatPrice(equipo.precio) }}</span>
             </div>
             <div class="price-info">Precio válido por tiempo limitado</div>
+
+            <div class="detail-actions-grid">
+              <div class="detail-action-box"></div>
+              <div class="detail-action-box"></div>
+              <div class="detail-action-box"></div>
+              <div class="detail-action-box"></div>
+            </div>
+          </div>
+
+          <div class="stock-row">
+            <span
+              :class="[
+                'stock-badge',
+                equipo.stock > 5
+                  ? 'stock-in'
+                  : equipo.stock > 0
+                    ? 'stock-low'
+                    : 'stock-out',
+              ]"
+            >
+              <span v-if="equipo.stock > 0" class="stock-dot" />
+              {{
+                equipo.stock > 0
+                  ? `En stock — ${equipo.stock} unidades`
+                  : "Agotado"
+              }}
+            </span>
           </div>
 
           <div class="actions-row">
@@ -340,32 +337,40 @@ watch(
 .price-block {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-lg); padding: 24px 24px 0 24px;
-  margin-bottom: 20px; overflow: hidden;
+  margin-bottom: 16px; overflow: hidden;
 }
-.price-row {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; margin: 18px -24px 0 0;
-  padding: 0 24px 0 0;
-}
-.price-left {
-  display: flex; flex-direction: column; gap: 10px;
-}
-.price-right {
-  display: inline-flex; align-items: center; gap: 6px;
+.price-right-only {
+  display: flex; align-items: center; justify-content: flex-end; gap: 6px;
   background: linear-gradient(135deg, var(--accent), #3b82f6);
   border-radius: 999px 0 0 999px;
-  padding: 14px 28px; font-family: var(--font-display); color: #fff;
+  padding: 14px 28px; margin-right: -24px; margin-top: 18px;
+  font-family: var(--font-display); color: #fff;
 }
-.price-right .price-label {
+.price-right-only .price-label {
   font-size: 14px; font-weight: 700; text-transform: uppercase;
   letter-spacing: 0.05em; line-height: 1;
 }
-.price-right .price-value {
+.price-right-only .price-value {
   font-size: 22px; font-weight: 700; line-height: 1;
   font-family: var(--font-mono);
 }
 .price-info {
-  font-size: 13px; color: var(--muted);
+  font-size: 13px; color: var(--muted); padding: 10px 0;
+}
+
+.detail-actions-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 12px; padding: 12px 0 16px;
+}
+.detail-action-box {
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--border-light);
+}
+
+.stock-row {
+  margin-bottom: 16px;
 }
 
 .actions-row {
@@ -378,11 +383,13 @@ watch(
   .detail-layout { grid-template-columns: 1fr; gap: 32px; }
   .gallery-col, .info-col { position: static; }
   .product-title { font-size: 26px; }
-  .price-right .price-value { font-size: 28px; }
-  .price-right .price-label { font-size: 12px; }
+  .price-right-only .price-value { font-size: 28px; }
+  .price-right-only .price-label { font-size: 12px; }
+  .detail-actions-grid { grid-template-columns: repeat(4, 1fr); }
 }
 @media (max-width: 640px) {
   .actions-row .btn-whatsapp { min-width: 100%; }
   .detail-wrapper { padding: 0 16px 48px; }
+  .detail-actions-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
