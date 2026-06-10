@@ -3,12 +3,7 @@
     <!-- Sidebar -->
     <aside class="sidebar-admin" :class="{ open: sidebarOpen }">
       <div class="sidebar-header">
-        <svg width="30" height="30" viewBox="0 0 48 48" fill="none">
-          <path d="M8 36c4-12 8-20 16-24 4 6 8 12 8 20-4 4-8 8-16 8s-12-4-8-4z" fill="var(--accent)" opacity="0.2"/>
-          <path d="M12 38c4-8 8-16 16-20 4 4 8 8 8 16-4 4-8 6-14 6s-10-2-10-2z" fill="var(--accent)"/>
-          <circle cx="18" cy="16" r="3" fill="var(--accent-2)"/>
-          <circle cx="30" cy="20" r="2" fill="var(--accent-2)"/>
-        </svg>
+        <img src="/images/logo/Logo.webp" alt="PCManager" class="logo-img-admin" />
         <span class="brand">PCManager</span>
       </div>
       <nav class="sidebar-nav">
@@ -90,6 +85,7 @@ function handleLogout() {
 }
 .sidebar-header { padding: 1.25rem 1.5rem; border-bottom: 0.0625rem solid var(--border); display: flex; align-items: center; gap: 0.75rem; }
 .brand { font-weight: 700; font-size: 1rem; letter-spacing: -0.02em; }
+.logo-img-admin { width: 1.875rem; height: 1.875rem; }
 .sidebar-nav { flex: 1; padding: 1rem 0.75rem; overflow-y: auto; }
 .nav-section-title {
   font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;

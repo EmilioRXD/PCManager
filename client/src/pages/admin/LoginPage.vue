@@ -2,12 +2,7 @@
   <div class="login-wrapper">
     <div class="login-card card">
       <div class="text-center q-mb-lg">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" class="q-mb-sm">
-          <path d="M8 36c4-12 8-20 16-24 4 6 8 12 8 20-4 4-8 8-16 8s-12-4-8-4z" fill="var(--accent)" opacity="0.2"/>
-          <path d="M12 38c4-8 8-16 16-20 4 4 8 8 8 16-4 4-8 6-14 6s-10-2-10-2z" fill="var(--accent)"/>
-          <circle cx="18" cy="16" r="3" fill="var(--accent-2)"/>
-          <circle cx="30" cy="20" r="2" fill="var(--accent-2)"/>
-        </svg>
+        <img src="/images/logo/Logo.webp" alt="PCManager" class="logo-img-login" />
         <div class="text-h5 text-weight-bold" style="letter-spacing:-0.02em;">Panel de Administración</div>
         <div class="text-body2 text-grey">PCManager</div>
       </div>
@@ -91,6 +86,9 @@ async function handleLogin() {
 .login-card {
   width: 100%; max-width: 25rem; padding: 2.5rem 2rem;
   position: relative; z-index: 1;
+}
+.logo-img-login {
+  width: 3rem; height: 3rem; margin-bottom: 0.5rem;
 }
 .text-negative { color: var(--danger); }
 </style>
