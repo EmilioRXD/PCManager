@@ -378,7 +378,7 @@ watch(
   gap: 0.5rem;
   background: linear-gradient(135deg, var(--accent), #3b82f6);
   border-radius: 0 62.5rem 62.5rem 0;
-  padding: 1rem 1rem 1rem 2.5rem;
+  padding: 1rem 1.5rem;
   margin-left: -1.5rem;
   font-family: var(--font-display);
   color: #fff;
@@ -397,17 +397,19 @@ watch(
   font-family: var(--font-mono);
 }
 .price-info {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--accent-dark);
-  padding: 0.25rem 0 0.75rem;
+  padding: 1.25rem 0 0.25rem;
 }
 .detail-actions-grid {
   display: grid;
   grid-template-columns: repeat(4, 3rem);
   justify-content: start;
   gap: 0.5rem;
-  padding: 1rem 0;
+  padding: 0.5rem 0 1rem;
 }
 .detail-action-box {
   aspect-ratio: 1;
@@ -464,7 +466,7 @@ watch(
     font-size: 1.75rem;
   }
   .price-right-only .price-label {
-    font-size: 0.75rem;
+    font-size: 1.25rem;
   }
 }
 @media (max-width: 40rem) {
@@ -473,10 +475,6 @@ watch(
   }
   .detail-wrapper {
     padding: 0 1rem 3rem;
-  }
-  .detail-actions-grid {
-    grid-template-columns: repeat(2, 3.75rem);
-    gap: 0.75rem;
   }
 }
 </style>
