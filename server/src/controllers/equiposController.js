@@ -3,9 +3,28 @@ import { validateEquipo } from '../validators/equipoValidator.js'
 
 export async function list(req, res, next) {
   try {
-    const { categoria, search, condicion, random, page, limit } = req.query
-    const result = await equipoModel.findAll({ categoria, search, condicion, random: random === 'true', page, limit })
+    const { categoria, search, condicion, marca, precio_min, precio_max, random, page, limit } = req.query
+    const result = await equipoModel.findAll({
+      categoria,
+      search,
+      condicion,
+      marca,
+      precio_min,
+      precio_max,
+      random: random === 'true',
+      page,
+      limit,
+    })
     res.json(result)
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function getBrands(_req, res, next) {
+  try {
+    const brands = await equipoModel.getBrands()
+    res.json(brands)
   } catch (err) {
     next(err)
   }

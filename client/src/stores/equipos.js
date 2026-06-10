@@ -36,7 +36,9 @@ export const useEquiposStore = defineStore('equipos', () => {
     try {
       const { data } = await equiposApi.getEquipos({ page: page.value, limit: limit.value, ...params })
       const items = data.data || []
-      equipos.value.push(...items)
+      const existingIds = new Set(equipos.value.map((e) => e.id))
+      const newItems = items.filter((item) => !existingIds.has(item.id))
+      equipos.value.push(...newItems)
       total.value = data.total
       totalPages.value = data.totalPages
       if (items.length < limit.value || equipos.value.length >= total.value) {

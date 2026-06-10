@@ -1,7 +1,7 @@
 import { query } from '../config/db.js'
 import * as imagenModel from './imagen.js'
 
-export async function findAll({ categoria, search, condicion, random, page = 1, limit = 12 } = {}) {
+export async function findAll({ categoria, search, condicion, marca, precio_min, precio_max, random, page = 1, limit = 12 } = {}) {
   const params = []
   let p = 1
 
@@ -43,8 +43,29 @@ export async function findAll({ categoria, search, condicion, random, page = 1, 
   }
 
   if (condicion) {
-    whereClause += ` AND e.condicion = $${p++}`
-    params.push(condicion)
+    const condiciones = Array.isArray(condicion) ? condicion : condicion.split(',').filter(Boolean)
+    const ph = condiciones.map((_, i) => `$${p + i}`).join(', ')
+    whereClause += ` AND e.condicion IN (${ph})`
+    condiciones.forEach((c) => params.push(c.trim()))
+    p += condiciones.length
+  }
+
+  if (marca) {
+    const marcas = Array.isArray(marca) ? marca : marca.split(',').filter(Boolean)
+    const ph = marcas.map((_, i) => `$${p + i}`).join(', ')
+    whereClause += ` AND e.marca IN (${ph})`
+    marcas.forEach((m) => params.push(m.trim()))
+    p += marcas.length
+  }
+
+  if (precio_min) {
+    whereClause += ` AND e.precio >= $${p++}`
+    params.push(parseFloat(precio_min))
+  }
+
+  if (precio_max) {
+    whereClause += ` AND e.precio <= $${p++}`
+    params.push(parseFloat(precio_max))
   }
 
   const countSql = `SELECT COUNT(*) AS total FROM equipos e JOIN categorias c ON e.categoria_id = c.id ${whereClause}`
@@ -64,6 +85,14 @@ export async function findAll({ categoria, search, condicion, random, page = 1, 
     limit: parseInt(limit, 10),
     totalPages: Math.ceil(total / parseInt(limit, 10)),
   }
+}
+
+export async function getBrands() {
+  const result = await query(
+    `SELECT DISTINCT marca FROM equipos WHERE marca IS NOT NULL AND marca <> '' ORDER BY marca`,
+    []
+  )
+  return result.rows.map((r) => r.marca)
 }
 
 export async function findById(id) {
