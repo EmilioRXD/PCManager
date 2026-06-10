@@ -4,7 +4,9 @@
       <div class="detail-layout">
         <!-- Gallery Column -->
         <div class="gallery-col">
-          <div class="image-col"><ImageGallery :images="galleryImages" :alt="equipo.modelo" /></div>
+          <div class="image-col">
+            <ImageGallery :images="galleryImages" :alt="equipo.modelo" />
+          </div>
 
           <!-- Specs below gallery -->
           <div class="detail-section">
@@ -54,16 +56,16 @@
 
             <div class="detail-actions-grid">
               <div class="detail-action-box">
-                <img src="/images/payments/Zelle.webp" alt="Zelle" />
+                <img src="/images/payments/zelle.webp" alt="Zelle" />
               </div>
               <div class="detail-action-box">
-                <img src="/images/payments/Binance.webp" alt="Binance" />
+                <img src="/images/payments/binance.webp" alt="Binance" />
               </div>
               <div class="detail-action-box detail-action-box--cash">
                 <span class="cash-symbol">$</span>
               </div>
               <div class="detail-action-box">
-                <img src="/images/payments/Banesco.webp" alt="Banesco" />
+                <img src="/images/payments/banesco.webp" alt="Banesco" />
               </div>
             </div>
           </div>
@@ -451,19 +453,48 @@ watch(
 }
 
 @media (max-width: 64rem) {
-  .detail-layout { grid-template-columns: 1fr; gap: 2rem; }
-  .gallery-col { position: static; display: contents; }
-  .gallery-col > .detail-section { order: 5; }
-  .gallery-col > .image-col { order: 1; }
-  .info-col { position: static; display: contents; }
-  .info-col > .price-block { order: 2; }
-  .info-col > .stock-row { order: 3; }
-  .info-col > .actions-row { order: 4; }
-  .info-col > .section--warranty { order: 6; }
-  .info-col > .section--accordion { order: 7; }
-  .product-title { font-size: 1.75rem; }
-  .price-right-only .price-value { font-size: 1.5rem; }
-  .price-right-only .price-label { font-size: 0.75rem; }
+  .detail-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .gallery-col {
+    position: static;
+    display: contents;
+  }
+  .gallery-col > .detail-section {
+    order: 5;
+  }
+  .gallery-col > .image-col {
+    order: 1;
+  }
+  .info-col {
+    position: static;
+    display: contents;
+  }
+  .info-col > .price-block {
+    order: 2;
+  }
+  .info-col > .stock-row {
+    order: 3;
+  }
+  .info-col > .actions-row {
+    order: 4;
+  }
+  .info-col > .section--warranty {
+    order: 6;
+  }
+  .info-col > .section--accordion {
+    order: 7;
+  }
+  .product-title {
+    font-size: 1.75rem;
+  }
+  .price-right-only .price-value {
+    font-size: 1.5rem;
+  }
+  .price-right-only .price-label {
+    font-size: 0.75rem;
+  }
 }
 @media (max-width: 40rem) {
   .actions-row .btn-whatsapp {
