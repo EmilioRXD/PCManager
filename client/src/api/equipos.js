@@ -20,3 +20,7 @@ export function updateEquipo(id, data) {
 export function deleteEquipo(id) {
   return api.delete(`/equipos/${id}`)
 }
+
+export function getBrands() {
+  return api.get('/equipos')
+}
