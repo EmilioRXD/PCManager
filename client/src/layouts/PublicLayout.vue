@@ -26,19 +26,19 @@
 
     <footer class="trust-stripe">
       <div class="trust-item">
-        <div class="trust-icon"><AppIcon name="verified_user" size="20px" /></div>
+        <div class="hl-icon hl-icon-lg"><AppIcon name="verified_user" size="20px" /></div>
         <div><strong>Garantía incluida</strong>Todos los equipos verificados</div>
       </div>
       <div class="trust-item">
-        <div class="trust-icon"><AppIcon name="local_shipping" size="20px" /></div>
+        <div class="hl-icon hl-icon-lg"><AppIcon name="local_shipping" size="20px" /></div>
         <div><strong>Envío gratis nacional</strong>Empaque anti-impacto</div>
       </div>
       <div class="trust-item">
-        <div class="trust-icon"><AppIcon name="build" size="20px" /></div>
+        <div class="hl-icon hl-icon-lg"><AppIcon name="build" size="20px" /></div>
         <div><strong>32 puntos de inspección</strong>Pantalla, batería, teclado, puertos</div>
       </div>
       <div class="trust-item">
-        <div class="trust-icon"><AppIcon name="chat" size="20px" /></div>
+        <div class="hl-icon hl-icon-lg"><AppIcon name="chat" size="20px" /></div>
         <div><strong>Soporte por WhatsApp</strong>Respuesta en menos de 24h</div>
       </div>
     </footer>
@@ -59,8 +59,7 @@ const searchOpen = ref(false)
   width: 40px; height: 40px; border-radius: 50%;
   border: 1px solid var(--border); background: var(--surface);
   color: var(--muted); cursor: pointer;
-  display: grid; place-items: center;
-  transition: all 0.15s;
+  display: grid; place-items: center; transition: all 0.15s;
 }
 .btn-search-icon:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -68,11 +67,9 @@ const searchOpen = ref(false)
   display: flex; align-items: center; justify-content: center; gap: 48px;
   padding: 32px; border-top: 1px solid var(--border); flex-wrap: wrap;
 }
-.trust-item { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
-.trust-item .trust-icon {
-  width: 40px; height: 40px; border-radius: var(--radius-sm);
-  background: var(--accent-glow); color: var(--accent);
-  display: grid; place-items: center; flex-shrink: 0;
+.trust-item {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 13px; color: var(--muted);
 }
 .trust-item strong { display: block; color: var(--fg); font-size: 14px; }
 

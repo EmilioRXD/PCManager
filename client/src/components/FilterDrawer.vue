@@ -118,54 +118,6 @@ function toggleCondition(cond) { emit('toggleCondition', cond) }
 .dh-close { padding: 6px; color: var(--muted); }
 
 .drawer-body { flex: 1; padding: 28px; }
-.filter-block { margin-bottom: 36px; }
-.filter-block:last-child { margin-bottom: 0; }
-.filter-block-title {
-  font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em;
-  color: var(--muted); margin-bottom: 14px; font-weight: 700;
-  display: flex; align-items: center; gap: 7px;
-}
-
-.brand-options {
-  display: flex; flex-wrap: wrap; gap: 8px;
-}
-.brand-chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: 99px;
-  border: 1px solid var(--border); background: var(--surface);
-  font-size: 13px; font-weight: 600; color: var(--fg); cursor: pointer;
-  transition: all 0.15s; font-family: var(--font-display);
-  user-select: none;
-}
-.brand-chip:hover { border-color: var(--accent); color: var(--accent); }
-.brand-chip.active {
-  background: var(--accent); color: #fff; border-color: var(--accent);
-  box-shadow: 0 2px 8px var(--accent-glow);
-}
-.brand-chip input { display: none; }
-
-.price-range-wrap {
-  display: flex; gap: 10px; align-items: center;
-}
-.price-field {
-  flex: 1; display: flex; align-items: center;
-  border: 1px solid var(--border); border-radius: var(--radius-md);
-  overflow: hidden;
-}
-.price-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-.price-currency {
-  padding: 0 0 0 14px; font-size: 15px; color: var(--muted);
-  font-family: var(--font-mono); font-weight: 500;
-}
-.price-input {
-  flex: 1; border: none; padding: 10px 14px 10px 6px;
-  font-family: var(--font-mono); font-size: 14px; color: var(--fg);
-  background: transparent;
-}
-.price-input:focus { outline: none; box-shadow: none; }
-.price-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-.price-input[type=number] { -moz-appearance: textfield; }
-.price-sep { color: var(--muted); font-size: 14px; }
 
 .drawer-footer {
   padding: 20px 28px; border-top: 1px solid var(--border);

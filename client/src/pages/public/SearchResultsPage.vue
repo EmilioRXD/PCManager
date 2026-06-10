@@ -17,14 +17,14 @@
     <div class="sp-body" v-if="query && !initialLoad">
       <p class="sp-count">{{ searchTotal }} resultado{{ searchTotal !== 1 ? 's' : '' }} para "<strong>{{ query }}</strong>"</p>
 
-      <div v-if="searchTotal === 0" class="sp-empty">
+      <div v-if="searchTotal === 0" class="empty-state">
         <AppIcon name="search_off" size="56px" />
         <h3>Sin resultados</h3>
         <p>No encontramos equipos. Probá con otra búsqueda.</p>
       </div>
 
       <template v-else>
-        <div class="sp-grid">
+        <div class="product-grid">
           <ProductCard
             v-for="equipo in searchResults"
             :key="'s-' + equipo.id"
@@ -35,11 +35,11 @@
 
         <div v-if="!searchExhausted" ref="searchSentinel" class="sentinel" />
 
-        <div v-if="searchExhausted" class="sp-divider">
+        <div v-if="searchExhausted" class="section-divider">
           <span>No hay más resultados para "{{ query }}"</span>
         </div>
 
-        <div v-if="searchExhausted" class="sp-grid">
+        <div v-if="searchExhausted" class="product-grid">
           <ProductCard
             v-for="equipo in allResults"
             :key="'a-' + equipo.id"
@@ -50,7 +50,7 @@
 
         <div v-if="searchExhausted && !allExhausted" ref="allSentinel" class="sentinel" />
 
-        <div v-if="fetchingMore" class="sp-grid">
+        <div v-if="fetchingMore" class="product-grid">
           <div v-for="n in 6" :key="'sk-' + n" class="skeleton-card">
             <div class="sk-img" />
             <div class="sk-body">
@@ -62,13 +62,13 @@
           </div>
         </div>
 
-        <div v-if="allExhausted" class="sp-divider">
+        <div v-if="allExhausted" class="section-divider">
           <span>Has visto todos los equipos disponibles</span>
         </div>
       </template>
     </div>
 
-    <div v-else-if="initialLoad && query" class="sp-grid">
+    <div v-else-if="initialLoad && query" class="product-grid">
       <div v-for="n in 12" :key="'isk-' + n" class="skeleton-card">
         <div class="sk-img" />
         <div class="sk-body">
@@ -80,7 +80,7 @@
       </div>
     </div>
 
-    <div class="sp-body sp-empty" v-else>
+    <div class="sp-body empty-state" v-else>
       <AppIcon name="search" size="56px" />
       <h3>Buscá equipos</h3>
       <p>Escribí para encontrar laptops, desktops y workstations.</p>
@@ -257,8 +257,7 @@ onUnmounted(() => {
 .sp-input {
   flex: 1; border: none; outline: none;
   padding: 14px 12px; font-size: 16px;
-  font-family: var(--font-body); color: var(--fg);
-  background: transparent;
+  font-family: var(--font-body); color: var(--fg); background: transparent;
 }
 .sp-input::placeholder { color: var(--muted-light); }
 .sp-clear {
@@ -269,65 +268,13 @@ onUnmounted(() => {
 }
 .sp-clear:hover { color: var(--fg); }
 
+.sp-body { padding: 0; }
 .sp-count { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
-
-.sp-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-}
-
-.sp-divider {
-  text-align: center; padding: 40px 0 32px;
-  color: var(--muted); font-size: 13px;
-}
-.sp-divider span {
-  display: inline-block; padding: 8px 20px;
-  border-radius: 999px; background: var(--border-light);
-  color: var(--muted);
-}
-
-.sentinel { height: 1px; width: 100%; }
-
-.sp-empty {
-  text-align: center; padding: 60px 20px;
-  color: var(--muted);
-}
-.sp-empty h3 { font-size: 18px; color: var(--fg); margin: 12px 0 4px; }
-.sp-empty p { font-size: 14px; }
-
-.skeleton-card {
-  border-radius: var(--radius-lg); overflow: hidden;
-  background: var(--surface);
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.025);
-}
-.sk-img {
-  aspect-ratio: 4/3;
-  background: linear-gradient(90deg, var(--border-light) 25%, var(--surface) 50%, var(--border-light) 75%);
-  background-size: 200% 100%;
-  animation: sk-pulse 1.5s ease-in-out infinite;
-}
-.sk-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
-.sk-line {
-  height: 14px; border-radius: 4px; width: 80%;
-  background: linear-gradient(90deg, var(--border-light) 25%, var(--surface) 50%, var(--border-light) 75%);
-  background-size: 200% 100%;
-  animation: sk-pulse 1.5s ease-in-out infinite;
-}
-.sk-line.sk-short { width: 50%; }
-.sk-line.sk-long { width: 95%; }
-
-@keyframes sk-pulse {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
 
 @media (max-width: 1024px) {
   .search-page { padding: 20px; }
-  .sp-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 }
 @media (max-width: 640px) {
   .search-page { padding: 16px 12px 48px; }
-  .sp-grid { grid-template-columns: 1fr; }
 }
 </style>

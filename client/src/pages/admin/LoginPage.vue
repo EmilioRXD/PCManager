@@ -79,35 +79,18 @@ async function handleLogin() {
 
 <style scoped>
 .login-wrapper {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--gradient-hero);
-  position: relative;
-  overflow: hidden;
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--gradient-hero); position: relative; overflow: hidden;
 }
 .login-wrapper::before {
-  content: '';
-  position: absolute; inset: 0;
+  content: ''; position: absolute; inset: 0;
   background:
     radial-gradient(ellipse 600px 400px at 50% 30%, rgba(0,82,255,0.05), transparent),
     radial-gradient(ellipse 400px 300px at 80% 70%, rgba(0,198,255,0.04), transparent);
 }
 .login-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 40px 32px;
-  position: relative;
-  z-index: 1;
-}
-.form-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--fg);
-  margin-bottom: 6px;
-  font-family: var(--font-display);
+  width: 100%; max-width: 400px; padding: 40px 32px;
+  position: relative; z-index: 1;
 }
 .text-negative { color: var(--danger); }
 </style>

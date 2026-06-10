@@ -24,16 +24,11 @@ defineProps({
 }
 .spec-item-detail {
   display: flex; gap: 14px; align-items: center;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--surface);
+  padding: 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-md); background: var(--surface);
   transition: all 0.18s;
 }
-.spec-item-detail:hover {
-  border-color: var(--accent-glow);
-  box-shadow: var(--shadow-sm);
-}
+.spec-item-detail:hover { border-color: var(--accent-glow); box-shadow: var(--shadow-sm); }
 .spec-icon-box {
   width: 42px; height: 42px; border-radius: var(--radius-sm);
   background: var(--accent-glow); color: var(--accent);

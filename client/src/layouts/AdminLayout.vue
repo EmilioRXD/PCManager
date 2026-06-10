@@ -83,9 +83,7 @@ function handleLogout() {
 .admin-layout { display: flex; min-height: 100vh; }
 
 .sidebar-admin {
-  width: 260px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
+  width: 260px; background: var(--surface); border-right: 1px solid var(--border);
   display: flex; flex-direction: column;
   position: fixed; inset: 0 auto 0 0; z-index: 50;
   transition: transform 0.3s cubic-bezier(0.23,1,0.32,1);
@@ -97,35 +95,17 @@ function handleLogout() {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--muted-light); padding: 10px 14px 6px; font-weight: 700;
 }
-.sidebar-link {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 14px; border-radius: var(--radius-md);
-  color: var(--muted); font-size: 13.5px; font-weight: 500;
-  text-decoration: none; transition: all 0.15s; position: relative;
-  cursor: pointer;
-}
-.sidebar-link:hover { background: var(--gradient-accent-subtle); color: var(--fg); }
-.sidebar-link.active {
-  background: var(--accent-glow); color: var(--accent); font-weight: 600;
-}
-.sidebar-link.active::before {
-  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-  width: 3px; height: 24px; background: var(--accent); border-radius: 0 3px 3px 0;
-}
 .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
 .logout-link { color: var(--muted); }
 
 .main-admin { flex: 1; margin-left: 260px; min-width: 0; background: var(--bg); }
 
 .header-admin {
-  height: 64px;
-  background: rgba(255,255,255,0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  height: 64px; background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32px;
-  position: sticky; top: 0; z-index: 40;
+  padding: 0 32px; position: sticky; top: 0; z-index: 40;
 }
 .header-left { display: flex; align-items: center; gap: 18px; }
 .menu-toggle {
@@ -140,10 +120,9 @@ function handleLogout() {
 .header-right { display: flex; align-items: center; gap: 14px; }
 .user-avatar {
   width: 34px; height: 34px; border-radius: 50%;
-  background: var(--gradient-accent-subtle);
-  color: var(--accent); font-weight: 700; font-size: 13px;
-  display: grid; place-items: center; cursor: pointer;
-  border: 2px solid transparent; transition: border-color 0.15s;
+  background: var(--gradient-accent-subtle); color: var(--accent);
+  font-weight: 700; font-size: 13px; display: grid; place-items: center;
+  cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s;
 }
 .user-avatar:hover { border-color: var(--accent); }
 .overlay-admin { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 45; backdrop-filter: blur(2px); }

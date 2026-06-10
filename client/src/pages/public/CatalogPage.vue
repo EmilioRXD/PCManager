@@ -50,23 +50,23 @@
       <div class="flex items-center gap-3 filter-left">
         <span class="results-info">Mostrando <strong>{{ filteredCount }}</strong> equipos</span>
         <div class="active-chips">
-          <span v-if="activeCat" class="chip" @click="setCategory(null)">
+          <span v-if="activeCat" class="chip-tag" @click="setCategory(null)">
             {{ activeCatName }}
             <AppIcon name="close" size="12px" />
           </span>
-          <span v-if="searchQuery" class="chip" @click="searchQuery = ''">
+          <span v-if="searchQuery" class="chip-tag" @click="searchQuery = ''">
             "{{ searchQuery }}"
             <AppIcon name="close" size="12px" />
           </span>
-          <span v-for="b in activeBrands" :key="b" class="chip" @click="toggleBrand(b)">
+          <span v-for="b in activeBrands" :key="b" class="chip-tag" @click="removeBrand(b)">
             {{ b }}
             <AppIcon name="close" size="12px" />
           </span>
-          <span v-for="c in activeConditions" :key="c" class="chip" @click="toggleCondition(c)">
+          <span v-for="c in activeConditions" :key="c" class="chip-tag" @click="removeCondition(c)">
             {{ c === 'nuevo' ? 'Nuevo' : 'Refurbished' }}
             <AppIcon name="close" size="12px" />
           </span>
-          <span v-if="minPrice > 0 || maxPrice < 10000" class="chip" @click="minPrice = 0; maxPrice = 10000">
+          <span v-if="minPrice > 0 || maxPrice < 10000" class="chip-tag" @click="resetPriceRange">
             ${{ minPrice }} — ${{ maxPrice }}
             <AppIcon name="close" size="12px" />
           </span>
@@ -78,7 +78,7 @@
           <option value="price-asc">Precio: menor a mayor</option>
           <option value="price-desc">Precio: mayor a menor</option>
         </select>
-        <button class="btn-filter-toggle" @click="drawerOpen = true">
+        <button class="btn-filter-toggle" @click="openDrawer">
           <AppIcon name="filter_list" size="16px" />
           Filtros
           <span v-if="filterCount" class="badge-count">{{ filterCount }}</span>
@@ -88,7 +88,7 @@
 
     <!-- Product grid -->
     <div class="products-area">
-      <div class="grid">
+      <div class="product-grid">
         <ProductCard
           v-for="equipo in sortedEquipos"
           :key="equipo.id"
@@ -122,8 +122,20 @@
       <!-- Sentinel for infinite scroll -->
       <div v-if="!store.exhausted && sortedEquipos.length > 0" ref="sentinel" class="sentinel" />
 
-      <div v-if="store.exhausted && sortedEquipos.length > 0" class="sp-divider">
+      <div v-if="store.exhausted && sortedEquipos.length > 0" class="section-divider">
         <span>Has visto todos los equipos disponibles</span>
+      </div>
+
+      <div v-if="store.loading && store.page > 1" class="product-grid">
+        <div v-for="n in 6" :key="'lm-sk-' + n" class="skeleton-card">
+          <div class="sk-img" />
+          <div class="sk-body">
+            <div class="sk-line sk-short" />
+            <div class="sk-line" />
+            <div class="sk-line sk-long" />
+            <div class="sk-line sk-short" />
+          </div>
+        </div>
       </div>
 
       <!-- Skeleton while loading more pages -->
@@ -164,18 +176,18 @@
     <!-- Filter drawer -->
     <FilterDrawer
       :open="drawerOpen"
-      :brands="uniqueBrands"
-      :active-brands="activeBrands"
-      :active-conditions="activeConditions"
-      :min-price="minPrice"
-      :max-price="maxPrice"
+      :brands="allBrands"
+      :active-brands="draftBrands"
+      :active-conditions="draftConditions"
+      :min-price="draftMinPrice"
+      :max-price="draftMaxPrice"
       @close="drawerOpen = false"
       @toggle-brand="toggleBrand"
       @toggle-condition="toggleCondition"
       @reset-all="resetFilters"
       @apply="applyFilters"
-      @update:min-price="(v) => { minPrice = v }"
-      @update:max-price="(v) => { maxPrice = v }"
+      @update:min-price="(v) => { draftMinPrice = v }"
+      @update:max-price="(v) => { draftMaxPrice = v }"
     />
   </div>
 </template>
@@ -185,6 +197,7 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useEquiposStore } from '../../stores/equipos'
 import { getCategorias } from '../../api/categorias'
+import { getBrands } from '../../api/equipos'
 import ProductCard from '../../components/ProductCard.vue'
 import QuickViewModal from '../../components/QuickViewModal.vue'
 import FilterDrawer from '../../components/FilterDrawer.vue'
@@ -208,9 +221,14 @@ const activeConditions = ref([])
 const minPrice = ref(0)
 const maxPrice = ref(10000)
 
+const draftBrands = ref([])
+const draftConditions = ref([])
+const draftMinPrice = ref(0)
+const draftMaxPrice = ref(10000)
+
 const catIcons = { Laptops: 'laptop', Desktops: 'desktop_windows', Gaming: 'sports_esports', Workstation: 'developer_board', 'All-in-One': 'dock' }
 
-const uniqueBrands = computed(() => [...new Set(store.equipos.map((e) => e.marca))].sort())
+const allBrands = ref([])
 
 const activeCatName = computed(() => {
   const found = categorias.value.find((c) => c.id === activeCat.value)
@@ -228,22 +246,12 @@ const filterCount = computed(() => {
 
 const filteredEquipos = computed(() => {
   let items = store.equipos
-  if (activeCat.value) items = items.filter((e) => e.categoria_id === activeCat.value)
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase()
     items = items.filter((e) =>
       `${e.marca} ${e.modelo} ${e.descripcion || ''}`.toLowerCase().includes(q)
     )
   }
-  if (activeBrands.value.length > 0) {
-    items = items.filter((e) => activeBrands.value.includes(e.marca))
-  }
-  if (activeConditions.value.length > 0) {
-    items = items.filter((e) => e.condicion && activeConditions.value.includes(e.condicion))
-  }
-  const min = Number(minPrice.value) || 0
-  const max = Number(maxPrice.value) || Infinity
-  items = items.filter((e) => Number(e.precio) >= min && Number(e.precio) <= max)
   return items
 })
 
@@ -254,13 +262,18 @@ const sortedEquipos = computed(() => {
   return items
 })
 
-const filteredCount = computed(() => sortedEquipos.value.length)
+const filteredCount = computed(() => store.total)
 
 const featuredId = computed(() => store.equipos[0]?.id || 1)
 
 function getServerParams() {
   const params = {}
   if (activeCat.value) params.categoria = activeCat.value
+  if (searchQuery.value) params.search = searchQuery.value
+  if (activeBrands.value.length > 0) params.marca = activeBrands.value.join(',')
+  if (activeConditions.value.length > 0) params.condicion = activeConditions.value.join(',')
+  if (minPrice.value > 0) params.precio_min = minPrice.value
+  if (maxPrice.value < 10000) params.precio_max = maxPrice.value
   return params
 }
 
@@ -289,6 +302,14 @@ function setCategory(id) {
   loadInitial()
 }
 
+function openDrawer() {
+  draftBrands.value = [...activeBrands.value]
+  draftConditions.value = [...activeConditions.value]
+  draftMinPrice.value = minPrice.value
+  draftMaxPrice.value = maxPrice.value
+  drawerOpen.value = true
+}
+
 function scrollToProducts() {
   if (productsRef.value) {
     window.scrollTo({ top: productsRef.value.offsetTop - 80, behavior: 'smooth' })
@@ -315,7 +336,27 @@ function clearCompare() { compareList.value = [] }
 function sortProducts() { /* computed handles it */ }
 
 function applyFilters() {
-  /* filtros reactivos via computed */
+  activeBrands.value = [...draftBrands.value]
+  activeConditions.value = [...draftConditions.value]
+  minPrice.value = draftMinPrice.value
+  maxPrice.value = draftMaxPrice.value
+  loadInitial()
+}
+
+function removeBrand(brand) {
+  activeBrands.value = activeBrands.value.filter((b) => b !== brand)
+  loadInitial()
+}
+
+function removeCondition(cond) {
+  activeConditions.value = activeConditions.value.filter((c) => c !== cond)
+  loadInitial()
+}
+
+function resetPriceRange() {
+  minPrice.value = 0
+  maxPrice.value = 10000
+  loadInitial()
 }
 
 function resetFilters() {
@@ -323,31 +364,48 @@ function resetFilters() {
   activeConditions.value = []
   minPrice.value = 0
   maxPrice.value = 10000
+  draftBrands.value = []
+  draftConditions.value = []
+  draftMinPrice.value = 0
+  draftMaxPrice.value = 10000
+  loadInitial()
 }
 
 function resetAll() {
-  resetFilters()
+  activeBrands.value = []
+  activeConditions.value = []
+  minPrice.value = 0
+  maxPrice.value = 10000
+  draftBrands.value = []
+  draftConditions.value = []
+  draftMinPrice.value = 0
+  draftMaxPrice.value = 10000
   activeCat.value = null
   searchQuery.value = ''
   loadInitial()
 }
 
 function toggleBrand(brand) {
-  const idx = activeBrands.value.indexOf(brand)
-  if (idx >= 0) activeBrands.value.splice(idx, 1)
-  else activeBrands.value.push(brand)
+  const idx = draftBrands.value.indexOf(brand)
+  if (idx >= 0) draftBrands.value.splice(idx, 1)
+  else draftBrands.value.push(brand)
 }
 
 function toggleCondition(cond) {
-  const idx = activeConditions.value.indexOf(cond)
-  if (idx >= 0) activeConditions.value.splice(idx, 1)
-  else activeConditions.value.push(cond)
+  const idx = draftConditions.value.indexOf(cond)
+  if (idx >= 0) draftConditions.value.splice(idx, 1)
+  else draftConditions.value.push(cond)
 }
 
 onMounted(async () => {
   try {
     const { data } = await getCategorias()
     categorias.value = data
+  } catch { /* */ }
+
+  try {
+    const { data } = await getBrands()
+    allBrands.value = data
   } catch { /* */ }
 
   if (route.query.search) {
@@ -367,7 +425,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* ── Hero ── */
 .catalog-hero {
   position: relative; overflow: hidden;
   background: linear-gradient(160deg, #f0f5ff 0%, #e8effe 25%, #fafbfd 55%, #f0f5ff 100%);
@@ -412,8 +469,8 @@ onUnmounted(() => {
 .hero-desc { font-size: 16px; color: var(--muted); max-width: 440px; margin: 16px 0 24px; line-height: 1.5; }
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .hero-visual {
-  position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
-  padding: 32px;
+  position: relative; z-index: 1; display: flex;
+  align-items: center; justify-content: center; padding: 32px;
 }
 .laptop-frame {
   width: 100%; max-width: 520px;
@@ -427,8 +484,7 @@ onUnmounted(() => {
   background: var(--surface); border: 1px solid var(--border);
   box-shadow: var(--shadow-md); font-size: 13px; font-weight: 600;
   display: flex; align-items: center; gap: 8px;
-  animation: float-bob 3s ease-in-out infinite;
-  color: var(--fg);
+  animation: float-bob 3s ease-in-out infinite; color: var(--fg);
 }
 .spec-float.f1 { top: 18%; right: 8%; animation-delay: 0s; }
 .spec-float.f2 { bottom: 28%; left: 4%; animation-delay: 1.2s; }
@@ -439,119 +495,8 @@ onUnmounted(() => {
 }
 @keyframes float-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
-/* ── Category pills ── */
-.cat-strip {
-  display: flex; align-items: center; gap: 10px;
-  padding: 20px 32px; border-bottom: 1px solid var(--border);
-  overflow-x: auto; scrollbar-width: none;
-}
-.cat-strip::-webkit-scrollbar { display: none; }
-.cat-pill {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 20px; border-radius: 99px;
-  border: 1px solid var(--border); background: var(--surface);
-  font-size: 14px; font-weight: 600; color: var(--fg);
-  cursor: pointer; white-space: nowrap; transition: all 0.18s;
-  flex-shrink: 0; font-family: var(--font-display);
-}
-.cat-pill:hover { border-color: var(--accent); color: var(--accent); }
-.cat-pill.active {
-  background: var(--accent); color: #fff; border-color: var(--accent);
-  box-shadow: 0 4px 16px var(--accent-glow-strong);
-}
-
-/* ── Filter bar ── */
-.filter-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 32px; gap: 16px; flex-wrap: wrap;
-}
-.filter-left { flex-wrap: wrap; }
-.results-info { font-size: 14px; color: var(--muted); }
-.results-info strong { color: var(--fg); font-family: var(--font-mono); }
-.active-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 14px; border-radius: 99px;
-  background: var(--accent-glow); color: var(--accent);
-  font-size: 12.5px; font-weight: 600; cursor: pointer;
-  transition: all 0.15s;
-}
-.chip:hover { background: var(--accent-glow-strong); }
-.filter-actions { display: flex; align-items: center; gap: 10px; }
-.sort-select {
-  border: 1px solid var(--border); border-radius: var(--radius-md);
-  padding: 9px 14px; font-size: 13px; background: var(--surface);
-  color: var(--fg); cursor: pointer; font-family: var(--font-body);
-}
-.sort-select:focus { outline: none; border-color: var(--accent); }
-.btn-filter-toggle {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 16px; border-radius: var(--radius-md);
-  border: 1px solid var(--border); background: var(--surface);
-  font-size: 13px; font-weight: 600; color: var(--fg); cursor: pointer;
-  transition: all 0.15s; font-family: var(--font-display);
-}
-.btn-filter-toggle:hover { border-color: var(--accent); color: var(--accent); }
-.badge-count {
-  background: var(--accent); color: #fff; font-family: var(--font-mono);
-  font-size: 10px; padding: 2px 7px; border-radius: 99px; font-weight: 700;
-}
-
-/* ── Products area ── */
 .products-area { padding: 0 32px 40px; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-}
-.empty-state { grid-column: 1/-1; text-align: center; padding: 80px 0; }
-.empty-state h3 { font-size: 18px; margin-bottom: 6px; color: var(--fg); }
-.empty-state p { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
 
-.sentinel { height: 1px; width: 100%; }
-
-.sp-divider {
-  text-align: center; padding: 40px 0 32px;
-  color: var(--muted); font-size: 13px;
-}
-.sp-divider span {
-  display: inline-block; padding: 8px 20px;
-  border-radius: 999px; background: var(--border-light);
-  color: var(--muted);
-}
-
-.skeleton-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px; margin-top: 24px;
-}
-.skeleton-card {
-  border-radius: var(--radius-lg); overflow: hidden;
-  background: var(--surface);
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.025);
-}
-.sk-img {
-  aspect-ratio: 4/3;
-  background: linear-gradient(90deg, var(--border-light) 25%, var(--surface) 50%, var(--border-light) 75%);
-  background-size: 200% 100%;
-  animation: sk-pulse 1.5s ease-in-out infinite;
-}
-.sk-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
-.sk-line {
-  height: 14px; border-radius: 4px; width: 80%;
-  background: linear-gradient(90deg, var(--border-light) 25%, var(--surface) 50%, var(--border-light) 75%);
-  background-size: 200% 100%;
-  animation: sk-pulse 1.5s ease-in-out infinite;
-}
-.sk-line.sk-short { width: 50%; }
-.sk-line.sk-long { width: 95%; }
-
-@keyframes sk-pulse {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* ── Compare bar ── */
 .compare-bar {
   position: fixed; bottom: -120px; left: 0; right: 0; z-index: 70;
   background: var(--surface); border-top: 1px solid var(--border);
@@ -573,18 +518,18 @@ onUnmounted(() => {
 .compare-actions { display: flex; gap: 10px; flex-shrink: 0; }
 .compare-btn { font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
 
+.filter-left { flex-wrap: wrap; }
+.active-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.results-info { font-size: 14px; color: var(--muted); }
+.results-info strong { color: var(--fg); font-family: var(--font-mono); }
+
 @media (max-width: 1024px) {
   .catalog-hero { grid-template-columns: 1fr; min-height: auto; }
   .hero-visual { display: none; }
   .hero-content { padding: 40px 20px; }
-  .cat-strip, .filter-bar { padding-left: 20px; padding-right: 20px; }
   .products-area { padding: 0 20px 32px; }
-  .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-  .skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 }
 @media (max-width: 640px) {
-  .grid { grid-template-columns: 1fr; }
-  .skeleton-grid { grid-template-columns: 1fr; }
   .hero-title { font-size: 28px; }
   .compare-bar { padding: 12px 16px; flex-direction: column; }
   .compare-actions { width: 100%; }
